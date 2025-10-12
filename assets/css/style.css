@@ -1,0 +1,352 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    
+}
+body > div{
+    display: flex;
+    flex-direction: column;
+    gap: 90px;
+}
+
+#cabecalho {
+    background-color: #3B0BB5;
+    padding: 15px 50px;
+}
+
+#menu_principal {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo img {
+    height: 40px;
+    width: auto;
+}
+
+.menu {
+    list-style: none;
+    display: flex;
+    gap: 60px;
+    margin-bottom: 0;
+}
+
+.menu a {
+    /*remove o sublinhado*/
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+    transition: 0.3s;
+    /*espaçamento entre as letras*/
+    letter-spacing: 0.5px;
+}
+
+.menu a:hover {
+    opacity: 0.8;
+}
+
+.botao {
+    background-color: #00B894;
+    color: white;
+    padding: 10px 30px;
+    border-radius: 6px;
+    font-weight: 700;
+    /*remove o sublinhado*/
+    text-decoration: none;
+    /*espaçamento entre as letras*/
+    letter-spacing: 0.5px;
+    transition: 0.3s;
+}
+
+.botao:hover {
+    opacity: 0.9;
+}
+
+
+
+
+
+
+#eventos{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 50px;
+}
+#titulo-evento{
+    font-size: 48px;
+    text-transform: uppercase;
+    font-weight: bold;
+    
+}
+#titulo-evento span{
+    color: #EA4746;
+}
+#carouselExample{
+    width: 1154px;
+    height: 482px;
+    padding: 0;
+}
+#carouselExample span{
+    width: 50px;
+    height: 72px;
+}
+.carousel-control-next, .carousel-control-prev{
+    width: auto !important;
+    justify-content: space-between !important;
+
+}
+.carousel-inner, .carousel-item, .container_carrossel{
+    width: 100%;
+    height: 100%;
+}
+.container_carrossel img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 15px;
+}
+.container_carrossel::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 60%;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.719), transparent);
+  pointer-events: none; 
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+.textos_carrossel{
+    text-transform: uppercase;
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    padding: 40px 30px;
+    z-index: 1;
+}
+
+.texto_superior{
+    color: #fff;
+}
+.texto_superior, .texto_inferior{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.texto_superior h3, .textos_carrossel h4{
+    font-weight: bold;
+    margin-bottom: 0;
+    
+}
+.texto_superior h3{
+    font-size: 48px;
+    
+}
+.texto_superior h4{
+    font-size: 38px;
+}
+.texto_inferior h4{ 
+    color: #04A777;
+    font-size: 38px;
+}
+
+
+
+
+
+.criar_conta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    font-family: "Poppins", sans-serif;
+    margin: 50px;
+}
+
+/* div dos textos */
+.textos p {
+    margin: 5px 0;
+    font-size: 48px;
+    font-family: "Poppins", sans-serif;
+}
+
+
+#textos {
+    flex-grow: 0.2;
+}
+
+/* coloquei a palavra talento separada dos outros textos */
+.talento {
+    color: #007BE5;
+    font-family: "Poppins", sans-serif;
+}
+
+/* tag <button> */
+.botao_criar_conta {
+    color: #04A777;
+    background-color: transparent;
+    text-decoration: underline;
+    text-decoration-color: green;
+    font-size: 64px;
+    font-family: "Poppins", sans-serif;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#rodape {
+    padding: 40px 80px; 
+    background-color: #3A0CA3; 
+    color: white;
+    font-family: Arial, Helvetica, sans-serif; 
+    display: flex;
+    align-items: center; 
+    justify-content: space-between; 
+    gap: 30px; 
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.2); 
+    text-wrap: wrap; 
+}
+
+/* ------------------ SEÇÃO LOGO ------------------ */
+
+#logo img {
+    font-size: 1em;
+    font-weight: bold;
+    margin: 0; 
+    width: 166px;
+}
+
+/* ------------------ SEÇÃO INSTITUCIONAL (Menu) ------------------ */
+footer nav{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+#menu_lista {
+    padding: 0; 
+    margin: 0; 
+    text-align: center;
+}
+
+#menu_lista li {
+    list-style: none;
+    margin-bottom: 5px; 
+}
+
+#menu_lista a {
+    color: inherit; 
+    text-decoration: none; 
+    transition: color 0.3s ease;
+    
+}
+
+#menu_lista a:hover {
+    text-decoration: underline; 
+    color: #dedede; 
+}
+
+/* ------------------ ESTILO DOS TÍTULOS ------------------ */
+
+nav h2, 
+#redes_sociais h2 {
+    font-size: 1em; 
+    margin-bottom: 15px; 
+    font-weight: bold;
+    text-transform: uppercase; /* Garante que o texto fique todo em maiúsculas */
+    letter-spacing: 1px; /* Adiciona um pouco de espaçamento entre letras */
+}
+
+/* ------------------ SEÇÃO REDES SOCIAIS ------------------ */
+
+#redes_sociais {
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+}
+
+#menus_redes {
+    display: flex;
+    gap: 15px; 
+}
+
+/* ------------------ ESTILOS DE ÍCONES (Links) ------------------ */
+
+#menus_redes i { 
+    font-size: 53px;
+}
+#menus_redes a { 
+    
+    margin-top: center;
+    margin-left: 4px;
+    display: inline-flex; 
+    justify-content: center;
+    align-items: center;
+    color: white; 
+    background-color: transparent; 
+    font-size: 1.5em; 
+    transition: color 0.3s ease;
+    text-decoration: none;
+}
+
+#menus_redes a:hover {
+    background-color: transparent; 
+    color: #dedede; 
+} 
+/* RESPONSIVIDADE (MOBILE) */
+ 
+@media (max-width: 768px) {
+   .botao{
+    display: none;
+   } 
+    #rodape {
+        flex-direction: column;
+        align-items: flex-start;
+        align-items: center;
+        padding: 40px 20px;
+    }
+    
+    #logo {
+        margin-bottom: 25px; 
+    }
+    
+    footer nav, #redes_sociais {
+        width: 100%; 
+        margin-bottom: 25px;
+    }
+    footer nav h2 {
+        margin-bottom: 10px;
+    }
+    
+    #menu_lista li {
+        margin-bottom: 5px;
+    }
+    
+    #redes_sociais {
+        margin-bottom: 0; 
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    #redes_sociais h2 {
+        margin-bottom: 15px; 
+    }
+    
+    #menus_redes {
+        
+
+        
+    }
+    
+    #menus_redes a {
+        font-size: 1.8em;
+    }
+}
