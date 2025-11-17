@@ -1,0 +1,100 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+/* =========================================================
+   CABEÇALHO
+========================================================= */
+#cabecalho {
+  background-color: #3b0bb5;
+  padding: 15px 50px;
+}
+
+#menu_principal {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo_site img {
+  height: 40px;
+  width: auto;
+}
+
+.lista_menu {
+  list-style: none;
+  display: flex;
+  gap: 60px;
+  margin-bottom: 0;
+}
+
+.lista_menu a {
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  transition: 0.3s;
+  letter-spacing: 0.5px;
+}
+
+.lista_menu a:hover {
+  opacity: 0.8;
+}
+
+.botao_acesso {
+  background-color: #00b894;
+  color: white;
+  padding: 10px 30px;
+  border-radius: 6px;
+  font-weight: 700;
+  text-decoration: none;
+  letter-spacing: 0.5px;
+  transition: 0.3s;
+}
+
+.botao_acesso:hover {
+  opacity: 0.9;
+}
+
+
+@media (max-width: 768px) {
+    #cabecalho {
+        padding: 15px 20px;
+    }
+
+    #menu_principal {
+        flex-wrap: wrap;
+        gap: 15px;
+        justify-content: center;
+    }
+
+    .logo {
+        flex: 1 1 100%;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .logo img {
+        height: 35px;
+    }
+
+    #menu {
+        gap: 20px;
+        order: 2;
+    }
+
+    #menu a {
+        font-size: 14px;
+    }
+
+    .botao {
+        order: 3;
+        padding: 8px 20px;
+        font-size: 13px;
+    }
+} 

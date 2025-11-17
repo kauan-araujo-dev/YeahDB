@@ -1,0 +1,391 @@
+#main-index {
+  margin: 90px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 90px;
+}
+#secao_bandas{
+    display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 50px;
+  padding: 20px;
+  height: auto;
+}
+#titulo_artistas span{
+  color: #04a777;
+}
+.linha_cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  justify-content: center;
+}
+
+.caixa_banda {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  width: 347px;
+  height: 432px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-decoration: none;
+}
+
+.caixa_banda img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  position: relative;
+  z-index: 0;
+}
+.caixa_banda::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 52%;
+  background: linear-gradient(to top, #000, #000, transparent);
+  pointer-events: none;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.texto_banda_overlay {
+  text-transform: uppercase;
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  padding: 10px 10px;
+  z-index: 1;
+}
+
+.titulo_banda {
+  font-size: 1.5rem;
+  color: #ffffff;
+  text-align: center;
+  border-radius: 5px 5px 0 0;
+  font-weight: bold;
+}
+
+.estilo_musical {
+  font-size: 1rem;
+  color: #ffc402;
+  text-align: center;
+  font-weight: bold;
+}
+
+.caixa_banda:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* =========================================================
+   SEÇÃO EVENTOS
+========================================================= */
+#secao_eventos {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 50px;
+  padding: 20px;
+  height: auto;
+}
+
+.titulo_secao {
+  font-size: 48px;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+#titulo_eventos span{
+  color: #ea4746;
+}
+
+#carouselExampleAutoplaying {
+  width: 1154px;
+  height: 500px;
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+  border-radius: 15px;
+  transition: 0.2 ease;
+}
+#carouselExampleAutoplaying:hover{
+  opacity: 0.9;
+  transform: scale(1.01);
+}
+
+#carouselExampleAutoplaying span {
+  width: 50px;
+  height: 72px;
+}
+
+.carousel-control-next,
+.carousel-control-prev {
+  width: auto !important;
+  justify-content: space-between !important;
+}
+
+.carousel-inner,
+.carousel-item,
+.container_carrossel {
+  width: 100%;
+  height: 100%;
+}
+
+.container_carrossel img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  
+}
+
+.container_carrossel::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 52%;
+  background: linear-gradient(to top, #000, #000, transparent);
+  pointer-events: none;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+
+.textos_carrossel {
+  text-transform: uppercase;
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+  padding: 30px 30px;
+  z-index: 1;
+}
+
+.texto_superior {
+  color: #fff;
+}
+
+.texto_superior,
+.texto_inferior {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.texto_superior h3,
+.textos_carrossel h4 {
+  font-weight: bold;
+  margin-bottom: 0;
+}
+
+.texto_superior h3 {
+  font-size: 43px;
+}
+
+.texto_superior h4 {
+  font-size: 33px;
+}
+
+.texto_inferior h4 {
+  color: #04a777;
+  font-size: 33px;
+}
+
+.secao_criar_conta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  font-family: "Poppins", sans-serif;
+  margin: 50px;
+}
+
+.textos_criar_conta p {
+  margin: 5px 0;
+  font-size: 48px;
+  font-family: "Poppins", sans-serif;
+}
+
+.texto_talento {
+  color: #007be5;
+  font-family: "Poppins", sans-serif;
+}
+
+.botao_criar_conta {
+  color: #04a777;
+  background-color: transparent;
+  text-decoration: underline;
+  text-decoration-color: green;
+  font-size: 64px;
+  font-family: "Poppins", sans-serif;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+
+@media (max-width: 1200px) {
+  #carouselExampleAutoplaying {
+    width: 1040px;
+    height: 434px;
+  }
+}
+
+@media (max-width: 1080px) {
+  #carouselExampleAutoplaying {
+    width: 936px;
+    height: 391px;
+  }
+}
+
+@media (max-width: 960px) {
+  #carouselExampleAutoplaying {
+    width: 740px;
+    height: 308px;
+  }
+
+  .texto_superior h3 {
+    font-size: 38px;
+  }
+
+  .textos_carrossel h4 {
+    font-size: 28px;
+  }
+  #carouselExampleAutoplaying span {
+  width: 45px;
+  height: 67px;
+}
+}
+
+@media (max-width: 768px) {
+  #categorias_genero{
+  display: none; 
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 10px;
+}
+
+#categorias_genero_mobile{
+  display: grid; 
+  grid-template-rows: 1fr 1fr;
+  gap: 10px;
+  place-items: center;
+
+}
+  #carouselExampleAutoplaying {
+    width: 510px;
+    height: 212px;
+  }
+
+  .botao_acesso {
+    display: none;
+  }
+
+  .caixa_banda {
+    flex: 1 1 calc(50% - 10px);
+    max-width: 45%;
+  }
+
+  .texto_superior h3 {
+    font-size: 28px;
+  }
+
+  .textos_carrossel h4 {
+    font-size: 18px;
+  }
+  #carouselExampleAutoplaying span {
+  width: 35px;
+  height: 57px;
+}
+}
+
+@media (max-width: 520px) {
+  #carouselExampleAutoplaying span {
+    width: 19px;
+    height: 51px;
+  }
+
+  #carouselExampleAutoplaying {
+    width: 410px;
+    height: 170px;
+  }
+
+  .texto_superior h3 {
+    font-size: 20px;
+  }
+
+  .textos_carrossel h4 {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 430px) {
+  #carouselExampleAutoplaying {
+    width: 360px;
+    height: 149px;
+  }
+
+  .linha_cards {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .caixa_banda {
+    flex: 1 1 100%;
+    max-width: 100%;
+    aspect-ratio: 1;
+    min-height: 150px;
+  }
+
+  .texto_banda_overlay {
+    bottom: 10px;
+  }
+
+  .titulo_banda {
+    font-size: 1.3rem;
+    padding: 6px 12px;
+  }
+
+  .estilo_musical {
+    font-size: 0.9rem;
+    padding: 4px 12px;
+  }
+}
+
+@media (max-width: 370px) {
+  #carouselExampleAutoplaying {
+    width: 310px;
+    height: 129px;
+  }
+}
+
+@media (max-width: 768px) {
+  .titulo_secao {
+    font-size: 35px !important;
+    text-align: center;
+  }
+
+  .secao_criar_conta {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 10px;
+  }
+
+  .textos_criar_conta p {
+    font-size: 30px;
+  }
+
+  .botao_criar_conta {
+    font-size: 30px;
+    padding: 10px 20px;
+  }
+
+}

@@ -1,0 +1,12 @@
+footer {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 20px;
+  border-top: 2px solid #C6C6C6;
+}
+
+#footer-form1{
+  justify-content: flex-end !important;
+}
+
