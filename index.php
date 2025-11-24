@@ -1,3 +1,14 @@
+<?php 
+
+require_once "src/Database/Conecta.php";
+require_once "src/Helpers/Utils.php";
+require_once "src/Services/EstilosMusicaisServicos.php";
+require_once "src/Services/AutenticarServico.php";
+
+$estilosMusicaisServicos = new EstilosMusicaisServicos();
+
+$estilos_musicais = $estilosMusicaisServicos->buscarArtistas();
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -17,7 +28,7 @@
           <img src="img/banda_rock.jpg" alt="Metal Boss" />
           <div class="texto_banda_overlay">
             <h3 class="titulo_banda">Metal Boss</h3>
-            <h4 class="estilo_musical">Classic Rock</h4>
+            <h4 class="estilo_musical_banda">Classic Rock</h4>
           </div>
         </a>
 
@@ -25,7 +36,7 @@
           <img src="img/dupla_sertaneja.jpg" alt="Toguro e Macacheira" />
           <div class="texto_banda_overlay">
             <h3 class="titulo_banda">Toguro e Macacheira</h3>
-            <h4 class="estilo_musical">Sertanejo</h4>
+            <h4 class="estilo_musical_banda">Sertanejo</h4>
           </div>
         </a>
 
@@ -33,7 +44,7 @@
           <img src="img/hiphop.jpg" alt="HipZica" />
           <div class="texto_banda_overlay">
             <h3 class="titulo_banda">HipZica</h3>
-            <h4 class="estilo_musical">Hip Hop</h4>
+            <h4 class="estilo_musical_banda">Hip Hop</h4>
           </div>
         </a>
       </div>
@@ -105,6 +116,21 @@
 
     </section>
 
+    <section id="secao_estilos_musicais">
+      <h2 class="titulo_secao" id="titulo_estilos_musicais">ENCONTRE O SEU <span>ESTILO</span></h2>
+
+      
+      <div class="cards_estilos_musicais">
+        <?php foreach($estilos_musicais as $estilo_musical){ ?>
+        <div class="card_estilos_musicais">
+          <img src="img/estilos_musicais/<?= $estilo_musical['imagem'] ?>" alt="band de <?= $estilo_musical['nome']?>" class="estilo_musical">
+          <h3 class="texto-estilo"><?= $estilo_musical['nome'] ?></h3>
+        </div>
+        <?php } ?>
+      </div>
+    </section>
+
+
     <section class="secao_criar_conta">
       <div class="textos_criar_conta">
         <p><b>QUER DIVULGAR O SEU</b></p>
@@ -112,13 +138,14 @@
         <p><b>CRIE SUA CONTA!</b></p>
       </div>
 
-      <a href="#">
+      <a href="cadastrar.php">
         <button class="botao_criar_conta">
           <b><i>CRIAR CONTA</i></b>
         </button>
       </a>
     </section>
-</main>
+
+  </main>
 
   <?php require_once "includes/rodape.php" ?>
 

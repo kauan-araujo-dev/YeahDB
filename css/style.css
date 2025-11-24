@@ -4,6 +4,7 @@
   flex-direction: column;
   gap: 90px;
 }
+
 #secao_bandas{
     display: flex;
   align-items: center;
@@ -24,12 +25,14 @@
 
 .caixa_banda {
   position: relative;
-  border-radius: 8px;
+  border-radius: 12px;
   overflow: hidden;
   width: 347px;
   height: 432px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   text-decoration: none;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+  
 }
 
 .caixa_banda img {
@@ -39,6 +42,7 @@
   display: block;
   position: relative;
   z-index: 0;
+  
 }
 .caixa_banda::after {
   content: "";
@@ -74,9 +78,9 @@
   font-weight: bold;
 }
 
-.estilo_musical {
-  font-size: 1rem;
-  color: #ffc402;
+.estilo_musical_banda {
+  font-size: 1.2rem;
+  color: #FB8B24;
   text-align: center;
   font-weight: bold;
 }
@@ -199,6 +203,7 @@
   font-size: 33px;
 }
 
+
 .secao_criar_conta {
   display: flex;
   align-items: center;
@@ -218,6 +223,77 @@
   color: #007be5;
   font-family: "Poppins", sans-serif;
 }
+
+#secao_estilos_musicais{
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+#titulo_estilos_musicais span{
+  color: #FB8B24;
+}
+.cards_estilos_musicais {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  padding: 20px;
+}
+
+.card_estilos_musicais {
+  position: relative; /* Faz do card um contêiner para posicionamento absoluto do texto */
+  width: 245px; /* Mesma largura da imagem */
+  height: 245px; /* Mesma altura da imagem */
+  border-radius: 20px;
+}
+.cards_estilos_musicais img{
+  object-fit: cover;
+}
+
+.estilo_musical {
+  width: 245px;
+  height: 245px;
+  background-color: #ea4746; /* Fundo vermelho para imagens não carregadas */
+  display: block; /* Garante que a imagem ocupe o espaço corretamente */
+}
+
+.texto-estilo {
+  position: absolute; /* Posiciona o texto em relação ao .card */
+  bottom: 0; /* Distância da parte inferior */
+  left: 0;
+  right: 0;
+  text-align: center; /* Centraliza o texto horizontalmente */
+  color: white; /* Cor do texto para contrastar com o fundo vermelho */
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  text-transform: uppercase; /* Mantém o texto em maiúsculas */
+  padding: 5px 0;
+  background: linear-gradient(180deg, transparent, #000);
+  margin-bottom: 0;
+}
+
+/* Media Query para dispositivos móveis (telas até 768px) */
+@media (max-width: 768px) {
+  .cards_estilos_musicais {
+    flex-direction: column; /* Altera para coluna em telas menores */
+    gap: 15px; /* Reduz o espaçamento entre os cards */
+    padding: 10px; /* Ajusta o padding para telas menores */
+  }
+
+  .card_estilos_musicais {
+    width: 80%; /* O card ocupa a largura total disponível */
+    max-width: 300px; /* Limita a largura máxima para evitar cards muito largos */
+    height: auto; /* Ajusta a altura automaticamente */
+  }
+
+  .estilo_musical {
+    width: 100%; /* Imagem ocupa a largura total do card */
+    height: auto; /* Mantém a proporção da imagem*/
+  }
+}
+
 
 .botao_criar_conta {
   color: #04a777;

@@ -1,0 +1,12 @@
+#link-cadastro{
+    display: flex;
+    flex-direction: row;
+    text-transform: uppercase;
+}
+#link-cadastro a{
+    text-decoration: none;
+    font-weight: bold;
+}
+#sessao-login{
+    margin-bottom: 90px;
+}

@@ -1,6 +1,7 @@
-<?php 
+<?php
 
-class ArtistaServicos{
+class ArtistaServicos
+{
 
     public ?PDO $conexao;
 
@@ -9,14 +10,15 @@ class ArtistaServicos{
         $this->conexao = Conecta::getConexao();
     }
 
-    public function buscarArtistas():?array {
+    public function buscarArtistas(): ?array
+    {
         $sql = "SELECT artistas.id, artistas.nome, (
-        SELECT foto_artista.url
+        SELECT foto_artista.url_imagem
         FROM foto_artista
         WHERE foto_artista.id_artista = artistas.id
         ORDER BY foto_artista.id ASC
         LIMIT 1
-        ) AS url,
+        ) AS url_imagem,
         (
         SELECT estilo_musical.nome
         FROM artista_estilo
@@ -34,14 +36,15 @@ class ArtistaServicos{
         return $consulta->fetchAll() ?: null;
     }
 
-    public function buscarArtistasComLimite(int $limite):?array {
+    public function buscarArtistasComLimite(int $limite): ?array
+    {
         $sql = "SELECT artistas.id, artistas.nome, (
-        SELECT foto_artista.url
+        SELECT foto_artista.url_imagem
         FROM foto_artista
         WHERE foto_artista.id_artista = artistas.id
         ORDER BY foto_artista.id ASC
         LIMIT 1
-        ) AS url,
+        ) AS url_imagem,
         (
         SELECT estilo_musical.nome
         FROM artista_estilo
@@ -59,41 +62,97 @@ class ArtistaServicos{
         $consulta->bindValue(":limite", $limite);
 
 
-        if($limite === 1){
+        if ($limite === 1) {
             return $consulta->fetch() ?: null;
-        }elseif($limite == 0){
+        } elseif ($limite == 0) {
             return null;
-        }else{
+        } else {
             return $consulta->fetchAll() ?: null;
         }
-
-        
     }
 
-    public function buscarEventos():?array {
-        $sql = "SELECT foto_evento.url
-        FROM foto_evento
-        WHERE foto_evento.id_evento = eventos.id
-        ORDER BY foto_evento.id ASC
-        LIMIT 1
-        ) AS url,
-        (
-            SELECT estilo_musical.nome
-            FROM evento_estilo
-            JOIN estilo_musical 
-                ON estilo_musical.id = evento_estilo.id_estilo
-            WHERE evento_estilo.id_evento = eventos.id
-            ORDER BY estilo_musical.id ASC
-            LIMIT 1
-        ) AS estilo
-        FROM eventos
-        ORDER BY eventos.id ASC";
+    public function inserirArtista(Artista $dadosArtista): int
+    {
+        $sql = "INSERT INTO artistas 
+            (nome, descricao, estado, cidade, cache_artista, whatsapp, instagram, contato, id_usuario)
+            VALUES 
+            (:nome, :descricao, :estado, :cidade, :cache_artista, :whatsapp, :instagram, :contato, :id_usuario)";
 
-        $consulta = $this->conexao->query($sql);
+        $consulta = $this->conexao->prepare($sql);
 
-        return $consulta->fetchAll() ?: null;
+        $consulta->bindValue(':nome', $dadosArtista->getNome());
+        $consulta->bindValue(':descricao', $dadosArtista->getDescricao());
+        $consulta->bindValue(':estado', $dadosArtista->getEstado());
+        $consulta->bindValue(':cidade', $dadosArtista->getCidade());
+        $consulta->bindValue(':cache_artista', $dadosArtista->getCacheArtista());
+        $consulta->bindValue(':whatsapp', $dadosArtista->getWhatsapp());
+        $consulta->bindValue(':instagram', $dadosArtista->getInstagram());
+        $consulta->bindValue(':contato', $dadosArtista->getContato());
+        $consulta->bindValue(':id_usuario', $dadosArtista->getIdUsuario(), PDO::PARAM_INT);
+
+        $consulta->execute();
+
+        // retorna o ID gerado
+        return intval($this->conexao->lastInsertId());
     }
+
+    public function inserirIntegrante(IntegranteArtista $integrante): void
+    {
+        $sql = "INSERT INTO integrante_artista 
+            (nome, instrumento, url_imagem, id_artista)
+            VALUES 
+            (:nome, :instrumento, :url_imagem, :id_artista)";
+
+        $consulta = $this->conexao->prepare($sql);
+
+        $consulta->bindValue(':nome', $integrante->getNome());
+        $consulta->bindValue(':instrumento', $integrante->getInstrumento());
+        $consulta->bindValue(':url_imagem', $integrante->getUrlImagem());
+        $consulta->bindValue(':id_artista', $integrante->getIdArtista());
+
+        $consulta->execute();
+    }
+
+    public function inserirFotoArtista(FotoArtista $foto): void
+    {
+        $sql = "INSERT INTO foto_artista (url_imagem, id_artista)
+                VALUES (:url_imagem, :id_artista)";
+
+        $consulta = $this->conexao->prepare($sql);
+
+        $consulta->bindValue(":url_imagem", $foto->getUrl());
+        $consulta->bindValue(":id_artista", $foto->getIdArtista());
+
+        $consulta->execute();
+
+        // retorna o ID recém inserido
+    }
+
+ public static function criarPastasUpload(int $id): bool
+{
+    // sobe 2 níveis e chega na raiz do projeto
+    $root = dirname(__DIR__, 2);
+
+    // Caminho base dentro da pasta raiz -> img/artistas/id
+    $basePath = $root . "/img/artistas/$id";
+
+    // Subpastas obrigatórias
+    $pastas = [
+        $basePath,
+        "$basePath/fotos_artistas",
+        "$basePath/fotos_integrantes"
+    ];
+
+    foreach ($pastas as $pasta) {
+        if (!file_exists($pasta)) {
+            if (!mkdir($pasta, 0777, true)) {
+                return false; // Erro ao criar pasta
+            }
+        }
+    }
+
+    return true;
 }
 
 
-?>
+}

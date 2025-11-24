@@ -48,5 +48,18 @@ class UsuarioServicos
         $consulta->execute();
     }
 
+    public function buscarPorEmail($email):?array{
+        $sql = "SELECT * FROM usuarios WHERE email = :email";
+
+        $consulta = $this->conexao->prepare($sql);
+
+        $consulta->bindValue(":email", $email);
+
+        $consulta->execute();
+
+        return $consulta->fetch() ?: null;
+
+    }
+
     
 }

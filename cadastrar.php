@@ -3,7 +3,10 @@ require_once "src/Database/Conecta.php";
 require_once "src/Helpers/Utils.php";
 require_once "src/Models/Usuario.php";
 require_once "src/Services/UsuarioServicos.php";
+require_once "src/Services/AutenticarServico.php";
 
+
+AutenticarServico::estaLogado();
 
 $condMsg;
 $msg = null;
@@ -145,7 +148,7 @@ if (isset($_SESSION['pt2'])) {
       echo "<p>$msg</p>";
     }  ?>
     <?php if (!isset($_SESSION['pt2'])) { ?>
-      <form method="post" id="form1">
+      <form method="post" id="form1" method="post">
         <div id="container-inputs">
 
           <div>
@@ -198,7 +201,7 @@ if (isset($_SESSION['pt2'])) {
       </footer>
     <?php } else { ?>
 
-      <form method="post" id="form2">
+      <form method="post" id="form2" method="post">
 
         <div id="container-inputs">
           <div>

@@ -1,0 +1,126 @@
+#sessao-cadastro h2 span {
+  color: #fb923c;
+}
+
+form{
+    margin-bottom: 90px;
+}
+
+#previewContainer {
+  display: grid;
+  grid-template-areas:
+    "main-image side-image1 side-image2"
+    "main-image side-image3 side-image4";
+  gap: 24px;
+}
+
+.img-preview {
+  position: relative;
+}
+.img-preview:first-child {
+  grid-area: main-image;
+  width: 390px;
+  height: 390px;
+}
+
+.img-preview:first-child img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.img-preview:nth-child(2) {
+  grid-area: side-image1;
+  width: 182px;
+  height: 182px;
+  margin-bottom: auto;
+}
+
+.img-preview:nth-child(3) {
+  grid-area: side-image2;
+  width: 182px;
+  height: 182px;
+  margin-bottom: auto;
+}
+
+.img-preview:nth-child(4) {
+  grid-area: side-image3;
+  width: 182px;
+  height: 182px;
+  margin-top: auto;
+}
+
+.img-preview:nth-child(5) {
+  grid-area: side-image4;
+  width: 182px;
+  height: 182px;
+  margin-top: auto;
+}
+
+.img-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.img-preview button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  border: none;
+  border-radius: 50% !important;
+  cursor: pointer;
+  font-size: 12px;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  font-weight: bold;
+}
+
+.img-preview:hover button {
+  opacity: 1;
+}
+
+#uploadButton {
+  margin-right: auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  opacity: 0.9;
+  background-color: transparent;
+  margin-top: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  text-transform: uppercase;
+  padding: 0px;
+}
+
+#uploadButton:hover {
+  opacity: 1;
+}
+.upBtn{
+  color: #04A777;
+  width: auto;
+  padding: 0;
+}
+.upBtn::before {
+  content: "+";
+  font-size: 20px;
+  margin-right: 5px;
+}
+
+

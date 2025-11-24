@@ -1,6 +1,6 @@
 <?php
 
-class Artistas
+class Artista
 {
     public ?int $id;
     public string $nome;

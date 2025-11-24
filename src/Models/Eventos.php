@@ -12,7 +12,6 @@ class Eventos
     public string $instagram;
     public string $contato;
     public int $id_usuario;
-    public array $urlFotos = [];
 
     public function __construct(
         ?int $id,
@@ -39,7 +38,6 @@ class Eventos
         $this->setInstagram($instagram);
         $this->setContato($contato);
         $this->setIdUsuario($id_usuario);
-        $this->setUrlFotos($urlFotos);
     }
 
     // ID
@@ -150,21 +148,5 @@ class Eventos
     public function setIdUsuario(int $id_usuario): void
     {
         $this->id_usuario = $id_usuario;
-    }
-
-    // urlFotos (array)
-    public function getUrlFotos(): array
-    {
-        return $this->urlFotos;
-    }
-
-    public function setUrlFotos(array $urlFotos): void
-    {
-        $this->urlFotos = $urlFotos;
-    }
-
-    public function addUrlFoto(string $foto): void
-    {
-        $this->urlFotos[] = $foto;
     }
 }

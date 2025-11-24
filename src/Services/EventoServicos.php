@@ -10,12 +10,12 @@ class EventoServicos{
     }
 
     public function buscarEventos():?array {
-        $sql = "SELECT foto_evento.url
+        $sql = "SELECT foto_evento.url_imagem
         FROM foto_evento
         WHERE foto_evento.id_evento = eventos.id
         ORDER BY foto_evento.id ASC
         LIMIT 1
-        ) AS url,
+        ) AS url_imagem,
         (
             SELECT estilo_musical.nome
             FROM evento_estilo
@@ -34,12 +34,12 @@ class EventoServicos{
     }
 
     public function buscarEventosComLimite(int $limite):?array {
-        $sql = "SELECT foto_evento.url
+        $sql = "SELECT foto_evento.url_imagem
         FROM foto_evento
         WHERE foto_evento.id_evento = eventos.id
         ORDER BY foto_evento.id ASC
         LIMIT 1
-        ) AS url,
+        ) AS url_imagem,
         (
             SELECT estilo_musical.nome
             FROM evento_estilo

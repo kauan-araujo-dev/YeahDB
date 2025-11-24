@@ -60,7 +60,22 @@ body {
 .botao_acesso:hover {
   opacity: 0.9;
 }
-
+#meu-perfil{
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  gap: 10px;
+}
+#meu-perfil p{
+  margin-bottom: 0; 
+  color: #fff;
+  text-transform: uppercase;
+  
+}
+#meu-perfil a{
+  color: #00b894;
+  text-decoration: none;
+}
 
 @media (max-width: 768px) {
     #cabecalho {
