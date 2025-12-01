@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Tempo de geração: 24/11/2025 às 15:48
+-- Tempo de geração: 01/12/2025 às 15:52
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -50,7 +50,8 @@ INSERT INTO `artistas` (`id`, `nome`, `descricao`, `estado`, `cidade`, `cache_ar
 (3, 'Trio Sertanejo', 'Grupo de sertanejo universitário', 'MG', 'Belo Horizonte', 4000, '31977776666', '@triosertanejo', 'contato@sertanejo.com', 3),
 (4, 'Coral Harmonia', 'Grupo vocal especializado em casamentos', 'BA', 'Salvador', 2500, '71966665555', '@coralharmonia', 'contato@harmonia.com', 4),
 (5, 'MC Ray', 'Cantor de funk carioca', 'RJ', 'Rio de Janeiro', 3500, '21955554444', '@mcrayoficial', 'contato@mcray.com', 5),
-(11, 'KAUAN DE ARAUJO', '32434243324423', 'SP', 'São Paulo', 3244340, '34243342423', '342432324', '324324324', 12);
+(11, 'Lana Souza', '32434243324423', 'SP', 'São Paulo', 3244340, '34243342423', '342432324', '324324324', 12),
+(12, 'Jabure', 'ehwefyhigbaw3eduwedbyuwhjdlvedwjtguvTGUvsadfgtsgdehwefyhigbaw3eduwedbyuwhjdlvedwjtguvTGUvsadfgtsgdehwefyhigbaw3eduwedbyuwhjdlvedwjtguvTGUvsadfgtsgdehwefyhigbaw3eduwedbyuwhjdlvedwjtguvTGUvsadfgtsgd', 'SP', 'SDDDDD', 23324200, '32443324', 'tyrgh456grfgd', '34234232432', 12);
 
 -- --------------------------------------------------------
 
@@ -73,7 +74,11 @@ INSERT INTO `artista_estilo` (`id_artista`, `id_estilo`) VALUES
 (2, 4),
 (3, 3),
 (4, 6),
-(5, 5);
+(5, 5),
+(11, 1),
+(11, 5),
+(12, 1),
+(12, 2);
 
 -- --------------------------------------------------------
 
@@ -151,7 +156,8 @@ INSERT INTO `eventos` (`id`, `nome`, `descricao`, `estado`, `cidade`, `endereco`
 (2, 'Rock Night', 'Evento dedicado ao rock nacional', 'SP', 'São Paulo', 'Espaço das Artes', '2025-11-20', '20:00:00', '@rocknight', 'contato@rocknight.com', 'https://www.ingresso.com/evento/rock-night', 2),
 (3, 'Sertanejo Fest', 'Festa com as maiores duplas sertanejas', 'MG', 'Belo Horizonte', 'Parque Municipal', '2025-12-05', '19:30:00', '@sertanejofest', 'contato@sertanejo.com', 'https://www.eventbrite.com/e/sertanejo-fest', 3),
 (4, 'Eletro Sunset', 'Balada eletrônica open air', 'RJ', 'Rio de Janeiro', 'Arena Rio', '2025-11-25', '22:00:00', '@eletrosunset', 'contato@eletro.com', 'https://www.bilheto.com.br/eletro-sunset', 4),
-(5, 'Natal Solidário', 'Evento beneficente com várias apresentações musicais', 'SC', 'Florianópolis', 'Centro Cultural', '2025-12-22', '17:00:00', '@natalsolidario', 'contato@natal.com', 'https://www.sympla.com.br/natal-solidario', 5);
+(5, 'Natal Solidário', 'Evento beneficente com várias apresentações musicais', 'SC', 'Florianópolis', 'Centro Cultural', '2025-12-22', '17:00:00', '@natalsolidario', 'contato@natal.com', 'https://www.sympla.com.br/natal-solidario', 5),
+(6, 'dfsfsdfsd', 'sadsdasadsadasdsdasdasdsdadasasdasdsdadasdsadsdasadsadasdsdasdasdsdadasasdasdsdadasdsadsdasadsadasdsdasdasdsdadasasdasdsdadasdsadsdasadsadasdsdasdasdsdadasasdasdsdadasdsadsdasadsadasdsdasdasdsdadasasdasdsdadasdsadsdasadsadasdsdasdasdsdadasasdasdsdadasdsadsdasadsadasdsdasdasdsdadasasdasdsdadasd', 'ds', 'dsffsd', 'fsdfdsdsf', '2012-12-04', '04:04:00', 'dssadasd', 'sadsdaads', 'asddasasd', 12);
 
 -- --------------------------------------------------------
 
@@ -174,7 +180,9 @@ INSERT INTO `evento_estilo` (`id_evento`, `id_estilo`) VALUES
 (2, 2),
 (3, 3),
 (4, 4),
-(5, 6);
+(5, 6),
+(6, 1),
+(6, 2);
 
 -- --------------------------------------------------------
 
@@ -201,7 +209,9 @@ INSERT INTO `foto_artista` (`id`, `url_imagem`, `id_artista`) VALUES
 (14, 'uma cantora de pop s.png', 11),
 (15, 'um grupo de hip hop .png', 11),
 (16, 'uma dupla sertaneja .png', 11),
-(17, 'uma banda de rock to.png', 11);
+(17, 'uma banda de rock to.png', 11),
+(18, 'ff54c022fc5c3952c5979d38885388b2.jpg', 12),
+(19, 'images (1).jpg', 12);
 
 -- --------------------------------------------------------
 
@@ -224,7 +234,12 @@ INSERT INTO `foto_evento` (`id`, `url_imagem`, `id_evento`) VALUES
 (2, 'https://img.site.com/eventos/rocknight.jpg', 2),
 (3, 'https://img.site.com/eventos/sertanejofest.jpg', 3),
 (4, 'https://img.site.com/eventos/eletrosunset.jpg', 4),
-(5, 'https://img.site.com/eventos/natalsolidario.jpg', 5);
+(5, 'https://img.site.com/eventos/natalsolidario.jpg', 5),
+(6, 'coloque um degradê p.png', 6),
+(7, 'um DJ se apresentand.png', 6),
+(8, 'uma cantora de pop s - Copia.png', 6),
+(9, 'uma cantora de pop s.png', 6),
+(10, 'um grupo de hip hop .png', 6);
 
 -- --------------------------------------------------------
 
@@ -254,7 +269,8 @@ INSERT INTO `integrante_artista` (`id`, `nome`, `instrumento`, `url_imagem`, `id
 (7, 'Clara Melo', 'Soprano', 'https://example.com/imagens/clara-melo.jpg', 4),
 (8, 'Marcos Silva', 'Tenor', 'https://example.com/imagens/marcos-silva.jpg', 4),
 (9, 'Ray Oliveira', 'Voz', 'https://example.com/imagens/ray-oliveira.jpg', 5),
-(11, '3234432', '324432342', 'um grupo de hip hop .png', 11);
+(11, '3234432', '324432342', 'um grupo de hip hop .png', 11),
+(12, 'saddsdsa', 'dasdasdsa', 'um cantor sertanejo .png', 12);
 
 -- --------------------------------------------------------
 
@@ -265,10 +281,17 @@ INSERT INTO `integrante_artista` (`id`, `nome`, `instrumento`, `url_imagem`, `id
 CREATE TABLE `integrante_evento` (
   `id` int(11) NOT NULL,
   `nome` varchar(100) NOT NULL,
-  `instrumento` varchar(100) NOT NULL,
+  `estilo_musical` varchar(100) NOT NULL,
   `url_imagem` varchar(255) DEFAULT NULL,
   `id_evento` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `integrante_evento`
+--
+
+INSERT INTO `integrante_evento` (`id`, `nome`, `estilo_musical`, `url_imagem`, `id_evento`) VALUES
+(1, 'safsasdsad', 'sdasdaasd', 'ff54c022fc5c3952c5979d38885388b2.jpg', 6);
 
 -- --------------------------------------------------------
 
@@ -389,7 +412,7 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de tabela `artistas`
 --
 ALTER TABLE `artistas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de tabela `estilo_musical`
@@ -401,31 +424,31 @@ ALTER TABLE `estilo_musical`
 -- AUTO_INCREMENT de tabela `eventos`
 --
 ALTER TABLE `eventos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de tabela `foto_artista`
 --
 ALTER TABLE `foto_artista`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT de tabela `foto_evento`
 --
 ALTER TABLE `foto_evento`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de tabela `integrante_artista`
 --
 ALTER TABLE `integrante_artista`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de tabela `integrante_evento`
 --
 ALTER TABLE `integrante_evento`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de tabela `usuarios`
