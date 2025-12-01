@@ -245,10 +245,13 @@
   position: relative; /* Faz do card um contêiner para posicionamento absoluto do texto */
   width: 245px; /* Mesma largura da imagem */
   height: 245px; /* Mesma altura da imagem */
-  border-radius: 20px;
+  
 }
 .cards_estilos_musicais img{
   object-fit: cover;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
 }
 
 .estilo_musical {
@@ -272,6 +275,7 @@
   padding: 5px 0;
   background: linear-gradient(180deg, transparent, #000);
   margin-bottom: 0;
+  border-radius: 20px;
 }
 
 /* Media Query para dispositivos móveis (telas até 768px) */

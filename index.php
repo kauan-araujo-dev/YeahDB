@@ -3,11 +3,20 @@
 require_once "src/Database/Conecta.php";
 require_once "src/Helpers/Utils.php";
 require_once "src/Services/EstilosMusicaisServicos.php";
+require_once "src/Services/EventoServicos.php";
+require_once "src/Services/ArtistaServicos.php";
 require_once "src/Services/AutenticarServico.php";
+$artistaServico = new ArtistaServicos();
+$artistas = $artistaServico->buscarArtistasComLimite(3);
+
+$eventoServicos = new EventoServicos();
+$contador = 0;
+
+$eventos = $eventoServicos->buscarEventosComLimite(4);
 
 $estilosMusicaisServicos = new EstilosMusicaisServicos();
 
-$estilos_musicais = $estilosMusicaisServicos->buscarArtistas();
+$estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -24,29 +33,19 @@ $estilos_musicais = $estilosMusicaisServicos->buscarArtistas();
     <section id="secao_bandas">
       <h2 class="titulo_secao" id="titulo_artistas">ARTISTAS EM <span>DESTAQUE</span></h2>
       <div class="linha_cards">
-        <a href="artista.php?" class="caixa_banda">
-          <img src="img/banda_rock.jpg" alt="Metal Boss" />
+
+      <?php foreach($artistas as $artista){ 
+        $artista['estilos_musicais'] = explode(",", $artista['estilos_musicais']); ?>
+        <a href="artista.php?artista=<?= $artista['id'] ?>" class="caixa_banda">
+          <img src="img/artistas/<?= $artista['id'] ?>/fotos_artistas/<?= $artista['url_imagem'] ?>" alt="<?= $artista['nome'] ?>" />
           <div class="texto_banda_overlay">
-            <h3 class="titulo_banda">Metal Boss</h3>
-            <h4 class="estilo_musical_banda">Classic Rock</h4>
+            <h3 class="titulo_banda"><?= $artista['nome'] ?></h3>
+            <h4 class="estilo_musical_banda"><?= implode(", ", $artista['estilos_musicais']) ?></h4>
           </div>
         </a>
 
-        <a href="artista.php?" class="caixa_banda">
-          <img src="img/dupla_sertaneja.jpg" alt="Toguro e Macacheira" />
-          <div class="texto_banda_overlay">
-            <h3 class="titulo_banda">Toguro e Macacheira</h3>
-            <h4 class="estilo_musical_banda">Sertanejo</h4>
-          </div>
-        </a>
+        <?php }?>
 
-        <a href="artista.php?" class="caixa_banda">
-          <img src="img/hiphop.jpg" alt="HipZica" />
-          <div class="texto_banda_overlay">
-            <h3 class="titulo_banda">HipZica</h3>
-            <h4 class="estilo_musical_banda">Hip Hop</h4>
-          </div>
-        </a>
       </div>
     </section>
 
@@ -54,53 +53,29 @@ $estilos_musicais = $estilosMusicaisServicos->buscarArtistas();
       <h2 class="titulo_secao" id="titulo_eventos">ONDE A <span>MÚSICA</span> VAI ESTAR</h2>
       <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
-          <div class="carousel-item active">
-            <a href="#" class="container_carrossel">
-              <img src="img/um festival sertanej.png" alt="Festival do Sol" />
+
+        <?php foreach($eventos as $evento){ 
+        $evento['estilos_musicais'] = array_map('trim', explode(",", $evento['estilos_musicais'])) ?>
+        <div class="carousel-item <?= $contador == 0 ? "active" : "" ?>">
+            <a href="evento.php?evento=<?= $evento['id'] ?>" class="container_carrossel">
+              <img src="img/eventos/<?= $evento['id'] ?>/fotos_eventos/<?= $evento['url_imagem'] ?>" alt="Festival do Sol" />
               <div class="textos_carrossel">
                 <div class="texto_superior">
-                  <h3>Festival do Sol</h3>
-                  <h4>São Paulo - SP</h4>
+                  <h3><?= $evento['nome'] ?></h3>
+                  <h4><?= $evento['cidade'] ?> - <?= $evento['estado'] ?></h4>
                 </div>
                 <div class="texto_inferior">
-                  <h4>Sertanejo</h4>
-                  <h4>09/11/25</h4>
+                  <h4><?= implode(", ", $evento['estilos_musicais']) ?></h4>
+                  <h4><?= Utils::formatarData($evento['dia'], true)?></h4>
                 </div>
               </div>
             </a>
           </div>
 
-          <div class="carousel-item">
-            <a href="#" class="container_carrossel">
-              <img src="img/um festival sertanej.png" alt="Festival do Sol" />
-              <div class="textos_carrossel">
-                <div class="texto_superior">
-                  <h3>Festival do Sol</h3>
-                  <h4>São Paulo - SP</h4>
-                </div>
-                <div class="texto_inferior">
-                  <h4>Sertanejo</h4>
-                  <h4>09/11/25</h4>
-                </div>
-              </div>
-            </a>
-          </div>
+        <?php 
+      $contador++;}?>
 
-          <div class="carousel-item">
-            <a href="#" class="container_carrossel">
-              <img src="img/um festival sertanej.png" alt="Festival do Sol" />
-              <div class="textos_carrossel">
-                <div class="texto_superior">
-                  <h3>Festival do Sol</h3>
-                  <h4>São Paulo - SP</h4>
-                </div>
-                <div class="texto_inferior">
-                  <h4>Sertanejo</h4>
-                  <h4>09/11/25</h4>
-                </div>
-              </div>
-            </a>
-          </div>
+          
         </div>
 
         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">

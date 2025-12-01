@@ -8,7 +8,15 @@ class EstilosMusicaisServicos
         $this->conexao = Conecta::getConexao();
     }
 
-    public function buscarArtistas(): ?array
+    public function buscarEstilos(): ?array
+    {
+        $sql = "SELECT id, nome, imagem FROM estilo_musical;";
+
+        $consulta = $this->conexao->query($sql);
+
+        return $consulta->fetchAll() ?: null;
+    }
+    public function buscarEstilosComLimite(): ?array
     {
         $sql = "SELECT id, nome, imagem FROM estilo_musical LIMIT 3;";
 

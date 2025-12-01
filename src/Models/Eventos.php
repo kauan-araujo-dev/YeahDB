@@ -11,6 +11,7 @@ class Eventos
     public string $horario;   // TIME -> string
     public string $instagram;
     public string $contato;
+    public string $link_compra;
     public int $id_usuario;
 
     public function __construct(
@@ -24,8 +25,8 @@ class Eventos
         string $horario,
         string $instagram,
         string $contato,
+        string $link_compra,
         int $id_usuario,
-        array $urlFotos = []
     ) {
         $this->setId($id);
         $this->setNome($nome);
@@ -37,7 +38,9 @@ class Eventos
         $this->setHorario($horario);
         $this->setInstagram($instagram);
         $this->setContato($contato);
+        $this->setLinkCompra($link_compra);
         $this->setIdUsuario($id_usuario);
+
     }
 
     // ID
@@ -138,6 +141,16 @@ class Eventos
     public function setContato(string $contato): void
     {
         $this->contato = $contato;
+    }
+
+    //Link compra
+    public function getLinkCompra(): string
+    {
+        return $this->link_compra;
+    }
+    public function setLinkCompra(string $link_compra): void
+    {
+        $this->link_compra = $link_compra;
     }
 
     // ID Usuário

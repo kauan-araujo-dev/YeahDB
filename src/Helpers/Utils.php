@@ -101,4 +101,22 @@ class Utils
 
         return $destinoFinal; // retorna caminho salvo
     }
+
+    public static function formatarData($data, $semAno = false) {
+    // Tenta criar o objeto DateTime a partir do formato d/m/Y
+    $dt = DateTime::createFromFormat('Y-m-d', $data);
+
+    // Verifica se a data é válida
+    if (!$dt) {
+        return false; // ou lançar exceção, se preferir
+    }
+
+    // Se quiser retornar sem o ano
+    if ($semAno) {
+        return $dt->format('d/m'); // dia/mês
+    }
+
+    // Retorna com o ano normalizado
+    return $dt->format('d/m/Y');
+}
 }

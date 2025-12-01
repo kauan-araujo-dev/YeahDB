@@ -1,23 +1,46 @@
+<?php
+require_once "src/Database/Conecta.php";
+require_once "src/Helpers/Utils.php";
+require_once "src/Services/ArtistaServicos.php";
+require_once "src/Services/AutenticarServico.php";
+
+$id = $_GET['artista'] ?? null;
+
+
+if (!$id) Utils::redirecionarPara("index.php");
+
+$artistaServico = new ArtistaServicos();
+$id = intval($id);
+$dadosArtista = $artistaServico->buscarArtistaId($id);
+if (empty($dadosArtista)) Utils::redirecionarPara("index.php");
+if (!is_int($id)) Utils::redirecionarPara("index.php");
+
+$integrantes = $artistaServico->buscarIntegrantes($id);
+
+
+
+$contador = 0;
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YeahDB</title>
+    <title><?= $dadosArtista['nome'] ?></title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <link rel="stylesheet" href="css/artista.css">
-<?php require_once "includes/cabecalho.php" ?>
-    
-    <h1>TOGURO E MACAXEIRA</h1>
+    <?php require_once "includes/cabecalho.php" ?>
+
+    <h2 id="titulo_artista"><?= $dadosArtista['nome'] ?></h2>
     <section class="banda">
 
         <div class="imagem_banda">
-            
-            <img src="img/dupla_sertaneja.jpg" alt="imagem de TOGURO E MACAXEIRA">
+
+            <img src="img/artistas/<?= $dadosArtista['id'] ?>/fotos_artistas/<?= explode(",", $dadosArtista['url_imagem'])[0] ?>" alt="<?= $dadosArtista['nome'] ?>">
 
         </div>
 
@@ -25,26 +48,25 @@
         <div class="estilo_da_banda">
 
             <div>
-                <p><b>REGIÃO: </b>São Paulo-SP</p>
-            
-            <p><b>ESTILOS MUSICAIS: </b>SERTANEJO-MPB</p>
-            
-            <p>-BLUES</p>
-            
-            <p><b>CONTATO: </b>@email.com</p>
+                <p><b>REGIÃO: </b><?= $dadosArtista['cidade'] ?> - <?= $dadosArtista['estado'] ?></p>
 
-            <div class="redes_sociais">
-                <a href="" target="_blank" class="rede"><i class="fab fa-instagram"></i></a>
-                <a href="" target="_blank" class="rede"><i class="fab fa-facebook-f"></i></a>
-            </div>
+                <p><b>ESTILOS MUSICAIS: </b><?= implode(", ", explode(",", $dadosArtista['estilos_musicais'])) ?></p>
+
+
+                <p><b>CONTATO: </b><?= $dadosArtista['contato'] ?></p>
+
+                <div class="redes_sociais">
+                    <a href="" target="_blank" class="rede"><i class="fab fa-instagram"></i></a>
+                    <a href="" target="_blank" class="rede"><i class="fab fa-facebook-f"></i></a>
+                </div>
             </div>
             <div class="botao_whatsapp">
-                <a href="" target="_blank">
+                <a href="<?= $dadosArtista['cidade'] ?>" target="_blank">
                     FALE COM O ARTISTA <i class="fab fa-whatsapp"></i>
                 </a>
 
             </div>
-            <p class="cache">CACHÊ: <span class="valor">$1000,00</span></p>
+            <p class="cache">CACHÊ: <span class="valor">R$<?= number_format($dadosArtista['cache_artista'], 2, ",", ".") ?> </span></p>
 
 
 
@@ -55,16 +77,11 @@
 
     <section id="sobre_a_banda">
         <p class="sobre">
-                <b>SOBRE A BANDA</b>
-            </p>
-            <p class="texto_banda">
-                Um encontro único que celebra música, arte e boas energias em um cenário inesquecível.
-                Ao som de grandes artistas e com uma atmosfera vibrante, o festival oferece experiências que vão além do
-                palco:
-                momentos de conexão, cultura e diversão para todas as idades.Prepare-se para curtir o pôr do sol mais
-                incrível da sua vida
-                ,acompanhado de muita música, gastronomia e atividades especiais que tornam esse evento inesquecível.
-            </p>
+            <b>SOBRE A BANDA</b>
+        </p>
+        <p class="texto_banda">
+            <?= $dadosArtista['descricao'] ?>
+        </p>
     </section>
 
     <div id="conteudo-principal">
@@ -76,28 +93,54 @@
                     <span id="destaque-titulo">ARTISTA</span>
                 </h2>
             </div>
-            <div id="cartao-imagem-principal">
-                <img src="img/um festival sertanej.png" alt="Artista tocando em um show com grande público ao pôr do sol." id="imagem-principal">
+
+
+
+            <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+
+                    <?php foreach (explode(",", $dadosArtista['url_imagem']) as $imagem) {
+                    ?>
+                        <div class="carousel-item <?= $contador == 0 ? "active" : "" ?>">
+                            <div class="container_carrossel">
+                                <img src="img/artistas/<?= $dadosArtista['id'] ?>/fotos_artistas/<?= $imagem ?>" alt="Festival do Sol" id="imagem-principal" />
+
+                            </div>
+                        </div>
+
+                    <?php
+                        $contador++;
+                    } ?>
+
+
+                </div>
+
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
             </div>
+
         </section>
 
         <section id="secao-integrantes">
             <h3 id="subtitulo-integrantes">INTEGRANTES</h3>
             <div id="container-cartoes-integrantes">
-                <div id="integrante-cartao-1" class="cartao-integrante">
-                    <img src="img/banda_rock.jpg" alt="Toguro cantando no palco." class="imagem-integrante">
-                    <div class="informacao-integrante">
-                        <p class="nome-integrante">TOGURO</p>
-                        <p class="papel-integrante">VOCAL</p>
+                <?php foreach ($integrantes as $integrante) {
+                ?>
+                    <div class="caixa_integrante">
+                        <img src="img/artistas/<?= $dadosArtista['id'] ?>/fotos_integrantes/<?= $integrante['url_imagem'] ?>" alt="<?= $integrante['nome'] ?>" />
+                        <div class="texto_integrante_overlay">
+                            <h3 class="titulo_integrante"><?= $integrante['nome'] ?></h3>
+                            <h4 class="instrumento_integrante"><?= $integrante['instrumento'] ?></h4>
+                        </div>
                     </div>
-                </div>
-                <div id="integrante-cartao-2" class="cartao-integrante">
-                    <img src="img/hiphop.jpg" alt="Macaxeira tocando violão no palco." class="imagem-integrante">
-                    <div class="informacao-integrante">
-                        <p class="nome-integrante">MACAXEIRA</p>
-                        <p class="papel-integrante">VIOLÃO</p>
-                    </div>
-                </div>
+
+                <?php } ?>
             </div>
         </section>
 
@@ -111,10 +154,12 @@
                         <p class="detalhes-evento">SERGIPE | 02/11</p>
                     </div>
                 </div>
-                </div>
+            </div>
         </section>
     </div>
+
     <?php require_once "includes/rodape.php" ?>
-</body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    </body>
 
 </html>
