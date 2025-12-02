@@ -16,13 +16,13 @@ $artistas = $artistaServico->buscarArtistasUsuario($_SESSION['id']);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MINHA CONTA</title>
-    <link rel="stylesheet" href="css/meus_perfils.css">
+    <link rel="stylesheet" href="css/meus_perfis.css">
     <?php require_once "includes/cabecalho.php"; ?>
     <main class="conteudo-principal">
         <section id="secao_bandas">
              <?php
             if (!empty($artistas)) { ?>
-            <h2 class="titulo_secao" id="titulo_artistas">MEUS <span>PERFILS</span></h2>
+            <h2 class="titulo_secao" id="titulo_artistas">MEUS <span>PERFIS</span></h2>
             <div class="linha_cards">
 
                 <?php foreach ($artistas as $artista) {

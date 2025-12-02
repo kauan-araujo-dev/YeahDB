@@ -32,7 +32,7 @@ class AutenticarServico
     public static function estaLogado():void{
         self::iniciarSecao();
         if(isset($_SESSION["id"])){
-            Utils::redirecionarPara("meu_perfil.php");
+            Utils::redirecionarPara("minha_conta.php");
         }
     }
 

@@ -14,6 +14,7 @@ section,
   max-width: 1200px;
   margin: 0 auto;
   margin-bottom: 90px;
+  padding: 20px;
 }
 .banda {
   display: flex;
@@ -21,6 +22,7 @@ section,
   padding: 50px 0;
   border-radius: 10px;
   margin-top: 0;
+  padding: 20px;
 }
 
 #titulo_artista {
@@ -90,7 +92,9 @@ section,
   font-size: 48px;
   color: #3a0ca3;
 }
-
+#sobre_a_banda{
+  padding: 0 20px;
+}
 .sobre {
   font-size: 30px;
   padding-bottom: 20px;
@@ -99,7 +103,8 @@ section,
 .texto_banda {
   font-size: 30px;
   margin-top: 30px;
-  padding: 20px 0;
+  word-break: break-word;
+
 }
 
 @media (max-width: 768px) {
@@ -107,7 +112,6 @@ section,
     flex-direction: column;
     gap: 30px;
     text-align: center;
-    padding: 20px;
   }
 
   .imagem_banda img {
@@ -191,11 +195,13 @@ section,
 
 /* 1. Galeria do Artista */
 #galeria-artista {
+  padding:40px;
   display: flex;
   margin-bottom: 40px;
   justify-content: space-between !important;
   align-items: center !important;
   width: 100%;
+  flex-wrap: wrap !important;
 }
 
 #carouselExampleAutoplaying {
@@ -443,4 +449,45 @@ section,
   .cartao-evento {
     flex: 1 1 100%;
   }
+}
+@media (max-width: 1200px) {
+  #carouselExampleAutoplaying {
+    width: 1040px;
+    height: 434px;
+  }
+  #galeria-artista{
+    justify-content: center !important;
+    align-items: center;
+    gap: 20px;
+  }
+  #galeria-artista #titulo-secao{
+    display: flex !important;
+    flex-direction: row !important;
+  }
+}
+
+@media (max-width: 1080px) {
+  #carouselExampleAutoplaying {
+    width: 936px;
+    height: 391px;
+  }
+}
+
+@media (max-width: 960px) {
+  #carouselExampleAutoplaying {
+    width: 740px;
+    height: 308px;
+  }
+
+  .texto_superior h3 {
+    font-size: 38px;
+  }
+
+  .textos_carrossel h4 {
+    font-size: 28px;
+  }
+  #carouselExampleAutoplaying span {
+  width: 45px;
+  height: 67px;
+}
 }

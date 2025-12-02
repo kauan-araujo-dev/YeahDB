@@ -11,11 +11,9 @@ AutenticarServico::estaLogado();
 $condMsg;
 $msg = null;
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-  session_start();
   session_destroy();
   $condMsg = false;
 }
-session_start();
 $usuarioServicos = new UsuarioServicos();
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['voltar'])) {
   $_SESSION['pt2'] = null;

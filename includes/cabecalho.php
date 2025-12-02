@@ -24,7 +24,7 @@
                 if (!isset($_SESSION['id'])) {
                 ?>
                     <div>
-                        <a href="login.php" class="botao_acesso">CADASTRAR</a>
+                        <a href="cadastrar.php" class="botao_acesso">CADASTRAR</a>
                         <a href="login.php" class="botao_acesso">ACESSAR</a>
                     </div>
                 <?php } else { ?>
