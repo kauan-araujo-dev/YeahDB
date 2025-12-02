@@ -26,7 +26,7 @@ class AutenticarServico
         $_SESSION['id'] = $id;
         $_SESSION['nome'] = $nome;
         $_SESSION['email'] = $email;
-        Utils::redirecionarPara("index.php");
+        Utils::redirecionarPara("minha_conta.php");
     }
 
     public static function estaLogado():void{

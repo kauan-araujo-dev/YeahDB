@@ -23,7 +23,7 @@ AutenticarServico::exigirLogin();
             <div class="container-acoes">
                 <article class="cartao-acao">
                     <a href="meus_perfis.php" class="cabecalho-cartao cabecalho-perfil">
-                        <h3>MEUS PERFILS</h3>
+                        <h3>MEUS PERFIS</h3>
                     </a>
                     <a href="criar_perfil.php" class="conteudo-cartao">
                         <p class="texto-criar">CRIAR</p>
