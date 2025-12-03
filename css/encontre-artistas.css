@@ -1,0 +1,86 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.nav-selects {
+    display: flex;
+    justify-content: center;
+    gap: 80px;
+    margin: 40px 0;
+    font-family: "Poppins", sans-serif;
+}
+
+.custom-select {
+    position: relative;
+    width: 220px;
+}
+
+.select-header {
+    padding-bottom: 10px;
+    cursor: pointer;
+    position: relative;
+}
+
+.select-header span {
+    color: #5c21d3;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.select-header::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #5c21d3;
+}
+
+.arrow {
+    position: absolute;
+    top: 0;
+    right: 0;
+    border: solid #5c21d3;
+    border-width: 0 2px 2px 0;
+    padding: 5px;
+    transform: rotate(45deg);
+    transition: 0.2s;
+}
+
+/* Lista oculta */
+.select-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 8px;
+    border: 1px solid #ccc;
+    background: #fff;
+    display: none;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.select-list li {
+    padding: 10px;
+    cursor: pointer;
+    color: #4b4b4b;
+}
+
+.select-list li:hover {
+    background: #f3e8ff;
+    color: #5c21d3;
+}
+
+/* Classe para quando abrir */
+.show {
+    display: block;
+}
+
+.rotate {
+    transform: rotate(-135deg);
+}
+
+
+
