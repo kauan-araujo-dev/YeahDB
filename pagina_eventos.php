@@ -29,16 +29,18 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YeahDB</title>
-    <link rel="stylesheet" href="css/style.css">    
+    <!--  <link rel="stylesheet" href="css/style.css">  -->
     <link rel="stylesheet" href="css/pagina_eventos.css">
+
     <?php
     require_once "includes/cabecalho.php";
     ?>
 </head>
 
-<section id="secao_bandas">
 
-    <h2 class="titulo_secao" id="titulo_artistas">
+<section id="secao_bandas">
+    
+    <h2 id="titulo_evento">
         ENCONTRE UM <span style="color: #04A777;">EVENTO!</span>
     </h2>
 
@@ -46,7 +48,7 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
 
         <div class="custom-select">
             <div class="select-header">
-                <span class="selected-option">Selecionar opção</span>
+                <span class="selected-option">estado</span>
                 <i class="arrow"></i>
             </div>
 
@@ -59,7 +61,7 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
 
         <div class="custom-select">
             <div class="select-header">
-                <span class="selected-option">Selecionar opção</span>
+                <span class="selected-option">cidade</span>
                 <i class="arrow"></i>
             </div>
 
@@ -72,7 +74,7 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
 
         <div class="custom-select">
             <div class="select-header">
-                <span class="selected-option">Selecionar opção</span>
+                <span class="selected-option">estilo musical</span>
                 <i class="arrow"></i>
             </div>
 
@@ -86,29 +88,31 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
     </nav>
 
 
+    <div class="linha_cards">
 
-    <section id="secao_bandas">
-        <div class="linha_cards">
+        <?php foreach ($eventos as $evento) {
+            $evento['estilos_musicais'] = explode(",", $evento['estilos_musicais']); ?>
 
-            <?php foreach ($artistas as $artista) {
-                $artista['estilos_musicais'] = explode(",", $artista['estilos_musicais']); ?>
-                <a href="artista.php?artista=<?= $artista['id'] ?>" class="caixa_banda">
-                    <img src="img/artistas/<?= $artista['id'] ?>/fotos_artistas/<?= $artista['url_imagem'] ?>" alt="<?= $artista['nome'] ?>" />
-                    <div class="texto_banda_overlay">
-                        <h3 class="titulo_banda"><?= $artista['nome'] ?></h3>
-                        <h4 class="estilo_musical_banda"><?= implode(", ", $artista['estilos_musicais']) ?></h4>
-                    </div>
-                </a>
+            <a href="artista.php?artista=<?= $evento['id'] ?>" class="caixa_banda">
 
-            <?php } ?>
+                <img src="img/eventos/<?= $evento['id'] ?>/fotos_eventos/<?= $evento['url_imagem'] ?>" alt="<?= $evento['nome'] ?>" />
 
-        </div>
+                <div class="texto_banda_overlay">
+                    <h3 class="titulo_banda"><?= $evento['nome'] ?></h3>
+                    <h4 class="estilo_musical_banda"><?= implode(", ", $evento['estilos_musicais']) ?></h4>
+                    <h4 class="data_evento"><?= Utils::formatarData($evento['dia'], true) ?></h4>
 
-    </section>
+                </div>
+            </a>
+
+        <?php } ?>
+
+    </div>
 
 </section>
 
 <script src="js/encontre-artistas-menu.js"></script>
+
 <body>
     <?php require_once "includes/rodape.php" ?>
 </body>
