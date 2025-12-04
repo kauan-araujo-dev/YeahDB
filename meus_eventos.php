@@ -7,6 +7,8 @@ require_once "src/Services/AutenticarServico.php";
 AutenticarServico::exigirLogin();
 
 $eventoServico = new EventoServicos();
+$id = Utils::sanitizar($_SESSION['id'], 'inteiro');
+if (!$id) Utils::redirecionarPara('login.php');
 $eventos = $eventoServico->buscarEventosUsuario($_SESSION['id']);
 ?>
 <!DOCTYPE html>
