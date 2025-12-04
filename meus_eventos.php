@@ -43,7 +43,7 @@ $eventos = $eventoServico->buscarEventosUsuario($_SESSION['id']);
                             <div class="texto_evento_overlay">
                                 <h3 class="titulo_evento"><?= $evento['nome'] ?></h3>
                                 <div class="botoes_evento">
-                                    <a href="" class="evento_editar">EDITAR</a>
+                                    <a href="editar_eventos.php?id=<?= $evento['id'] ?>" class="evento_editar">EDITAR</a>
                                     <a href="" class="evento_excluir">EXCLUIR</a>
                                 </div>
                             </div>
