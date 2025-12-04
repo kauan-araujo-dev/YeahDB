@@ -179,7 +179,11 @@ class EventoServicos
         return true;
     }
 
-    public static function excluirEvento(){
-        
+    public function excluirEvento($id, $idUsuario):void {
+        $sql = "DELETE FROM eventos WHERE id = :id AND idUsuario = :idUsuario";
+        $consulta = $this->conexao->prepare($sql);
+        $consulta->bindValue(":id", $id);
+        $consulta->bindValue(":idUsuario", $idUsuario);
+        $consulta->execute();
     }
 }

@@ -44,7 +44,7 @@ $eventos = $eventoServico->buscarEventosUsuario($_SESSION['id']);
                                 <h3 class="titulo_evento"><?= $evento['nome'] ?></h3>
                                 <div class="botoes_evento">
                                     <a href="editar_eventos.php?id=<?= $evento['id'] ?>" class="evento_editar">EDITAR</a>
-                                    <a href="" class="evento_excluir">EXCLUIR</a>
+                                    <a href="excluir_evento.php?id=<?= $evento['id'] ?>" class="evento_excluir">EXCLUIR</a>
                                 </div>
                             </div>
                         </div>
