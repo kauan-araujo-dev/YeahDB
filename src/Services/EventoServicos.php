@@ -178,4 +178,8 @@ class EventoServicos
 
         return true;
     }
+
+    public static function excluirEvento(){
+        
+    }
 }
