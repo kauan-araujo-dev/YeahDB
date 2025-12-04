@@ -15,9 +15,9 @@
                     <img src="img/logo_YeahDB.png" alt="Logo YeahDB" />
                 </a>
                 <ul class="lista_menu">
-                    <li><a href="#">EVENTOS</a></li>
+                    <li><a href="pagina_eventos.php">EVENTOS</a></li>
                     <li><a href="#">CATEGORIAS</a></li>
-                    <li><a href="#">ARTISTAS</a></li>
+                    <li><a href="encontre_artistas.php">ARTISTAS</a></li>
                 </ul>
                 <?php
                 AutenticarServico::iniciarSecao();
