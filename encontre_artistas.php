@@ -34,10 +34,10 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
     require_once "includes/cabecalho.php";
     ?>
 </head>
-
+ 
 <section id="secao_bandas">
 
-    <h2 class="titulo_secao" id="titulo_artistas">
+   <h2 class="titulo_secao">
         ENCONTRE UM <span style="color: #FB8B24;">ARTISTA!</span>
     </h2>
 
@@ -45,7 +45,7 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
 
         <div class="custom-select">
             <div class="select-header">
-                <span class="selected-option">Selecionar opção</span>
+                <span class="selected-option">estado</span>
                 <i class="arrow"></i>
             </div>
 
@@ -58,7 +58,7 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
 
         <div class="custom-select">
             <div class="select-header">
-                <span class="selected-option">Selecionar opção</span>
+                <span class="selected-option">cidade</span>
                 <i class="arrow"></i>
             </div>
 
@@ -71,7 +71,7 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
 
         <div class="custom-select">
             <div class="select-header">
-                <span class="selected-option">Selecionar opção</span>
+                <span class="selected-option">estilo musical</span>
                 <i class="arrow"></i>
             </div>
 
@@ -86,7 +86,7 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
 
 
 
-    <section id="secao_bandas">
+    
         <div class="linha_cards">
 
             <?php foreach ($artistas as $artista) {
@@ -103,9 +103,6 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
 
         </div>
 
-    </section>
-
-    <section id="secao_bandas">
         <div class="linha_cards">
 
             <?php foreach ($artistas as $artista) {
@@ -121,7 +118,6 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
             <?php } ?>
 
         </div>
-    </section>
 
 </section>
 

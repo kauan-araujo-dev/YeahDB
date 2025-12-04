@@ -11,9 +11,18 @@
   padding: 20px;
   height: auto;
 }
-#titulo_artistas span{
+
+#titulo_evento span{
   color: #04a777;
 }
+
+#titulo_evento {
+  font-weight: bold;
+  font-size: 64px;
+
+}
+
+
 .linha_cards {
   display: flex;
   flex-wrap: wrap;
@@ -35,7 +44,7 @@
 }
 
 .caixa_banda img {
-  width: 100%;
+  width: 300px;
   height: 100%;
   object-fit: cover;
   display: block;
@@ -58,7 +67,7 @@
 .texto_banda_overlay {
   text-transform: uppercase;
   position: absolute;
-  bottom: 0px;
+  bottom: 0;
   left: 0px;
   width: 100%;
   display: flex;
@@ -76,12 +85,20 @@
   font-weight: bold;
 }
 
+.data_evento {
+  color: #04a777;
+  align-self: end;
+  bottom: 20px;
+}
+
 .estilo_musical_banda {
   font-size: 1.2rem;
   color: #FB8B24;
   text-align: center;
   font-weight: bold;
 }
+
+
 
 .caixa_banda:hover {
   transform: scale(1.05);
