@@ -12,7 +12,7 @@
         <header id="cabecalho">
             <nav id="menu_principal">
                 <a href="index.php" class="logo_site">
-                    <img src="img/logo_YeahBD.png" alt="Logo YeahBD" />
+                    <img src="img/logo_YeahDB.png" alt="Logo YeahDB" />
                 </a>
                 <ul class="lista_menu">
                     <li><a href="#">EVENTOS</a></li>
