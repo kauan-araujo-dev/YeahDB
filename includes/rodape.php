@@ -1,6 +1,6 @@
 <footer id="rodape">
     <div id="logo_rodape">
-        <img src="img/logo_YeahBD.png" alt="Logo YeahDB" />
+        <img src="img/logo_YeahDB.png" alt="Logo YeahDB" />
     </div>
 
     <nav id="menu_institucional" aria-labelledby="titulo_institucional">
