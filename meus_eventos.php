@@ -9,6 +9,14 @@ AutenticarServico::exigirLogin();
 $eventoServico = new EventoServicos();
 $id = Utils::sanitizar($_SESSION['id'], 'inteiro');
 if (!$id) Utils::redirecionarPara('login.php');
+
+try {
+    $dados = $eventoServico->buscarEventosUsuario($id);
+} catch (\Throwable $e) {
+    $erro = "Erro ao exibir o evento. <br>".$e->getMessage();
+}
+
+
 $eventos = $eventoServico->buscarEventosUsuario($_SESSION['id']);
 ?>
 <!DOCTYPE html>
