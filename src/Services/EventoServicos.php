@@ -180,10 +180,10 @@ class EventoServicos
     }
 
     public function excluirEvento($id, $idUsuario):void {
-        $sql = "DELETE FROM eventos WHERE id = :id AND idUsuario = :idUsuario";
+        $sql = "DELETE FROM eventos WHERE id = :id AND idUsuario = :id_Usuario";
         $consulta = $this->conexao->prepare($sql);
         $consulta->bindValue(":id", $id);
-        $consulta->bindValue(":idUsuario", $idUsuario);
+        $consulta->bindValue(":id_Usuario", $idUsuario);
         $consulta->execute();
     }
 }

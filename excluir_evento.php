@@ -39,48 +39,6 @@
         ENCONTRE UM <span style="color: #04A777;">EVENTO!</span>
     </h2>
 
-    <nav class="nav-selects">
-
-        <div class="custom-select">
-            <div class="select-header">
-                <span class="selected-option">estado</span>
-                <i class="arrow"></i>
-            </div>
-
-            <ul class="select-list">
-                <li>Opção 1</li>
-                <li>Opção 2</li>
-                <li>Opção 3</li>
-            </ul>
-        </div>
-
-        <div class="custom-select">
-            <div class="select-header">
-                <span class="selected-option">cidade</span>
-                <i class="arrow"></i>
-            </div>
-
-            <ul class="select-list">
-                <li>Opção A</li>
-                <li>Opção B</li>
-                <li>Opção C</li>
-            </ul>
-        </div>
-
-        <div class="custom-select">
-            <div class="select-header">
-                <span class="selected-option">estilo musical</span>
-                <i class="arrow"></i>
-            </div>
-
-            <ul class="select-list">
-                <li>Item 01</li>
-                <li>Item 02</li>
-                <li>Item 03</li>
-            </ul>
-        </div>
-
-    </nav>
 
 
     <!-- <div class="linha_cards">
