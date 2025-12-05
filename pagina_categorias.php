@@ -29,7 +29,18 @@ $contador = 0;
 
 $estilosMusicaisServicos = new EstilosMusicaisServicos();
 
-$estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
+// Ler filtros da query string (se houver) - reusar as mesmas chaves
+$estadoFiltro = isset($_GET['estado']) && $_GET['estado'] !== '' ? trim($_GET['estado']) : null;
+$cidadeFiltro = isset($_GET['cidade']) && $_GET['cidade'] !== '' ? trim($_GET['cidade']) : null;
+$estiloFiltro = isset($_GET['estilo']) && $_GET['estilo'] !== '' ? trim($_GET['estilo']) : null;
+
+// Se não houver filtro, buscar 6 estilos aleatórios (3x3). Caso contrário, buscar por filtros.
+if (!$estadoFiltro && !$cidadeFiltro && !$estiloFiltro) {
+    $estilos = $estilosMusicaisServicos->buscarEstilosAleatorios(6) ?: [];
+} else {
+    $estilos = $estilosMusicaisServicos->buscarEstilosPorFiltros($estadoFiltro, $cidadeFiltro, $estiloFiltro) ?: [];
+    if (count($estilos) > 6) $estilos = array_slice($estilos, 0, 6);
+}
 
 
 
@@ -57,7 +68,7 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
         ESCOLHA UMA <span style="color: #04A777;">CATEGORIA MUSICAL!</span>
     </h2>
 
-    <nav class="nav-selects" data-source="eventos">
+    <nav class="nav-selects" data-source="artistas">
 
         <div class="custom-select" data-field="estado">
             <div class="select-header">
@@ -68,8 +79,8 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
 
             <ul class="select-list">
                 <?php
-                // Buscar estados distintos na tabela eventos
-                $stmt = $eventoServicos->conexao->prepare("SELECT DISTINCT estado FROM eventos WHERE estado IS NOT NULL AND estado != '' ORDER BY estado ASC");
+                // Buscar estados distintos na tabela artistas
+                $stmt = $artistaServico->conexao->prepare("SELECT DISTINCT estado FROM artistas WHERE estado IS NOT NULL AND estado != '' ORDER BY estado ASC");
                 $stmt->execute();
                 $estados = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
@@ -93,8 +104,8 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
 
             <ul class="select-list">
                 <?php
-                // Buscar cidades distintas na tabela eventos
-                $stmt = $eventoServicos->conexao->prepare("SELECT DISTINCT cidade FROM eventos WHERE cidade IS NOT NULL AND cidade != '' ORDER BY cidade ASC");
+                // Buscar cidades distintas na tabela artistas
+                $stmt = $artistaServico->conexao->prepare("SELECT DISTINCT cidade FROM artistas WHERE cidade IS NOT NULL AND cidade != '' ORDER BY cidade ASC");
                 $stmt->execute();
                 $cidades = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
@@ -118,12 +129,8 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
 
             <ul class="select-list">
                 <?php
-                // Buscar estilos musicais associados a eventos
-                $sql = "SELECT DISTINCT em.nome
-                        FROM evento_estilo ee
-                        JOIN estilo_musical em ON em.id = ee.id_estilo
-                        ORDER BY em.nome ASC";
-                $stmt = $eventoServicos->conexao->prepare($sql);
+                // Buscar todos os estilos musicais (nome)
+                $stmt = $estilosMusicaisServicos->conexao->prepare("SELECT DISTINCT nome FROM estilo_musical ORDER BY nome ASC");
                 $stmt->execute();
                 $estilos_evento = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
@@ -142,22 +149,20 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
 
 
     <?php
-    if (empty($eventos)) {
-        echo '<div class="linha_cards"><p>Nenhum evento encontrado para os filtros selecionados.</p></div>';
+    if (empty($estilos)) {
+        echo '<div class="linha_cards"><p>Nenhum estilo encontrado para os filtros selecionados.</p></div>';
     } else {
-        $rows = array_chunk($eventos, 2);
+        $rows = array_chunk($estilos, 3);
         foreach ($rows as $row) {
-            echo '<div class="linha_cards">';
-            foreach ($row as $evento) {
-                $evento['estilos_musicais'] = explode(",", $evento['estilos_musicais']);
-                echo '<a href="artista.php?artista=' . intval($evento['id']) . '" class="caixa_banda">';
-                $img = htmlspecialchars($evento['url_imagem'] ?? '');
-                $nome = htmlspecialchars($evento['nome']);
-                echo '<img src="img/eventos/' . intval($evento['id']) . '/fotos_eventos/' . $img . '" alt="' . $nome . '" />';
+            echo '<div class="linha_cards estilos">';
+            foreach ($row as $estilo) {
+                $id = intval($estilo['id']);
+                $img = htmlspecialchars($estilo['imagem'] ?? '');
+                $nome = htmlspecialchars($estilo['nome']);
+                echo '<a href="encontre_artistas.php?estilo=' . urlencode($estilo['nome']) . '" class="caixa_banda">';
+                echo '<img src="img/estilos_musicais/' . $img . '" alt="' . $nome . '" />';
                 echo '<div class="texto_banda_overlay">';
                 echo '<h3 class="titulo_banda">' . $nome . '</h3>';
-                echo '<h4 class="estilo_musical_banda">' . htmlspecialchars(implode(', ', $evento['estilos_musicais'])) . '</h4>';
-                echo '<h4 class="data_evento">' . Utils::formatarData($evento['dia'], true) . '</h4>';
                 echo '</div></a>';
             }
             echo '</div>';

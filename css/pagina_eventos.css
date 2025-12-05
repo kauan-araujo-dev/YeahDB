@@ -43,6 +43,27 @@
   
 }
 
+/* Styles specific to categoria cards: 3 columns on desktop, responsive */
+.linha_cards.estilos .caixa_banda {
+  flex: 1 1 calc(33.333% - 40px);
+  max-width: none;
+  height: 240px;
+}
+
+@media (max-width: 992px) {
+  .linha_cards.estilos .caixa_banda {
+    flex: 1 1 calc(50% - 24px);
+    height: 260px;
+  }
+}
+
+@media (max-width: 480px) {
+  .linha_cards.estilos .caixa_banda {
+    flex: 1 1 100%;
+    height: 220px;
+  }
+}
+
 .caixa_banda img {
   width: 300px;
   height: 100%;
