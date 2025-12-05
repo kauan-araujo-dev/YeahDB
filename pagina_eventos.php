@@ -44,44 +44,81 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
         ENCONTRE UM <span style="color: #04A777;">EVENTO!</span>
     </h2>
 
-    <nav class="nav-selects">
+    <nav class="nav-selects" data-source="eventos">
 
-        <div class="custom-select">
+        <div class="custom-select" data-field="estado">
             <div class="select-header">
                 <span class="selected-option">estado</span>
                 <i class="arrow"></i>
             </div>
 
             <ul class="select-list">
-                <li>Opção 1</li>
-                <li>Opção 2</li>
-                <li>Opção 3</li>
+                <?php
+                // Buscar estados distintos na tabela eventos
+                $stmt = $eventoServicos->conexao->prepare("SELECT DISTINCT estado FROM eventos WHERE estado IS NOT NULL AND estado != '' ORDER BY estado ASC");
+                $stmt->execute();
+                $estados = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+                if (!empty($estados)) {
+                    foreach ($estados as $est) {
+                        echo '<li>' . htmlspecialchars($est) . '</li>';
+                    }
+                } else {
+                    echo '<li>Nenhuma informação localizada</li>';
+                }
+                ?>
             </ul>
         </div>
 
-        <div class="custom-select">
+        <div class="custom-select" data-field="cidade">
             <div class="select-header">
                 <span class="selected-option">cidade</span>
                 <i class="arrow"></i>
             </div>
 
             <ul class="select-list">
-                <li>Opção A</li>
-                <li>Opção B</li>
-                <li>Opção C</li>
+                <?php
+                // Buscar cidades distintas na tabela eventos
+                $stmt = $eventoServicos->conexao->prepare("SELECT DISTINCT cidade FROM eventos WHERE cidade IS NOT NULL AND cidade != '' ORDER BY cidade ASC");
+                $stmt->execute();
+                $cidades = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+                if (!empty($cidades)) {
+                    foreach ($cidades as $cid) {
+                        echo '<li>' . htmlspecialchars($cid) . '</li>';
+                    }
+                } else {
+                    echo '<li>Nenhuma informação localizada</li>';
+                }
+                ?>
             </ul>
         </div>
 
-        <div class="custom-select">
+        <div class="custom-select" data-field="estilo">
             <div class="select-header">
                 <span class="selected-option">estilo musical</span>
                 <i class="arrow"></i>
             </div>
 
             <ul class="select-list">
-                <li>Item 01</li>
-                <li>Item 02</li>
-                <li>Item 03</li>
+                <?php
+                // Buscar estilos musicais associados a eventos
+                $sql = "SELECT DISTINCT em.nome
+                        FROM evento_estilo ee
+                        JOIN estilo_musical em ON em.id = ee.id_estilo
+                        ORDER BY em.nome ASC";
+                $stmt = $eventoServicos->conexao->prepare($sql);
+                $stmt->execute();
+                $estilos_evento = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+                if (!empty($estilos_evento)) {
+                    foreach ($estilos_evento as $estNome) {
+                        echo '<li>' . htmlspecialchars($estNome) . '</li>';
+                    }
+                } else {
+                    echo '<li>Nenhuma informação localizada</li>';
+                }
+                ?>
             </ul>
         </div>
 
@@ -112,6 +149,7 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
 </section>
 
 <script src="js/encontre-artistas-menu.js"></script>
+<script src="js/select-dependent.js"></script>
 
 <body>
     <?php require_once "includes/rodape.php" ?>
