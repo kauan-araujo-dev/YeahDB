@@ -42,7 +42,7 @@ $artistas = $artistaServico->buscarArtistasUsuario($_SESSION['id']);
 
             </div>
             <?php } else { ?>
-                    <h2 class="titulo_secao" id="titulo_artistas">Não encontramos nenhum evento</h2>
+                    <h2 class="titulo_secao" id="titulo_artistas">Nenhum Perfil Encontrado.</h2>
                 <?php } ?>
         </section>
     </main>
