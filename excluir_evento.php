@@ -10,7 +10,7 @@
     session_start();
     $eventoServico = new EventoServicos();
 
-    $id = Utils::sanitzar($_GET['id'], 'inteiro');
+    $id = Utils::sanitizar($_GET['id'], 'inteiro');
 
-    if(!id) Utils::redirecionarPara('meus_eventos.php');
+    if(!$id) Utils::redirecionarPara('meus_eventos.php');
 ?>
