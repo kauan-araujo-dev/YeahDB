@@ -50,6 +50,20 @@
     transition: 0.2s;
 }
 
+.reset-select {
+    position: absolute;
+    top: 0;
+    right: 22px;
+    background: transparent;
+    border: none;
+    color: #888;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 0 6px;
+    font-size: 14px;
+}
+.reset-select:hover { color: #5c21d3; }
+
 /* Lista oculta */
 .select-list {
     list-style: none;

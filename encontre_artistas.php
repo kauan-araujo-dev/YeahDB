@@ -7,12 +7,19 @@ require_once "src/Services/ArtistaServicos.php";
 require_once "src/Services/AutenticarServico.php";
 
 $artistaServico = new ArtistaServicos();
-$artistas = $artistaServico->buscarArtistasComLimite(3);
 
-$eventoServicos = new EventoServicos();
-$contador = 0;
+// Ler filtros da query string (sequencial: estado -> cidade -> estilo)
+$estadoFiltro = isset($_GET['estado']) && $_GET['estado'] !== '' ? trim($_GET['estado']) : null;
+$cidadeFiltro = isset($_GET['cidade']) && $_GET['cidade'] !== '' ? trim($_GET['cidade']) : null;
+$estiloFiltro = isset($_GET['estilo']) && $_GET['estilo'] !== '' ? trim($_GET['estilo']) : null;
 
-$eventos = $eventoServicos->buscarEventosComLimite(4);
+if (!$estadoFiltro && !$cidadeFiltro && !$estiloFiltro) {
+    // sem filtros: 6 aleatórios (3 em cima, 3 embaixo)
+    $artistas = $artistaServico->buscarArtistasAleatorios(6) ?: [];
+} else {
+    $artistas = $artistaServico->buscarArtistasPorFiltros($estadoFiltro, $cidadeFiltro, $estiloFiltro) ?: [];
+    if (count($artistas) > 6) $artistas = array_slice($artistas, 0, 6);
+}
 
 $estilosMusicaisServicos = new EstilosMusicaisServicos();
 
@@ -46,6 +53,7 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
         <div class="custom-select" data-field="estado">
             <div class="select-header">
                 <span class="selected-option">estado</span>
+                <button type="button" class="reset-select" title="Limpar">✕</button>
                 <i class="arrow"></i>
             </div>
 
@@ -70,6 +78,7 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
         <div class="custom-select" data-field="cidade">
             <div class="select-header">
                 <span class="selected-option">cidade</span>
+                <button type="button" class="reset-select" title="Limpar">✕</button>
                 <i class="arrow"></i>
             </div>
 
@@ -94,6 +103,7 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
         <div class="custom-select" data-field="estilo">
             <div class="select-header">
                 <span class="selected-option">estilo musical</span>
+                <button type="button" class="reset-select" title="Limpar">✕</button>
                 <i class="arrow"></i>
             </div>
 
@@ -124,37 +134,29 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
 
 
     
-        <div class="linha_cards">
-
-            <?php foreach ($artistas as $artista) {
-                $artista['estilos_musicais'] = explode(",", $artista['estilos_musicais']); ?>
-                <a href="artista.php?artista=<?= $artista['id'] ?>" class="caixa_banda">
-                    <img src="img/artistas/<?= $artista['id'] ?>/fotos_artistas/<?= $artista['url_imagem'] ?>" alt="<?= $artista['nome'] ?>" />
-                    <div class="texto_banda_overlay">
-                        <h3 class="titulo_banda"><?= $artista['nome'] ?></h3>
-                        <h4 class="estilo_musical_banda"><?= implode(", ", $artista['estilos_musicais']) ?></h4>
-                    </div>
-                </a>
-
-            <?php } ?>
-
-        </div>
-
-        <div class="linha_cards">
-
-            <?php foreach ($artistas as $artista) {
-                $artista['estilos_musicais'] = explode(",", $artista['estilos_musicais']); ?>
-                <a href="artista.php?artista=<?= $artista['id'] ?>" class="caixa_banda">
-                    <img src="img/artistas/<?= $artista['id'] ?>/fotos_artistas/<?= $artista['url_imagem'] ?>" alt="<?= $artista['nome'] ?>" />
-                    <div class="texto_banda_overlay">
-                        <h3 class="titulo_banda"><?= $artista['nome'] ?></h3>
-                        <h4 class="estilo_musical_banda"><?= implode(", ", $artista['estilos_musicais']) ?></h4>
-                    </div>
-                </a>
-
-            <?php } ?>
-
-        </div>
+    <?php
+    if (empty($artistas)) {
+        echo '<div class="linha_cards"><p>Nenhum artista encontrado para os filtros selecionados.</p></div>';
+    } else {
+        $rows = array_chunk($artistas, 3);
+        foreach ($rows as $row) {
+            echo '<div class="linha_cards">';
+            foreach ($row as $artista) {
+                $artista['estilos_musicais'] = explode(",", $artista['estilos_musicais']);
+                $id = intval($artista['id']);
+                $img = htmlspecialchars($artista['url_imagem'] ?? '');
+                $nome = htmlspecialchars($artista['nome']);
+                echo '<a href="artista.php?artista=' . $id . '" class="caixa_banda">';
+                echo '<img src="img/artistas/' . $id . '/fotos_artistas/' . $img . '" alt="' . $nome . '" />';
+                echo '<div class="texto_banda_overlay">';
+                echo '<h3 class="titulo_banda">' . $nome . '</h3>';
+                echo '<h4 class="estilo_musical_banda">' . htmlspecialchars(implode(', ', $artista['estilos_musicais'])) . '</h4>';
+                echo '</div></a>';
+            }
+            echo '</div>';
+        }
+    }
+    ?>
 
 </section>
 

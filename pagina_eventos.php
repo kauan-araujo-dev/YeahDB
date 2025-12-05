@@ -10,9 +10,22 @@ $artistaServico = new ArtistaServicos();
 $artistas = $artistaServico->buscarArtistasComLimite(4);
 
 $eventoServicos = new EventoServicos();
-$contador = 0;
 
-$eventos = $eventoServicos->buscarEventosComLimite(4);
+// Ler filtros da query string (se houver)
+$estadoFiltro = isset($_GET['estado']) && $_GET['estado'] !== '' ? trim($_GET['estado']) : null;
+$cidadeFiltro = isset($_GET['cidade']) && $_GET['cidade'] !== '' ? trim($_GET['cidade']) : null;
+$estiloFiltro = isset($_GET['estilo']) && $_GET['estilo'] !== '' ? trim($_GET['estilo']) : null;
+
+// Se não houver filtros, buscar 4 aleatórios. Caso contrário, buscar por filtros.
+if (!$estadoFiltro && !$cidadeFiltro && !$estiloFiltro) {
+    $eventos = $eventoServicos->buscarEventosAleatorios(4);
+} else {
+    $eventos = $eventoServicos->buscarEventosPorFiltros($estadoFiltro, $cidadeFiltro, $estiloFiltro) ?: [];
+    // limitar a 4 resultados para preservar o layout 2x2
+    if (count($eventos) > 4) $eventos = array_slice($eventos, 0, 4);
+}
+
+$contador = 0;
 
 $estilosMusicaisServicos = new EstilosMusicaisServicos();
 
@@ -49,6 +62,7 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
         <div class="custom-select" data-field="estado">
             <div class="select-header">
                 <span class="selected-option">estado</span>
+                <button type="button" class="reset-select" title="Limpar">✕</button>
                 <i class="arrow"></i>
             </div>
 
@@ -73,6 +87,7 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
         <div class="custom-select" data-field="cidade">
             <div class="select-header">
                 <span class="selected-option">cidade</span>
+                <button type="button" class="reset-select" title="Limpar">✕</button>
                 <i class="arrow"></i>
             </div>
 
@@ -97,6 +112,7 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
         <div class="custom-select" data-field="estilo">
             <div class="select-header">
                 <span class="selected-option">estilo musical</span>
+                <button type="button" class="reset-select" title="Limpar">✕</button>
                 <i class="arrow"></i>
             </div>
 
@@ -125,26 +141,29 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
     </nav>
 
 
-    <div class="linha_cards">
-
-        <?php foreach ($eventos as $evento) {
-            $evento['estilos_musicais'] = explode(",", $evento['estilos_musicais']); ?>
-
-            <a href="artista.php?artista=<?= $evento['id'] ?>" class="caixa_banda">
-
-                <img src="img/eventos/<?= $evento['id'] ?>/fotos_eventos/<?= $evento['url_imagem'] ?>" alt="<?= $evento['nome'] ?>" />
-
-                <div class="texto_banda_overlay">
-                    <h3 class="titulo_banda"><?= $evento['nome'] ?></h3>
-                    <h4 class="estilo_musical_banda"><?= implode(", ", $evento['estilos_musicais']) ?></h4>
-                    <h4 class="data_evento"><?= Utils::formatarData($evento['dia'], true) ?></h4>
-
-                </div>
-            </a>
-
-        <?php } ?>
-
-    </div>
+    <?php
+    if (empty($eventos)) {
+        echo '<div class="linha_cards"><p>Nenhum evento encontrado para os filtros selecionados.</p></div>';
+    } else {
+        $rows = array_chunk($eventos, 2);
+        foreach ($rows as $row) {
+            echo '<div class="linha_cards">';
+            foreach ($row as $evento) {
+                $evento['estilos_musicais'] = explode(",", $evento['estilos_musicais']);
+                echo '<a href="artista.php?artista=' . intval($evento['id']) . '" class="caixa_banda">';
+                $img = htmlspecialchars($evento['url_imagem'] ?? '');
+                $nome = htmlspecialchars($evento['nome']);
+                echo '<img src="img/eventos/' . intval($evento['id']) . '/fotos_eventos/' . $img . '" alt="' . $nome . '" />';
+                echo '<div class="texto_banda_overlay">';
+                echo '<h3 class="titulo_banda">' . $nome . '</h3>';
+                echo '<h4 class="estilo_musical_banda">' . htmlspecialchars(implode(', ', $evento['estilos_musicais'])) . '</h4>';
+                echo '<h4 class="data_evento">' . Utils::formatarData($evento['dia'], true) . '</h4>';
+                echo '</div></a>';
+            }
+            echo '</div>';
+        }
+    }
+    ?>
 
 </section>
 

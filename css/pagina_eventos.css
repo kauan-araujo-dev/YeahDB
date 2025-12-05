@@ -143,13 +143,27 @@
 .arrow {
     position: absolute;
     top: 0;
-    right: 0;
+  right: 0;
     border: solid #5c21d3;
     border-width: 0 2px 2px 0;
     padding: 5px;
     transform: rotate(45deg);
     transition: 0.2s;
 }
+
+.reset-select {
+  position: absolute;
+  top: 0;
+  right: 22px;
+  background: transparent;
+  border: none;
+  color: #888;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0 6px;
+  font-size: 14px;
+}
+.reset-select:hover { color: #5c21d3; }
 
 /* Lista oculta */
 .select-list {

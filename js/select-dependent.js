@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
       const params = new URLSearchParams({ source: source, field: field });
       if (state) params.set('state', state);
       if (city) params.set('city', city);
-      return fetch('/Yeahdb/ajax/filter_options.php?' + params.toString())
+      return fetch('ajax/filter_options.php?' + params.toString())
         .then(r => r.json())
         .catch(() => []);
     }
@@ -37,6 +37,19 @@ document.addEventListener('DOMContentLoaded', function () {
       return sel ? sel.textContent.trim() : '';
     }
 
+    function applyFiltersToUrl(){
+      const estado = getSelected('estado');
+      const cidade = getSelected('cidade');
+      const estilo = getSelected('estilo');
+      const params = new URLSearchParams();
+      if (estado && estado.toLowerCase() !== 'estado') params.set('estado', estado);
+      if (cidade && cidade.toLowerCase() !== 'cidade') params.set('cidade', cidade);
+      if (estilo && estilo.toLowerCase() !== 'estilo musical' && estilo.toLowerCase() !== 'estilo') params.set('estilo', estilo);
+      const base = window.location.pathname;
+      // reload page with new querystring
+      window.location.href = base + (params.toString() ? '?' + params.toString() : '');
+    }
+
     // initial: ensure lists have data-value attributes (if static)
     qsa('.custom-select', nav).forEach(function(cs){
       const ul = qs('.select-list', cs);
@@ -58,7 +71,46 @@ document.addEventListener('DOMContentLoaded', function () {
       if (ulEstilo) setList(ulEstilo, estilos);
     }
 
-    // attach click handlers via event delegation
+    // set initial selected values from querystring if present
+    (function populateFromQuery(){
+      const qp = new URLSearchParams(window.location.search);
+      const e = qp.get('estado');
+      const c = qp.get('cidade');
+      const s = qp.get('estilo');
+      if (e) {
+        const span = qs('.custom-select[data-field="estado"] .selected-option', nav);
+        if (span) span.textContent = e;
+      }
+      if (c) {
+        const span = qs('.custom-select[data-field="cidade"] .selected-option', nav);
+        if (span) span.textContent = c;
+      }
+      if (s) {
+        const span = qs('.custom-select[data-field="estilo"] .selected-option', nav);
+        if (span) span.textContent = s;
+      }
+    })();
+
+    // reset button handler (delegated)
+    nav.addEventListener('click', function(e){
+      const resetBtn = e.target.closest('.reset-select');
+      if (!resetBtn) return;
+      e.preventDefault();
+      e.stopPropagation();
+      // clear all selected-option spans within this nav
+      qsa('.custom-select', nav).forEach(function(cs){
+        const field = cs.dataset.field;
+        const span = qs('.selected-option', cs);
+        if (!span) return;
+        if (field === 'estado') span.textContent = 'estado';
+        else if (field === 'cidade') span.textContent = 'cidade';
+        else if (field === 'estilo') span.textContent = 'estilo musical';
+      });
+      // reload page without filters
+      applyFiltersToUrl();
+    });
+
+    // attach click handlers via event delegation for selecting options
     nav.addEventListener('click', async function(e){
       const li = e.target.closest('li');
       if (!li) return;
@@ -71,6 +123,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
       // after selection, refresh dependent lists
       await refreshAll();
+      // apply filters to page (reload with querystring)
+      applyFiltersToUrl();
     });
 
     // on load, refresh dependent lists once
