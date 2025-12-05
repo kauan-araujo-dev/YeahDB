@@ -54,7 +54,7 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
 <section id="secao_bandas">
     
     <h2 id="titulo_evento">
-        ENCONTRE UM <span style="color: #04A777;">EVENTO!</span>
+        ESCOLHA UMA <span style="color: #04A777;">CATEGORIA MUSICAL!</span>
     </h2>
 
     <nav class="nav-selects" data-source="eventos">
