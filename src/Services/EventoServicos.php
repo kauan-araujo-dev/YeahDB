@@ -187,3 +187,4 @@ class EventoServicos
         $consulta->execute();
     }
 }
+
