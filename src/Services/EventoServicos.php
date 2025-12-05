@@ -179,12 +179,95 @@ class EventoServicos
         return true;
     }
 
-    public function excluirEvento($id, $idUsuario):void {
-        $sql = "DELETE FROM eventos WHERE id = :id AND idUsuario = :id_Usuario";
+    public function excluirEvento($id, $idUsuario): int {
+        // Deletar registros filhos antes de excluir o evento para não violar FKs.
+        // Usa transação para garantir atomicidade.
+        try {
+            $this->conexao->beginTransaction();
+
+            // Tabelas que referenciam eventos.id: artista_evento, evento_estilo, foto_evento, integrante_evento
+            $sqls = [
+                "DELETE FROM artista_evento WHERE id_evento = :id",
+                "DELETE FROM evento_estilo WHERE id_evento = :id",
+                "DELETE FROM foto_evento WHERE id_evento = :id",
+                "DELETE FROM integrante_evento WHERE id_evento = :id",
+            ];
+
+            foreach ($sqls as $s) {
+                $stmt = $this->conexao->prepare($s);
+                $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+                $stmt->execute();
+            }
+
+            // Agora exclui o próprio evento (verificando propriedade)
+            $sql = "DELETE FROM eventos WHERE id = :id AND id_usuario = :id_usuario";
+            $consulta = $this->conexao->prepare($sql);
+            $consulta->bindValue(":id", $id, PDO::PARAM_INT);
+            $consulta->bindValue(":id_usuario", $idUsuario, PDO::PARAM_INT);
+            $consulta->execute();
+
+            $rows = $consulta->rowCount();
+
+            $this->conexao->commit();
+
+            if ($rows > 0) {
+                // Remover arquivos relacionados ao evento
+                $root = dirname(__DIR__, 2);
+                $dirEvento = $root . "/img/eventos/" . intval($id);
+
+                if (is_dir($dirEvento)) {
+                    $this->removerDiretorioRecursivo($dirEvento);
+                }
+            }
+
+            return $rows;
+        } catch (\Throwable $e) {
+            try {
+                $this->conexao->rollBack();
+            } catch (\Throwable $ignore) {}
+
+            // Re-throw para o controlador/log, ou retornar 0 caso prefira silenciar
+            throw $e;
+        }
+    }
+
+    private function removerDiretorioRecursivo(string $dir): void
+    {
+        // Segurança: garante que estamos apagando dentro da pasta img/eventos
+        $root = dirname(__DIR__, 2);
+        $expectedBase = realpath($root . "/img/eventos");
+        $target = realpath($dir);
+
+        if ($target === false || strpos($target, $expectedBase) !== 0) {
+            return; // proteção contra deletar caminhos fora do esperado
+        }
+
+        $it = new RecursiveDirectoryIterator($target, RecursiveDirectoryIterator::SKIP_DOTS);
+        $files = new RecursiveIteratorIterator($it, RecursiveIteratorIterator::CHILD_FIRST);
+        foreach ($files as $file) {
+            if ($file->isDir()) {
+                rmdir($file->getRealPath());
+            } else {
+                unlink($file->getRealPath());
+            }
+        }
+
+        // remove a pasta raiz do evento
+        if (is_dir($target)) {
+            rmdir($target);
+        }
+    }
+
+    public function obterEventoPorId(int $id): ?array
+    {
+        $sql = "SELECT * FROM eventos WHERE id = :id LIMIT 1";
         $consulta = $this->conexao->prepare($sql);
-        $consulta->bindValue(":id", $id);
-        $consulta->bindValue(":id_Usuario", $idUsuario);
+        $consulta->bindValue(':id', $id, PDO::PARAM_INT);
         $consulta->execute();
+
+        $resultado = $consulta->fetch(PDO::FETCH_ASSOC);
+
+        return $resultado ?: null;
     }
 }
 

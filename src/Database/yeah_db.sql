@@ -478,7 +478,7 @@ ALTER TABLE `artista_estilo`
 --
 ALTER TABLE `artista_evento`
   ADD CONSTRAINT `artista_evento_ibfk_1` FOREIGN KEY (`id_artista`) REFERENCES `artistas` (`id`),
-  ADD CONSTRAINT `artista_evento_ibfk_2` FOREIGN KEY (`id_evento`) REFERENCES `eventos` (`id`);
+  ADD CONSTRAINT `artista_evento_ibfk_2` FOREIGN KEY (`id_evento`) REFERENCES `eventos` (`id`) ON DELETE CASCADE;
 
 --
 -- Restrições para tabelas `eventos`
@@ -490,7 +490,7 @@ ALTER TABLE `eventos`
 -- Restrições para tabelas `evento_estilo`
 --
 ALTER TABLE `evento_estilo`
-  ADD CONSTRAINT `evento_estilo_ibfk_1` FOREIGN KEY (`id_evento`) REFERENCES `eventos` (`id`),
+  ADD CONSTRAINT `evento_estilo_ibfk_1` FOREIGN KEY (`id_evento`) REFERENCES `eventos` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `evento_estilo_ibfk_2` FOREIGN KEY (`id_estilo`) REFERENCES `estilo_musical` (`id`);
 
 --
@@ -503,7 +503,7 @@ ALTER TABLE `foto_artista`
 -- Restrições para tabelas `foto_evento`
 --
 ALTER TABLE `foto_evento`
-  ADD CONSTRAINT `foto_evento_ibfk_1` FOREIGN KEY (`id_evento`) REFERENCES `eventos` (`id`);
+  ADD CONSTRAINT `foto_evento_ibfk_1` FOREIGN KEY (`id_evento`) REFERENCES `eventos` (`id`) ON DELETE CASCADE;
 
 --
 -- Restrições para tabelas `integrante_artista`
@@ -515,7 +515,7 @@ ALTER TABLE `integrante_artista`
 -- Restrições para tabelas `integrante_evento`
 --
 ALTER TABLE `integrante_evento`
-  ADD CONSTRAINT `integrante_evento_ibfk_1` FOREIGN KEY (`id_evento`) REFERENCES `eventos` (`id`);
+  ADD CONSTRAINT `integrante_evento_ibfk_1` FOREIGN KEY (`id_evento`) REFERENCES `eventos` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

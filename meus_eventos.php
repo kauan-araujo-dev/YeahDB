@@ -29,6 +29,12 @@ $eventos = $eventoServico->buscarEventosUsuario($_SESSION['id']);
     <link rel="stylesheet" href="css/meus_eventos.css">
     <?php require_once "includes/cabecalho.php"; ?>
     <main class="conteudo-principal">
+        <?php if (isset($_SESSION['flash_message'])): ?>
+            <div class="flash_message <?= isset($_SESSION['flash_message_type']) ? $_SESSION['flash_message_type'] : '' ?>">
+                <?= $_SESSION['flash_message'] ?>
+            </div>
+            <?php unset($_SESSION['flash_message'], $_SESSION['flash_message_type']); ?>
+        <?php endif; ?>
         <section id="secao_eventos">
             <?php
             if (!empty($eventos)) { ?>
@@ -44,7 +50,10 @@ $eventos = $eventoServico->buscarEventosUsuario($_SESSION['id']);
                                 <h3 class="titulo_evento"><?= $evento['nome'] ?></h3>
                                 <div class="botoes_evento">
                                     <a href="editar_eventos.php?id=<?= $evento['id'] ?>" class="evento_editar">EDITAR</a>
-                                    <a href="excluir_evento.php?id=<?= $evento['id'] ?>" class="evento_excluir">EXCLUIR</a>
+                                    <form method="post" action="excluir_evento.php" style="display:inline">
+                                        <input type="hidden" name="id" value="<?= $evento['id'] ?>">
+                                        <button type="submit" class="evento_excluir" onclick="return confirm('Tem certeza que deseja excluir este evento?')">EXCLUIR</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>

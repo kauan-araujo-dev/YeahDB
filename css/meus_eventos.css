@@ -101,9 +101,22 @@ display: flex;
     color: #ef5844;
     text-decoration: none;
 }
-.botoes_evento a:hover {
+.botoes_evento a:hover, .botoes_evento button.evento_excluir:hover {
   transform: scale(1.05);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Garantir que botões com a classe evento_excluir tenham a mesma aparência
+   dos links (para manter o visual original ao usar form + button) */
+.botoes_evento button.evento_excluir {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    color: #ef5844;
+    text-decoration: none;
+    font: inherit;
+    cursor: pointer;
 }
 .caixa_evento:hover{
   transform: scale(1.01);
