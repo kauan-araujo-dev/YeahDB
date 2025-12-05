@@ -49,7 +49,7 @@ body {
 
 .botao_acesso {
   background-color: #00b894;
-  color: white;
+  color: #ffffff;
   padding: 10px 30px;
   border-radius: 6px;
   font-weight: 700;
@@ -60,6 +60,15 @@ body {
 
 .botao_acesso:hover {
   opacity: 0.9;
+  color: #ffffff;
+}
+
+/* Garantir que o texto do botão permaneça branco em todos os estados */
+#cabecalho .botao_acesso:link,
+#cabecalho .botao_acesso:visited,
+#cabecalho .botao_acesso:hover,
+#cabecalho .botao_acesso:active {
+    color: #ffffff;
 }
 #meu-perfil{
   display: flex;

@@ -1,33 +1,46 @@
 #rodape {
-  padding: 40px 80px;
+  padding: 30px 60px;
   background-color: #3a0ca3;
   color: white;
   font-family: Arial, Helvetica, sans-serif;
+  box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.rodape_inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 30px;
-  box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.2);
-  text-wrap: wrap;
+  flex-wrap: wrap;
 }
 
 #logo_rodape img {
   font-size: 1em;
   font-weight: bold;
   margin: 0;
-  width: 70px;
+  width: 100px;
+  height: auto;
 }
 
-#menu_institucional {
+#rodape_links {
+  flex: 1 1 500px;
   display: flex;
-  flex-direction: column;
   align-items: center;
+  justify-content: center;
 }
 
 #lista_institucional {
   padding: 0;
   margin: 0;
-  text-align: center;
+  list-style: none;
+  display: flex;
+  gap: 22px;
+  align-items: center;
+  justify-content: center;
+}
+
+#lista_institucional li {
+  margin: 0;
 }
 
 #lista_institucional li {
@@ -59,6 +72,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-width: 160px;
 }
 
 #icones_redes {
@@ -67,7 +81,7 @@
 }
 
 #icones_redes i {
-  font-size: 53px;
+  font-size: 28px;
 }
 
 #icones_redes a {
@@ -77,8 +91,23 @@
   color: white;
   background-color: transparent;
   font-size: 1.5em;
-  transition: color 0.3s ease;
+  transition: color 0.3s ease, transform 0.15s ease;
   text-decoration: none;
+}
+
+/* small hover pop */
+#icones_redes a:hover {
+  transform: translateY(-3px);
+  color: #ffd54d;
+}
+
+/* utility: visually hidden for headings */
+.visually-hidden {
+  position: absolute !important;
+  height: 1px; width: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  white-space: nowrap;
 }
 
 #icones_redes a:hover {
@@ -86,32 +115,28 @@
   color: #dedede;
 }
 
-@media (max-width: 768px) {
-  #rodape {
+@media (max-width: 992px) {
+  .rodape_inner {
     flex-direction: column;
     align-items: center;
-    padding: 40px 20px;
+    gap: 16px;
   }
 
   #logo_rodape {
-    margin-bottom: 25px;
+    margin-bottom: 6px;
   }
 
-  #menu_institucional,
-  #redes_sociais {
+  #rodape_links {
     width: 100%;
-    margin-bottom: 25px;
   }
 
-  #menu_institucional h2 {
-    margin-bottom: 10px;
-  }
-
-  #redes_sociais h2 {
-    margin-bottom: 15px;
+  #lista_institucional {
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
   }
 
   #icones_redes a {
-    font-size: 1.8em;
+    font-size: 1.6em;
   }
 }

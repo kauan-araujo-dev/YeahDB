@@ -29,8 +29,9 @@
                     </div>
                 <?php } else { ?>
                     <div id="meu-perfil">
-                        <p>Olá <?= $_SESSION['nome'] ?>, </p>
+                        <p>Olá <?= htmlspecialchars($_SESSION['nome']) ?>, </p>
                         <a href="minha_conta.php">MINHA CONTA</a>
+                        <a href="logout.php" class="botao_acesso">SAIR</a>
                     </div>
                     <?php } ?>
             </nav>
