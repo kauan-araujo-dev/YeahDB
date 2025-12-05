@@ -34,7 +34,8 @@ section,
 }
 
 .imagem_banda img {
-  width: 500px;
+  width: 100%;
+  max-width: 500px;
   height: auto;
   max-height: 715px;
   border-radius: 10px;
@@ -204,17 +205,24 @@ section,
   flex-wrap: wrap !important;
 }
 
+.carousel-container {
+  width: 100%;
+  max-width: 852px;
+  height: auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+/* If the markup uses #carouselExampleAutoplaying, keep compatibility */
 #carouselExampleAutoplaying {
-  width: 852px !important;
-  height: 528px !important;
-  
+  width: 100% !important;
+  max-width: 852px !important;
+  height: auto !important;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 .carousel-inner,
 .carousel-item,
 .container_carrossel {
   width: 100%;
-  height: 100%;
+  height: auto;
 }
 #bloco-texto h2 {
   display: flex;

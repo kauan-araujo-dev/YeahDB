@@ -7,3 +7,15 @@
 body {
   font-family: "Poppins", sans-serif;
 }
+
+/* Global responsive helpers */
+img, video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Make forms and buttons adapt in tight layouts */
+button, input[type="submit"], .botao_acesso {
+  max-width: 100%;
+}
