@@ -123,3 +123,70 @@ body {
         font-size: 13px;
     }
 } 
+
+/* Additional responsive adjustments for header (tablets and small desktops) */
+@media (max-width: 992px) {
+  #menu_principal {
+    flex-direction: column;
+    gap: 14px;
+    align-items: center;
+  }
+
+  .logo_site img {
+    height: 70px;
+    width: auto;
+  }
+
+  .lista_menu {
+    gap: 24px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .lista_menu a {
+    font-size: 20px;
+  }
+
+  #meu-perfil {
+    gap: 12px;
+    flex-direction: row;
+  }
+
+  .botao_acesso {
+    padding: 8px 20px;
+    font-size: 14px;
+  }
+}
+
+/* Small screens: stack cleanly and keep buttons usable */
+@media (max-width: 480px) {
+  #menu_principal {
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .logo_site img {
+    height: 50px;
+  }
+
+  .lista_menu {
+    gap: 12px;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .lista_menu a {
+    font-size: 16px;
+  }
+
+  #meu-perfil {
+    width: 100%;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .botao_acesso {
+    padding: 7px 14px;
+    font-size: 13px;
+  }
+}
