@@ -56,7 +56,9 @@ $contador = 0;
             <div>
                 <p><b>REGIÃO: </b><?= $dadosArtista['cidade'] ?> - <?= $dadosArtista['estado'] ?></p>
 
-                <p><b>ESTILOS MUSICAIS: </b><?= implode(", ", explode(",", $dadosArtista['estilos_musicais'])) ?></p>
+                <?php if (!empty($dadosArtista['estilos_musicais']) && trim($dadosArtista['estilos_musicais']) !== ''): ?>
+                    <p><b>ESTILOS MUSICAIS: </b><?= implode(", ", array_filter(array_map('trim', explode(",", $dadosArtista['estilos_musicais'])))) ?></p>
+                <?php endif; ?>
 
 
                 <p><b>CONTATO: </b><?= $dadosArtista['contato'] ?></p>

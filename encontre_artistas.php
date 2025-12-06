@@ -13,13 +13,28 @@ $estadoFiltro = isset($_GET['estado']) && $_GET['estado'] !== '' ? trim($_GET['e
 $cidadeFiltro = isset($_GET['cidade']) && $_GET['cidade'] !== '' ? trim($_GET['cidade']) : null;
 $estiloFiltro = isset($_GET['estilo']) && $_GET['estilo'] !== '' ? trim($_GET['estilo']) : null;
 
-if (!$estadoFiltro && !$cidadeFiltro && !$estiloFiltro) {
-    // sem filtros: 6 aleatórios (3 em cima, 3 embaixo)
-    $artistas = $artistaServico->buscarArtistasAleatorios(6) ?: [];
+// suporte a filtro por id de estilo (vindo de pagina_categorias)
+$estiloIdFiltro = isset($_GET['estilo_id']) && $_GET['estilo_id'] !== '' ? intval($_GET['estilo_id']) : null;
+
+// Paginação simples para artistas
+$page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
+$perPage = 6;
+
+// Se filtro por id de estilo foi fornecido, usar método direto por id (mais robusto)
+if ($estiloIdFiltro !== null) {
+    $allArtistas = $artistaServico->buscarArtistasPorEstiloId($estiloIdFiltro) ?: [];
 } else {
-    $artistas = $artistaServico->buscarArtistasPorFiltros($estadoFiltro, $cidadeFiltro, $estiloFiltro) ?: [];
-    if (count($artistas) > 6) $artistas = array_slice($artistas, 0, 6);
+    if (!$estadoFiltro && !$cidadeFiltro && !$estiloFiltro) {
+        // sem filtros: buscar um conjunto aleatório maior e paginar localmente
+        $allArtistas = $artistaServico->buscarArtistasAleatorios(30) ?: [];
+    } else {
+        $allArtistas = $artistaServico->buscarArtistasPorFiltros($estadoFiltro, $cidadeFiltro, $estiloFiltro) ?: [];
+    }
 }
+
+$totalArtistas = count($allArtistas);
+$offset = ($page - 1) * $perPage;
+$artistas = array_slice($allArtistas, $offset, $perPage);
 
 $estilosMusicaisServicos = new EstilosMusicaisServicos();
 
@@ -158,10 +173,22 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
     }
     ?>
 
+    <?php
+    // Link "Mostrar mais" se existirem mais artistas além dos exibidos
+    if ($offset + count($artistas) < $totalArtistas) {
+        $nextPage = $page + 1;
+        $qs = $_GET;
+        $qs['page'] = $nextPage;
+        $href = 'encontre_artistas.php?' . htmlspecialchars(http_build_query($qs));
+        echo '<div class="linha_cards"><a class="mostrar-mais" href="' . $href . '" data-source="artistas" data-page="' . $nextPage . '">Mostrar mais</a></div>';
+    }
+    ?>
+
 </section>
 
 <script src="js/encontre-artistas-menu.js"></script>
 <script src="js/select-dependent.js"></script>
+<script src="js/load-more.js"></script>
 <body>
     <?php require_once "includes/rodape.php" ?>
 </body>

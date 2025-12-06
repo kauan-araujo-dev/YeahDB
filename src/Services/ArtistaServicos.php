@@ -155,6 +155,34 @@ class ArtistaServicos
         return $consulta->fetchAll() ?: null;
     }
 
+    public function buscarArtistasPorEstiloId(int $idEstilo): ?array
+    {
+        $sql = "SELECT artistas.id, artistas.nome, artistas.cidade, artistas.estado, (
+            SELECT foto_artista.url_imagem
+            FROM foto_artista
+            WHERE foto_artista.id_artista = artistas.id
+            ORDER BY foto_artista.id ASC
+            LIMIT 1
+        ) AS url_imagem, (
+            SELECT GROUP_CONCAT(estilo_musical.nome SEPARATOR ',')
+            FROM artista_estilo
+            JOIN estilo_musical ON estilo_musical.id = artista_estilo.id_estilo
+            WHERE artista_estilo.id_artista = artistas.id
+            ORDER BY estilo_musical.id ASC
+            LIMIT 1
+        ) AS estilos_musicais
+        FROM artistas
+        JOIN artista_estilo ae ON ae.id_artista = artistas.id
+        WHERE ae.id_estilo = :id_estilo
+        ORDER BY artistas.id DESC";
+
+        $consulta = $this->conexao->prepare($sql);
+        $consulta->bindValue(':id_estilo', $idEstilo, PDO::PARAM_INT);
+        $consulta->execute();
+
+        return $consulta->fetchAll() ?: null;
+    }
+
     public function buscarArtistasAleatorios(int $limite = 6): ?array
     {
         $sql = "SELECT artistas.id, artistas.nome, artistas.cidade, artistas.estado, (\n            SELECT foto_artista.url_imagem\n            FROM foto_artista\n            WHERE foto_artista.id_artista = artistas.id\n            ORDER BY foto_artista.id ASC\n            LIMIT 1\n        ) AS url_imagem, (\n            SELECT GROUP_CONCAT(estilo_musical.nome SEPARATOR ',')\n            FROM artista_estilo\n            JOIN estilo_musical ON estilo_musical.id = artista_estilo.id_estilo\n            WHERE artista_estilo.id_artista = artistas.id\n            ORDER BY estilo_musical.id ASC\n            LIMIT 1\n        ) AS estilos_musicais\n        FROM artistas\n        ORDER BY RAND() LIMIT :limite";

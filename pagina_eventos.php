@@ -16,14 +16,20 @@ $estadoFiltro = isset($_GET['estado']) && $_GET['estado'] !== '' ? trim($_GET['e
 $cidadeFiltro = isset($_GET['cidade']) && $_GET['cidade'] !== '' ? trim($_GET['cidade']) : null;
 $estiloFiltro = isset($_GET['estilo']) && $_GET['estilo'] !== '' ? trim($_GET['estilo']) : null;
 
-// Se não houver filtros, buscar 4 aleatórios. Caso contrário, buscar por filtros.
+// Paginação simples: ler página atual
+$page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
+$perPage = 4;
+
+// Se não houver filtros, buscar um conjunto aleatório maior para permitir paginação local. Caso contrário, buscar por filtros (conjunto completo) e paginar.
 if (!$estadoFiltro && !$cidadeFiltro && !$estiloFiltro) {
-    $eventos = $eventoServicos->buscarEventosAleatorios(4);
+    $allEventos = $eventoServicos->buscarEventosAleatorios(20) ?: [];
 } else {
-    $eventos = $eventoServicos->buscarEventosPorFiltros($estadoFiltro, $cidadeFiltro, $estiloFiltro) ?: [];
-    // limitar a 4 resultados para preservar o layout 2x2
-    if (count($eventos) > 4) $eventos = array_slice($eventos, 0, 4);
+    $allEventos = $eventoServicos->buscarEventosPorFiltros($estadoFiltro, $cidadeFiltro, $estiloFiltro) ?: [];
 }
+
+$totalEventos = count($allEventos);
+$offset = ($page - 1) * $perPage;
+$eventos = array_slice($allEventos, $offset, $perPage);
 
 $contador = 0;
 
@@ -163,12 +169,23 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
             echo '</div>';
         }
     }
+
+    // Link "Mostrar mais" se existirem mais eventos além dos exibidos
+    if ($offset + count($eventos) < $totalEventos) {
+        $nextPage = $page + 1;
+        // preserva filtros na querystring
+        $qs = $_GET;
+        $qs['page'] = $nextPage;
+        $href = 'pagina_eventos.php?' . htmlspecialchars(http_build_query($qs));
+        echo '<div class="linha_cards"><a class="mostrar-mais" href="' . $href . '" data-source="eventos" data-page="' . $nextPage . '">Mostrar mais</a></div>';
+    }
     ?>
 
 </section>
 
 <script src="js/encontre-artistas-menu.js"></script>
 <script src="js/select-dependent.js"></script>
+<script src="js/load-more.js"></script>
 
 <body>
     <?php require_once "includes/rodape.php" ?>
