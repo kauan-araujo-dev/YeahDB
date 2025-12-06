@@ -21,7 +21,7 @@ $integrantes = $artistaServico->buscarIntegrantes($id);
 
 // Buscar eventos em que o artista participa
 $eventoServicos = new EventoServicos();
-$eventosArtista = $eventoServicos->buscarEventosPorArtista($id) ?: [];
+$eventosArtista = $eventoServicos->buscarEventosUsuario($id) ?: [];
 
 
 
