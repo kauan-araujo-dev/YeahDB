@@ -35,11 +35,30 @@ $cidadeFiltro = isset($_GET['cidade']) && $_GET['cidade'] !== '' ? trim($_GET['c
 $estiloFiltro = isset($_GET['estilo']) && $_GET['estilo'] !== '' ? trim($_GET['estilo']) : null;
 
 // Se não houver filtro, buscar 6 estilos aleatórios (3x3). Caso contrário, buscar por filtros.
+// Paginação simples para estilos
+$page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
+$perPage = 6;
+
 if (!$estadoFiltro && !$cidadeFiltro && !$estiloFiltro) {
-    $estilos = $estilosMusicaisServicos->buscarEstilosAleatorios(6) ?: [];
+    $seed = isset($_GET['seed']) && $_GET['seed'] !== '' ? intval($_GET['seed']) : mt_rand();
+    $offset = ($page - 1) * $perPage;
+    $pdo = $estilosMusicaisServicos->conexao;
+    $sql = "SELECT id, nome, imagem FROM estilo_musical ORDER BY RAND(:seed) LIMIT :limit OFFSET :offset";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(':seed', $seed, PDO::PARAM_INT);
+    $stmt->bindValue(':limit', $perPage, PDO::PARAM_INT);
+    $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+    $stmt->execute();
+    $estilos = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+
+    $countStmt = $pdo->prepare('SELECT COUNT(*) FROM estilo_musical');
+    $countStmt->execute();
+    $totalEstilos = intval($countStmt->fetchColumn() ?: 0);
 } else {
-    $estilos = $estilosMusicaisServicos->buscarEstilosPorFiltros($estadoFiltro, $cidadeFiltro, $estiloFiltro) ?: [];
-    if (count($estilos) > 6) $estilos = array_slice($estilos, 0, 6);
+    $allEstilos = $estilosMusicaisServicos->buscarEstilosPorFiltros($estadoFiltro, $cidadeFiltro, $estiloFiltro) ?: [];
+    $totalEstilos = count($allEstilos);
+    $offset = ($page - 1) * $perPage;
+    $estilos = array_slice($allEstilos, $offset, $perPage);
 }
 
 
@@ -149,17 +168,36 @@ if (!$estadoFiltro && !$cidadeFiltro && !$estiloFiltro) {
 
 
     <?php
+    // garantir que cada estilo apareça apenas uma vez (por id)
+    if (!empty($estilos)) {
+        $seen = [];
+        $unique = [];
+        foreach ($estilos as $e) {
+            $idE = intval($e['id']);
+            if (!isset($seen[$idE])) {
+                $seen[$idE] = true;
+                $unique[] = $e;
+            }
+        }
+        $estilos = $unique;
+        // Não sobrescrever $totalEstilos aqui — ele representa o total de estilos
+        // disponíveis globalmente (ou do conjunto filtrado) e deve ser usado
+        // para controlar a paginação / botão "Mostrar mais".
+    }
+
     if (empty($estilos)) {
-        echo '<div class="linha_cards"><p>Nenhum estilo encontrado para os filtros selecionados.</p></div>';
+        // Quando não houver estilos, ocultamos a visualização (nenhuma saída)
     } else {
         $rows = array_chunk($estilos, 3);
-        foreach ($rows as $row) {
+                foreach ($rows as $row) {
             echo '<div class="linha_cards estilos">';
             foreach ($row as $estilo) {
                 $id = intval($estilo['id']);
                 $img = htmlspecialchars($estilo['imagem'] ?? '');
                 $nome = htmlspecialchars($estilo['nome']);
-                echo '<a href="encontre_artistas.php?estilo=' . urlencode($estilo['nome']) . '" class="caixa_banda">';
+                // Compatibilidade: passar tanto o id quanto o nome do estilo
+                $qsName = urlencode($estilo['nome']);
+                echo '<a href="encontre_artistas.php?estilo_id=' . $id . '&estilo=' . $qsName . '" class="caixa_banda" data-id="' . $id . '">';
                 echo '<img src="img/estilos_musicais/' . $img . '" alt="' . $nome . '" />';
                 echo '<div class="texto_banda_overlay">';
                 echo '<h3 class="titulo_banda">' . $nome . '</h3>';
@@ -168,12 +206,23 @@ if (!$estadoFiltro && !$cidadeFiltro && !$estiloFiltro) {
             echo '</div>';
         }
     }
+
+    // Link "Mostrar mais" se existirem mais estilos além dos exibidos
+    if ($offset + count($estilos) < $totalEstilos) {
+        $nextPage = $page + 1;
+        $qs = $_GET;
+        $qs['page'] = $nextPage;
+        $href = 'pagina_categorias.php?' . htmlspecialchars(http_build_query($qs));
+        echo '<div class="linha_cards"><a class="mostrar-mais" href="' . $href . '" data-source="estilos" data-page="' . $nextPage . '" data-seed="' . ($seed ?? '') . '">Mostrar mais</a></div>';
+    }
     ?>
 
 </section>
 
 <script src="js/encontre-artistas-menu.js"></script>
 <script src="js/select-dependent.js"></script>
+<script src="js/gallery.js"></script>
+<script src="js/load-more.js"></script>
 
 <body>
     <?php require_once "includes/rodape.php" ?>

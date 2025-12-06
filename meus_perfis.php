@@ -8,6 +8,7 @@ AutenticarServico::exigirLogin();
 
 $artistaServico = new ArtistaServicos();
 $artistas = $artistaServico->buscarArtistasUsuario($_SESSION['id']);
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -16,38 +17,80 @@ $artistas = $artistaServico->buscarArtistasUsuario($_SESSION['id']);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MINHA CONTA</title>
+
     <link rel="stylesheet" href="css/meus_perfis.css">
     <?php require_once "includes/cabecalho.php"; ?>
-    <main class="conteudo-principal">
-        <section id="secao_bandas">
-             <?php
-            if (!empty($artistas)) { ?>
+</head>
+
+<body>
+
+<main class="conteudo-principal">
+
+    <section id="secao_bandas">
+
+        <?php if (!empty($artistas)) { ?>
+
             <h2 class="titulo_secao" id="titulo_artistas">MEUS <span>PERFIS</span></h2>
+
             <div class="linha_cards">
 
-                <?php foreach ($artistas as $artista) {
-                    $artista['estilos_musicais'] = explode(",", $artista['estilos_musicais']); ?>
-                    <div class="caixa_banda">
-                        <img src="img/artistas/<?= $artista['id'] ?>/fotos_artistas/<?= $artista['url_imagem'] ?>" alt="<?= $artista['nome'] ?>" />
-                        <div class="texto_banda_overlay">
-                            <h3 class="titulo_banda"><?= $artista['nome'] ?></h3>
-                            <div class="botoes_banda">
-                                <a href="" class="banda_editar">EDITAR</a>
-                                <a href="" class="banda_excluir">EXCLUIR</a>
-                            </div>
+                <?php
+                foreach ($artistas as $artista):
+
+                    // BUSCAR PRIMEIRA IMAGEM REAL DO ARTISTA
+                    $pdo = Conecta::getConexao();
+                    $stmt = $pdo->prepare("
+                        SELECT url_imagem 
+                        FROM foto_artista 
+                        WHERE id_artista = :id
+                        ORDER BY id ASC 
+                        LIMIT 1
+                    ");
+                    $stmt->execute([":id" => $artista['id']]);
+                    $img = $stmt->fetchColumn();
+
+                    // Monta caminho final
+                    $caminhoImagem = $img 
+                        ? "img/artistas/{$artista['id']}/fotos_artistas/{$img}" 
+                        : "img/sem-imagem.png";
+                ?>
+
+                <div class="caixa_banda">
+
+                    <img src="<?= $caminhoImagem ?>" 
+                         alt="<?= htmlspecialchars($artista['nome']) ?>" />
+
+                    <div class="texto_banda_overlay">
+
+                        <h3 class="titulo_banda"><?= htmlspecialchars($artista['nome']) ?></h3>
+
+                        <div class="botoes_banda">
+                            <a href="editar_artista.php?id=<?= intval($artista['id']) ?>" class="banda_editar">EDITAR</a>
+                            <a href="excluir_artista.php?id=<?= intval($artista['id']) ?>" 
+                               class="banda_excluir"
+                               onclick="return confirm('Tem certeza que deseja excluir este perfil?')">
+                                EXCLUIR
+                            </a>
                         </div>
+                    </div>
+
                 </div>
 
-                <?php } ?>
+                <?php endforeach; ?>
 
             </div>
-            <?php } else { ?>
-                    <h2 class="titulo_secao" id="titulo_artistas">Nenhum Perfil Encontrado.</h2>
-                <?php } ?>
-        </section>
-    </main>
 
-    <?php require_once("includes/rodape.php"); ?>
-    </body>
+        <?php } else { ?>
 
+            <h2 class="titulo_secao" id="titulo_artistas">Nenhum Perfil Encontrado.</h2>
+
+        <?php } ?>
+
+    </section>
+
+</main>
+
+<?php require_once("includes/rodape.php"); ?>
+
+</body>
 </html>

@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1:3306
--- Tempo de geração: 01/12/2025 às 15:52
+-- Host: 127.0.0.1
+-- Tempo de geração: 06/12/2025 às 05:26
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -45,13 +45,11 @@ CREATE TABLE `artistas` (
 --
 
 INSERT INTO `artistas` (`id`, `nome`, `descricao`, `estado`, `cidade`, `cache_artista`, `whatsapp`, `instagram`, `contato`, `id_usuario`) VALUES
-(1, 'Banda Solaris', 'Banda de pop rock com 5 integrantes', 'SP', 'São Paulo', 5000, '11999990000', '@bandasolaris', 'contato@solaris.com', 1),
-(2, 'DJ Luna', 'DJ especializada em música eletrônica', 'RJ', 'Rio de Janeiro', 3000, '21988887777', '@djluna', 'contato@luna.com', 2),
-(3, 'Trio Sertanejo', 'Grupo de sertanejo universitário', 'MG', 'Belo Horizonte', 4000, '31977776666', '@triosertanejo', 'contato@sertanejo.com', 3),
-(4, 'Coral Harmonia', 'Grupo vocal especializado em casamentos', 'BA', 'Salvador', 2500, '71966665555', '@coralharmonia', 'contato@harmonia.com', 4),
-(5, 'MC Ray', 'Cantor de funk carioca', 'RJ', 'Rio de Janeiro', 3500, '21955554444', '@mcrayoficial', 'contato@mcray.com', 5),
-(11, 'Lana Souza', '32434243324423', 'SP', 'São Paulo', 3244340, '34243342423', '342432324', '324324324', 12),
-(12, 'Jabure', 'ehwefyhigbaw3eduwedbyuwhjdlvedwjtguvTGUvsadfgtsgdehwefyhigbaw3eduwedbyuwhjdlvedwjtguvTGUvsadfgtsgdehwefyhigbaw3eduwedbyuwhjdlvedwjtguvTGUvsadfgtsgdehwefyhigbaw3eduwedbyuwhjdlvedwjtguvTGUvsadfgtsgd', 'SP', 'SDDDDD', 23324200, '32443324', 'tyrgh456grfgd', '34234232432', 12);
+(1, 'Iron Howl', 'Iron Howl é uma banda de Heavy Metal formada em Belo Horizonte, unindo riffs agressivos, vocais potentes e uma presença de palco intensa. O grupo se inspira na velha guarda do metal, mas incorpora elementos modernos de produção, entregando shows explosivos e cheios de energia. Suas letras abordam temas épicos, fantasia sombria e lutas internas, criando um estilo marcante e identitário.', 'RJ', 'Volta Redonda', 12000, '31 99244-8866', '@ironhowl.official', 'contato@ironhowl.com', 2),
+(2, 'Golden Groove Experience', 'Golden Groove Experience é uma banda vibrante inspirada na era clássica da disco music dos anos 70. Com figurinos brilhosos, luzes coloridas, arranjos cheios de groove e vocais poderosos, o grupo recria fielmente a atmosfera das grandes pistas de dança da época. Inspirada em nomes como Earth, Wind &#38; Fire, Bee Gees e Chic, a banda entrega shows alegres, dançantes e cheios de energia — transformando qualquer evento em uma festa retrô inesquecível.', 'SP', 'São Paulo', 8500, '11 98855-2297', '@goldengroovexp', 'contato@goldengroovexp.com', 1),
+(3, 'Rima Urbana Crew', 'Rima Urbana Crew é um grupo de Rap do Rio de Janeiro que mistura rimas conscientes, batidas pesadas e elementos de trap moderno. Suas letras abordam a vida na periferia, superação e identidade cultural, trazendo autenticidade e intensidade às apresentações. Com forte presença de palco e performances energéticas, o trio se destaca pela química entre os integrantes e pela sonoridade marcante.', 'RJ', 'Rio de Janeiro', 6500, '21 98733-1204', '@rimaurbana.crew', 'contato@rimaurbanacrew.com', 4),
+(4, 'Aurora Urbana', 'Aurora Urbana é uma banda de Indie Rock com influências modernas de synth pop e rock alternativo. Formada em São Paulo em 2019, o grupo combina melodias atmosféricas, vocais expressivos e uma identidade visual profunda que remete ao cenário urbano contemporâneo. Suas apresentações ao vivo são conhecidas por alta energia e forte envolvimento com o público.', 'SP', 'São Paulo', 7500, '11 98344-1922', '@auroraurbana.oficial', 'contato@auroraurbana.com', 5),
+(5, 'Thiago Solano', 'Thiago Solano é um violonista solo conhecido por sua técnica refinada, performances emocionantes e arranjos acústicos envolventes. Traz influências da Música Popular Brasileira, folk internacional e técnicas modernas de fingerstyle. Com um repertório versátil — que vai de clássicos nacionais a interpretações criativas de hits contemporâneos — Thiago transforma qualquer evento em uma experiência intimista e sofisticada.', 'SE', 'Aracajú', 2800, '41 99877-5521', '@thiagosolano.music', 'contato@thiagosolano.com', 6);
 
 -- --------------------------------------------------------
 
@@ -69,16 +67,14 @@ CREATE TABLE `artista_estilo` (
 --
 
 INSERT INTO `artista_estilo` (`id_artista`, `id_estilo`) VALUES
-(1, 1),
 (1, 2),
 (2, 4),
-(3, 3),
+(3, 7),
+(4, 1),
+(4, 2),
 (4, 6),
-(5, 5),
-(11, 1),
-(11, 5),
-(12, 1),
-(12, 2);
+(5, 1),
+(5, 6);
 
 -- --------------------------------------------------------
 
@@ -90,17 +86,6 @@ CREATE TABLE `artista_evento` (
   `id_artista` int(11) NOT NULL,
   `id_evento` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Despejando dados para a tabela `artista_evento`
---
-
-INSERT INTO `artista_evento` (`id_artista`, `id_evento`) VALUES
-(1, 2),
-(2, 4),
-(3, 3),
-(4, 5),
-(5, 1);
 
 -- --------------------------------------------------------
 
@@ -124,7 +109,10 @@ INSERT INTO `estilo_musical` (`id`, `nome`, `imagem`) VALUES
 (3, 'Sertanejo', 'sertanejo.jpg'),
 (4, 'Eletrônica', 'eletronica.jpg'),
 (5, 'Funk', 'funk.jpg'),
-(6, 'MPB', 'mpb.jpg');
+(6, 'MPB', 'mpb.jpg'),
+(7, 'RAP', 'rap.jpg'),
+(8, 'Samba', 'samba.jpg'),
+(9, 'Clássica', 'classica.jpg');
 
 -- --------------------------------------------------------
 
@@ -152,12 +140,12 @@ CREATE TABLE `eventos` (
 --
 
 INSERT INTO `eventos` (`id`, `nome`, `descricao`, `estado`, `cidade`, `endereco`, `dia`, `horario`, `instagram`, `contato`, `link_compra`, `id_usuario`) VALUES
-(1, 'Festival de Verão', 'Grande festival de música para o público jovem', 'BA', 'Salvador', 'Praia do Farol', '2025-12-10', '18:00:00', '@festivalverao', 'eventos@verao.com', 'https://www.sympla.com.br/festival-de-verao', 1),
-(2, 'Rock Night', 'Evento dedicado ao rock nacional', 'SP', 'São Paulo', 'Espaço das Artes', '2025-11-20', '20:00:00', '@rocknight', 'contato@rocknight.com', 'https://www.ingresso.com/evento/rock-night', 2),
-(3, 'Sertanejo Fest', 'Festa com as maiores duplas sertanejas', 'MG', 'Belo Horizonte', 'Parque Municipal', '2025-12-05', '19:30:00', '@sertanejofest', 'contato@sertanejo.com', 'https://www.eventbrite.com/e/sertanejo-fest', 3),
-(4, 'Eletro Sunset', 'Balada eletrônica open air', 'RJ', 'Rio de Janeiro', 'Arena Rio', '2025-11-25', '22:00:00', '@eletrosunset', 'contato@eletro.com', 'https://www.bilheto.com.br/eletro-sunset', 4),
-(5, 'Natal Solidário', 'Evento beneficente com várias apresentações musicais', 'SC', 'Florianópolis', 'Centro Cultural', '2025-12-22', '17:00:00', '@natalsolidario', 'contato@natal.com', 'https://www.sympla.com.br/natal-solidario', 5),
-(6, 'dfsfsdfsd', 'sadsdasadsadasdsdasdasdsdadasasdasdsdadasdsadsdasadsadasdsdasdasdsdadasasdasdsdadasdsadsdasadsadasdsdasdasdsdadasasdasdsdadasdsadsdasadsadasdsdasdasdsdadasasdasdsdadasdsadsdasadsadasdsdasdasdsdadasasdasdsdadasdsadsdasadsadasdsdasdasdsdadasasdasdsdadasdsadsdasadsadasdsdasdasdsdadasasdasdsdadasd', 'ds', 'dsffsd', 'fsdfdsdsf', '2012-12-04', '04:04:00', 'dssadasd', 'sadsdaads', 'asddasasd', 12);
+(1, 'Eco-Sons Festival 2006', 'Uma celebração da música e da sustentabilidade. O festival mais verde do país, com palcos movidos a energia solar e workshops de conscientização ambiental.', 'SP', 'São Paulo', 'Parque Ibirapuera', '2026-02-20', '15:00:00', '@ecosons_fest', 'faleconosco@ecosons.art.br', 'www.ticketagora.com.br/ecosonsibirapuera', 1),
+(2, 'Metálica Ruína', 'O evento mais pesado do ano. Uma noite de puro caos e decibéis, reunindo lendas do metal e as novas promessas em um cenário pós-industrial.', 'RJ', 'Volta Redonda', 'Antigo Complexo Industrial de Volta Redonda', '2026-08-15', '23:00:00', '@metalicaruinaoficial', 'bandas@metalicaruina.com', 'www.headbangeringressos.com/metalicaruina', 2),
+(3, 'Samba na Laje', 'O autêntico clima de festa de comunidade. Samba, feijoada e a vista mais deslumbrante da cidade maravilhosa. Venha celebrar a cultura brasileira no alto da colina.', 'RJ', 'Rio de Janeiro', 'Comunidade Santa Marta', '2026-01-05', '21:00:00', '@sambanalaje_rj', 'reservas@sambanalaje.com.br', 'www.sympla.com.br/sambanalajestamarta', 5),
+(4, 'Pop Galaxy Tour', 'O maior espetáculo pop da América Latina. Superprodução, coreografias e os artistas mais vendidos do momento em uma noite de hits e luzes.', 'MG', 'Ouro Preto', 'Teatro Municipal de Ouro Preto', '2026-02-15', '23:00:00', '@classicosdeinvernooficial', 'ouropreto.arte@festival.org', 'www.teatromunicipalop.com/ingressos', 6),
+(5, 'Clássicos de Inverno', 'Uma noite de gala dedicada às grandes obras da música erudita. Uma experiência refinada na arquitetura histórica de Minas Gerais, celebrando os mestres.', 'MG', 'Ouro Preto', 'Teatro Municipal de Ouro Preto', '2026-03-09', '22:00:00', '@classicosdeinvernooficial', 'ouropreto.arte@festival.org', 'www.teatromunicipalop.com/ingressos', 6),
+(6, 'Sunset Vibes Festival', 'Sunset Vibes Festival chega à Praia do Madeiro, uma das mais paradisíacas do Nordeste, para 10 horas ininterruptas de música eletrônica com vista para o mar.&#13;&#10;Line-up secreto sendo revelado aos poucos, com DJs nacionais e internacionais que vão fazer você dançar da golden hour até debaixo das estrelas.&#13;&#10;Open bar premium, área VIP com vista privilegiada, after oficial na praia e muita energia positiva.&#13;&#10;Prepare-se para o evento que vai marcar o verão 2026!&#13;&#10;#SunsetVibes2026 #Pipa #ElectronicMusic #FestivalNaPraia', 'RS', 'Pelotas', 'Praia do Madeiro', '2026-07-18', '23:00:00', '@sunsetvibesfestival', '(84) 99999-8888', 'https://www.sympla.com.br/sunsetvibes2026', 7);
 
 -- --------------------------------------------------------
 
@@ -176,13 +164,15 @@ CREATE TABLE `evento_estilo` (
 
 INSERT INTO `evento_estilo` (`id_evento`, `id_estilo`) VALUES
 (1, 1),
-(1, 5),
+(1, 6),
 (2, 2),
-(3, 3),
+(3, 8),
+(4, 1),
 (4, 4),
-(5, 6),
+(5, 9),
 (6, 1),
-(6, 2);
+(6, 4),
+(6, 5);
 
 -- --------------------------------------------------------
 
@@ -201,17 +191,21 @@ CREATE TABLE `foto_artista` (
 --
 
 INSERT INTO `foto_artista` (`id`, `url_imagem`, `id_artista`) VALUES
-(1, 'https://img.site.com/artistas/solaris1.jpg', 1),
-(2, 'https://img.site.com/artistas/luna1.jpg', 2),
-(3, 'https://img.site.com/artistas/sertanejo1.jpg', 3),
-(4, 'https://img.site.com/artistas/harmonia1.jpg', 4),
-(5, 'https://img.site.com/artistas/mcray1.jpg', 5),
-(14, 'uma cantora de pop s.png', 11),
-(15, 'um grupo de hip hop .png', 11),
-(16, 'uma dupla sertaneja .png', 11),
-(17, 'uma banda de rock to.png', 11),
-(18, 'ff54c022fc5c3952c5979d38885388b2.jpg', 12),
-(19, 'images (1).jpg', 12);
+(1, 'IronHowl5.png', 1),
+(2, 'IronHowl4.png', 1),
+(3, 'IronHowl3.png', 1),
+(4, 'IronHowl2.png', 1),
+(5, 'IronHowl1.png', 1),
+(6, 'GoldenGrooveExperience1.png', 2),
+(7, 'RimaUrbanaCrew1.png', 3),
+(8, 'RimaUrbanaCrew2.png', 3),
+(9, 'RimaUrbanaCrew3.png', 3),
+(10, 'RimaUrbanaCrew4.png', 3),
+(11, 'Aurora Urbana1.png', 4),
+(12, 'Thiago Solano4.png', 5),
+(13, 'Thiago Solano3.png', 5),
+(14, 'Thiago Solano2.png', 5),
+(15, 'Thiago Solano1.png', 5);
 
 -- --------------------------------------------------------
 
@@ -230,16 +224,25 @@ CREATE TABLE `foto_evento` (
 --
 
 INSERT INTO `foto_evento` (`id`, `url_imagem`, `id_evento`) VALUES
-(1, 'https://img.site.com/eventos/festivalverao.jpg', 1),
-(2, 'https://img.site.com/eventos/rocknight.jpg', 2),
-(3, 'https://img.site.com/eventos/sertanejofest.jpg', 3),
-(4, 'https://img.site.com/eventos/eletrosunset.jpg', 4),
-(5, 'https://img.site.com/eventos/natalsolidario.jpg', 5),
-(6, 'coloque um degradê p.png', 6),
-(7, 'um DJ se apresentand.png', 6),
-(8, 'uma cantora de pop s - Copia.png', 6),
-(9, 'uma cantora de pop s.png', 6),
-(10, 'um grupo de hip hop .png', 6);
+(1, 'Eco Sons Festival2.png', 1),
+(2, 'Metálica Ruína1.png', 2),
+(3, 'Metálica Ruína3.png', 2),
+(4, 'Metálica Ruína4.png', 2),
+(5, 'Metálica Ruína5.png', 2),
+(6, 'Samba na Laje1.png', 3),
+(7, 'Samba na Laje2.png', 3),
+(8, 'Samba na Laje3.png', 3),
+(9, 'Samba na Laje4.png', 3),
+(10, 'Samba na Laje5.png', 3),
+(11, 'Pop Galaxy Tour1.png', 4),
+(12, 'Pop Galaxy Tour2.png', 4),
+(13, 'Pop Galaxy Tour3.png', 4),
+(15, 'Clássicos de Inverno1.png', 5),
+(16, 'Clássicos de Inverno2.png', 5),
+(17, 'Clássicos de Inverno3.png', 5),
+(18, 'Clássicos de Inverno4.png', 5),
+(19, 'Clássicos de Inverno5.png', 5),
+(20, 'SunsetVibes20262.png', 6);
 
 -- --------------------------------------------------------
 
@@ -260,17 +263,22 @@ CREATE TABLE `integrante_artista` (
 --
 
 INSERT INTO `integrante_artista` (`id`, `nome`, `instrumento`, `url_imagem`, `id_artista`) VALUES
-(1, 'Carlos Mendes', 'Guitarra', 'https://example.com/imagens/integrante1.jpg', 1),
-(2, 'Felipe Rocha', 'Baixo', 'https://example.com/imagens/felipe-rocha.jpg', 1),
-(3, 'Rafaela Torres', 'Voz', 'https://example.com/imagens/rafaela-torres.jpg', 1),
-(4, 'Luana Dias', 'CDJ', 'https://example.com/imagens/luana-dias.jpg', 2),
-(5, 'João Pedro', 'Voz', 'https://example.com/imagens/joao-pedro.jpg', 3),
-(6, 'Bruno Castro', 'Violão', 'https://example.com/imagens/bruno-castro.jpg', 3),
-(7, 'Clara Melo', 'Soprano', 'https://example.com/imagens/clara-melo.jpg', 4),
-(8, 'Marcos Silva', 'Tenor', 'https://example.com/imagens/marcos-silva.jpg', 4),
-(9, 'Ray Oliveira', 'Voz', 'https://example.com/imagens/ray-oliveira.jpg', 5),
-(11, '3234432', '324432342', 'um grupo de hip hop .png', 11),
-(12, 'saddsdsa', 'dasdasdsa', 'um cantor sertanejo .png', 12);
+(1, 'Viktor Ramírez', 'Vocal / Guitarra Base', 'IronHowl1.png', 1),
+(2, 'Caio Ferraz', 'Baixo / Backing Vocal', 'IronHowl3.png', 1),
+(3, 'Bruno \"HellHammer\" Carvalho', 'Bateria', 'IronHowl2.png', 1),
+(4, 'Marvin “SoulFire” Ribeiro', 'Vocal Principal', 'GoldenGrooveExperience1.png', 2),
+(5, 'Elisa “FunkShine” Prado', 'Baixo / Vocais de Apoio', 'GoldenGrooveExperience3.png', 2),
+(6, 'Renato “GrooveLine” Torres', 'Guitarra Rítmica / Talkbox', 'GoldenGrooveExperience4.png', 2),
+(7, 'Diana “StarVibe” Monteiro', 'Teclados / Synths', 'GoldenGrooveExperience5.png', 2),
+(8, 'André “FlashBeat” Costa', 'Bateria / Percussões', 'GoldenGrooveExperience4.png', 2),
+(9, 'Kael “RK” Fonseca', 'Voz / Compositor', 'RimaUrbanaCrew2.png', 3),
+(10, 'Davi “Beatz” Amaral', 'Beatmaker / DJ', 'RimaUrbanaCrew3.png', 3),
+(11, 'Luan “FlowZ” Martins', 'Voz / Freestyle', 'RimaUrbanaCrew4.png', 3),
+(12, 'Lucas Andrade', 'Vocal e Guitarra', 'Aurora Urbana2.png', 4),
+(13, 'Sabrina Mello', 'Teclado e Synths', 'Aurora Urbana4.png', 4),
+(14, 'Diego Torres', 'Baixo', 'Aurora Urbana3.png', 4),
+(15, 'Luwilson Silva', 'Bateria', 'Aurora Urbana5.png', 4),
+(16, 'Thiago Solano', 'Violão e Voz', 'Thiago Solano5.png', 5);
 
 -- --------------------------------------------------------
 
@@ -291,7 +299,14 @@ CREATE TABLE `integrante_evento` (
 --
 
 INSERT INTO `integrante_evento` (`id`, `nome`, `estilo_musical`, `url_imagem`, `id_evento`) VALUES
-(1, 'safsasdsad', 'sdasdaasd', 'ff54c022fc5c3952c5979d38885388b2.jpg', 6);
+(1, 'Jonny Mathias', 'Pop', 'Eco Sons Festival1.png', 1),
+(2, 'Viktor Ramírez', 'Vocal / Guitarra Base', 'IronHowl1.png', 2),
+(3, 'Bruno \"HellHammer\" Carvalho', 'Bateria', 'IronHowl2.png', 2),
+(4, 'Caio Ferraz', 'Baixo / Backing Vocal', 'IronHowl3.png', 2),
+(5, 'GES Escola de Samba', 'Samba', 'Samba na Laje4.png', 3),
+(6, 'Carol Biffe', 'Trance', 'Pop Galaxy Tour4.png', 4),
+(7, 'Tripla Lipa', 'Contralto', 'Clássicos de Inverno5.png', 5),
+(8, 'Djs Djiliro e Liro', 'Funk', 'hiphop.jpg', 6);
 
 -- --------------------------------------------------------
 
@@ -317,12 +332,13 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id`, `nome`, `data_nascimento`, `cep`, `estado`, `cidade`, `rua`, `numero`, `email`, `senha`) VALUES
-(1, 'João Silva', '1990-05-12', '01001000', 'SP', 'São Paulo', 'Rua das Flores', '123', 'joao@gmail.com', 'senha123'),
-(2, 'Maria Souza', '1985-09-20', '20040030', 'RJ', 'Rio de Janeiro', 'Av. Atlântica', '456', 'maria@gmail.com', 'senha456'),
-(3, 'Pedro Oliveira', '1993-07-02', '30140071', 'MG', 'Belo Horizonte', 'Rua Goiás', '789', 'pedro@gmail.com', 'senha789'),
-(4, 'Ana Lima', '1998-02-11', '40010000', 'BA', 'Salvador', 'Rua do Carmo', '321', 'ana@gmail.com', 'senha321'),
-(5, 'Lucas Pereira', '1995-11-15', '88010010', 'SC', 'Florianópolis', 'Rua das Palmeiras', '654', 'lucas@gmail.com', 'senha654'),
-(12, 'Kauan', '3434-02-04', '3223432', 'SP', 'São Paulo', 'Rua Marrela', '123', 'rogerio@gmail.com', '$2y$10$8gQjcVDCk7ZQ9/.DBr6kK.ATqpJDXOHxYJRhQzFkiNd/OKTxCCx2K');
+(1, 'Rodrigo Alexandre Vehman', '1977-08-14', '05711-00', 'SP', 'São Paulo', 'Rua 1', '2', 'rodvehman@hotmail.com', '$2y$10$N6Kf0r./cpDzXGRsve1/zumV0p6gJSPwAx1onhzfGJWs1WxCFyZu6'),
+(2, 'João Silva', '1985-03-15', '01001-00', 'SP', 'São Paulo', 'Av. Paulista', '1500', 'joao.silva@teste.com', '$2y$10$JRebmzy9cL6uFS4W21zUr.lIO0ueVJD41SCnkPyIXMMbhVD1K5.Sa'),
+(3, 'Maria Santos', '1992-10-22', '22010-01', 'RJ', 'Rio de Janeiro', 'Rua Barata Ribeiro', '45', 'maria.santos@exemplo.org', '$2y$10$llDCssDg6BwmiAU1M3H.DuIL9lLxrt.j.B0.ciSO/.MVW6ZrlYW6y'),
+(4, 'Pedro Oliveira', '1970-07-01', '90010-10', 'RS', 'Porto Alegre', 'Praça da Matriz', '120', 'pedro.oliveira@ficticio.net', '$2y$10$mN3teRkXEz82u7lFhRvXL.MXpUbX9k76uT68XFtHlkgmj4buhyyUa'),
+(5, 'Ana Costa', '2000-01-30', '30130-90', 'MG', 'Belo Horizonte', 'Av. Afonso Pena', '250', 'ana.costa@modelo.com', '$2y$10$luzIQNYYSo1do2yrb.2uLexrxb3DUr5SKmRH.yN/0qHBLDyvcyKnC'),
+(6, 'Carlos Pereira', '1965-12-10', '69005-01', 'RJ', 'Rio de Janeiro', 'Alameda Cosme Ferreira', '987', 'carlos.pereira@dados.br', '$2y$10$VT2hK64A1GxKHxo1/iw4weE/419bO1mxCEPVOldSE0KBtQhb9DKFK'),
+(7, 'Josefa Fagundes', '1950-05-15', '10291048', 'MG', 'Belo Horizonte', 'Rua 1', '3', 'josefagundes@email.com', '$2y$10$sDjoWVZA3Rjkj4zYKlTzxOGDsuWuYSMKG9801kNEDECCRPVA.tIaC');
 
 --
 -- Índices para tabelas despejadas
@@ -402,7 +418,8 @@ ALTER TABLE `integrante_evento`
 -- Índices de tabela `usuarios`
 --
 ALTER TABLE `usuarios`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email` (`email`);
 
 --
 -- AUTO_INCREMENT para tabelas despejadas
@@ -412,13 +429,13 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de tabela `artistas`
 --
 ALTER TABLE `artistas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de tabela `estilo_musical`
 --
 ALTER TABLE `estilo_musical`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de tabela `eventos`
@@ -430,31 +447,31 @@ ALTER TABLE `eventos`
 -- AUTO_INCREMENT de tabela `foto_artista`
 --
 ALTER TABLE `foto_artista`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de tabela `foto_evento`
 --
 ALTER TABLE `foto_evento`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT de tabela `integrante_artista`
 --
 ALTER TABLE `integrante_artista`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT de tabela `integrante_evento`
 --
 ALTER TABLE `integrante_evento`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de tabela `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Restrições para tabelas despejadas
@@ -478,7 +495,7 @@ ALTER TABLE `artista_estilo`
 --
 ALTER TABLE `artista_evento`
   ADD CONSTRAINT `artista_evento_ibfk_1` FOREIGN KEY (`id_artista`) REFERENCES `artistas` (`id`),
-  ADD CONSTRAINT `artista_evento_ibfk_2` FOREIGN KEY (`id_evento`) REFERENCES `eventos` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `artista_evento_ibfk_2` FOREIGN KEY (`id_evento`) REFERENCES `eventos` (`id`);
 
 --
 -- Restrições para tabelas `eventos`
@@ -490,7 +507,7 @@ ALTER TABLE `eventos`
 -- Restrições para tabelas `evento_estilo`
 --
 ALTER TABLE `evento_estilo`
-  ADD CONSTRAINT `evento_estilo_ibfk_1` FOREIGN KEY (`id_evento`) REFERENCES `eventos` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `evento_estilo_ibfk_1` FOREIGN KEY (`id_evento`) REFERENCES `eventos` (`id`),
   ADD CONSTRAINT `evento_estilo_ibfk_2` FOREIGN KEY (`id_estilo`) REFERENCES `estilo_musical` (`id`);
 
 --
@@ -503,7 +520,7 @@ ALTER TABLE `foto_artista`
 -- Restrições para tabelas `foto_evento`
 --
 ALTER TABLE `foto_evento`
-  ADD CONSTRAINT `foto_evento_ibfk_1` FOREIGN KEY (`id_evento`) REFERENCES `eventos` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `foto_evento_ibfk_1` FOREIGN KEY (`id_evento`) REFERENCES `eventos` (`id`);
 
 --
 -- Restrições para tabelas `integrante_artista`
@@ -515,7 +532,7 @@ ALTER TABLE `integrante_artista`
 -- Restrições para tabelas `integrante_evento`
 --
 ALTER TABLE `integrante_evento`
-  ADD CONSTRAINT `integrante_evento_ibfk_1` FOREIGN KEY (`id_evento`) REFERENCES `eventos` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `integrante_evento_ibfk_1` FOREIGN KEY (`id_evento`) REFERENCES `eventos` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

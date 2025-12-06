@@ -13,36 +13,33 @@ class ArtistaServicos
     public function buscarArtistas(): ?array
     {
         $sql = "SELECT artistas.id, artistas.nome, (
-        SELECT foto_artista.url_imagem
-        FROM foto_artista
-        WHERE foto_artista.id_artista = artistas.id
-        ORDER BY foto_artista.id ASC
-        LIMIT 1
-        ) AS url_imagem,
-        (
-        SELECT estilo_musical.nome
-        FROM artista_estilo
-        JOIN estilo_musical 
-            ON estilo_musical.id = artista_estilo.id_estilo
-        WHERE artista_estilo.id_artista = artistas.id
-        ORDER BY estilo_musical.id ASC
-        LIMIT 1
-        ) AS estilo
+            SELECT GROUP_CONCAT(url_imagem SEPARATOR '||')
+            FROM foto_artista
+            WHERE foto_artista.id_artista = artistas.id
+            ORDER BY foto_artista.id ASC
+        ) AS imagens, (
+            SELECT GROUP_CONCAT(estilo_musical.nome SEPARATOR ',')
+            FROM artista_estilo
+            JOIN estilo_musical ON estilo_musical.id = artista_estilo.id_estilo
+            WHERE artista_estilo.id_artista = artistas.id
+            ORDER BY estilo_musical.id ASC
+            LIMIT 1
+        ) AS estilos_musicais
         FROM artistas
         ORDER BY artistas.id ASC";
 
         $consulta = $this->conexao->query($sql);
 
-        return $consulta->fetchAll() ?: null;
+        return $consulta->fetchAll(PDO::FETCH_ASSOC) ?: null;
     }
     public function buscarArtistaId(int $id)
     {
         $sql = "SELECT DISTINCT artistas.id, artistas.nome, artistas.cidade, artistas.estado, artistas.whatsapp, artistas.contato, artistas.instagram, artistas.whatsapp, artistas.cache_artista, artistas.descricao, (
-        SELECT GROUP_CONCAT(foto_artista.url_imagem SEPARATOR ',')
+        SELECT GROUP_CONCAT(foto_artista.url_imagem SEPARATOR '||')
         FROM foto_artista
         WHERE foto_artista.id_artista = artistas.id
         ORDER BY foto_artista.id ASC
-    ) AS url_imagem,
+    ) AS imagens,
     (
         SELECT GROUP_CONCAT(estilo_musical.nome SEPARATOR ',')
         FROM artista_estilo
@@ -58,24 +55,21 @@ class ArtistaServicos
         $consulta->execute();
 
 
-        return $consulta->fetch() ?: null;
+        return $consulta->fetch(PDO::FETCH_ASSOC) ?: null;
     }
     public function buscarArtistasUsuario(int $id): ?array
     {
         $sql = "SELECT artistas.id, artistas.nome, (
-        SELECT foto_artista.url_imagem
-        FROM foto_artista
-        WHERE foto_artista.id_artista = artistas.id
-        ORDER BY foto_artista.id ASC
-        LIMIT 1
-        ) AS url_imagem,
-        (
-        SELECT GROUP_CONCAT(estilo_musical.nome SEPARATOR ',')
-        FROM artista_estilo
-        JOIN estilo_musical 
-            ON estilo_musical.id = artista_estilo.id_estilo
-        WHERE artista_estilo.id_artista = artistas.id
-    ) AS estilos_musicais
+            SELECT GROUP_CONCAT(url_imagem SEPARATOR '||')
+            FROM foto_artista
+            WHERE foto_artista.id_artista = artistas.id
+            ORDER BY foto_artista.id ASC
+        ) AS imagens, (
+            SELECT GROUP_CONCAT(estilo_musical.nome SEPARATOR ',')
+            FROM artista_estilo
+            JOIN estilo_musical ON estilo_musical.id = artista_estilo.id_estilo
+            WHERE artista_estilo.id_artista = artistas.id
+        ) AS estilos_musicais
         FROM artistas JOIN usuarios ON artistas.id_usuario = usuarios.id
         WHERE usuarios.id = :id ORDER BY artistas.id DESC";
 
@@ -87,35 +81,30 @@ class ArtistaServicos
 
 
 
-        return $consulta->fetchAll() ?: null;
+        return $consulta->fetchAll(PDO::FETCH_ASSOC) ?: null;
     }
 
     public function buscarArtistasComLimite(int $limite): ?array
     {
         $sql = "SELECT artistas.id, artistas.nome, (
-        SELECT foto_artista.url_imagem
-        FROM foto_artista
-        WHERE foto_artista.id_artista = artistas.id
-        ORDER BY foto_artista.id ASC
-        LIMIT 1
-        ) AS url_imagem,
-        (
-        SELECT GROUP_CONCAT(estilo_musical.nome SEPARATOR ',')
-        FROM artista_estilo
-        JOIN estilo_musical 
-            ON estilo_musical.id = artista_estilo.id_estilo
-        WHERE artista_estilo.id_artista = artistas.id
-    ) AS estilos_musicais
+            SELECT GROUP_CONCAT(url_imagem SEPARATOR '||')
+            FROM foto_artista
+            WHERE foto_artista.id_artista = artistas.id
+            ORDER BY foto_artista.id ASC
+        ) AS imagens, (
+            SELECT GROUP_CONCAT(estilo_musical.nome SEPARATOR ',')
+            FROM artista_estilo
+            JOIN estilo_musical ON estilo_musical.id = artista_estilo.id_estilo
+            WHERE artista_estilo.id_artista = artistas.id
+        ) AS estilos_musicais
         FROM artistas
-        ORDER BY artistas.id DESC LIMIT $limite ";
+        ORDER BY artistas.id DESC LIMIT :limite";
 
         $consulta = $this->conexao->prepare($sql);
-
-
+        $consulta->bindValue(':limite', $limite, PDO::PARAM_INT);
         $consulta->execute();
 
-
-        return $consulta->fetchAll() ?: null;
+        return $consulta->fetchAll(PDO::FETCH_ASSOC) ?: null;
     }
 
     public function buscarArtistasPorFiltros(?string $estado, ?string $cidade, ?string $estilo): ?array
@@ -138,7 +127,21 @@ class ArtistaServicos
             $params[':estilo'] = $estilo;
         }
 
-        $sql = "SELECT artistas.id, artistas.nome, artistas.cidade, artistas.estado, (\n            SELECT foto_artista.url_imagem\n            FROM foto_artista\n            WHERE foto_artista.id_artista = artistas.id\n            ORDER BY foto_artista.id ASC\n            LIMIT 1\n        ) AS url_imagem, (\n            SELECT GROUP_CONCAT(estilo_musical.nome SEPARATOR ',')\n            FROM artista_estilo\n            JOIN estilo_musical ON estilo_musical.id = artista_estilo.id_estilo\n            WHERE artista_estilo.id_artista = artistas.id\n            ORDER BY estilo_musical.id ASC\n            LIMIT 1\n        ) AS estilos_musicais\n        FROM artistas\n        " . $joinEstilo . "\n";
+        $sql = "SELECT artistas.id, artistas.nome, artistas.cidade, artistas.estado, (
+            SELECT GROUP_CONCAT(url_imagem SEPARATOR '||')
+            FROM foto_artista
+            WHERE foto_artista.id_artista = artistas.id
+            ORDER BY foto_artista.id ASC
+        ) AS imagens, (
+            SELECT GROUP_CONCAT(estilo_musical.nome SEPARATOR ',')
+            FROM artista_estilo
+            JOIN estilo_musical ON estilo_musical.id = artista_estilo.id_estilo
+            WHERE artista_estilo.id_artista = artistas.id
+            ORDER BY estilo_musical.id ASC
+            LIMIT 1
+        ) AS estilos_musicais
+        FROM artistas
+        " . $joinEstilo . "\n";
 
         if (!empty($where)) {
             $sql .= ' WHERE ' . implode(' AND ', $where);
@@ -152,30 +155,71 @@ class ArtistaServicos
         }
         $consulta->execute();
 
-        return $consulta->fetchAll() ?: null;
+        return $consulta->fetchAll(PDO::FETCH_ASSOC) ?: null;
+    }
+
+    public function buscarArtistasPorEstiloId(int $idEstilo): ?array
+    {
+        $sql = "SELECT artistas.id, artistas.nome, artistas.cidade, artistas.estado, (
+            SELECT GROUP_CONCAT(url_imagem SEPARATOR '||')
+            FROM foto_artista
+            WHERE foto_artista.id_artista = artistas.id
+            ORDER BY foto_artista.id ASC
+        ) AS imagens, (
+            SELECT GROUP_CONCAT(estilo_musical.nome SEPARATOR ',')
+            FROM artista_estilo
+            JOIN estilo_musical ON estilo_musical.id = artista_estilo.id_estilo
+            WHERE artista_estilo.id_artista = artistas.id
+            ORDER BY estilo_musical.id ASC
+            LIMIT 1
+        ) AS estilos_musicais
+        FROM artistas
+        JOIN artista_estilo ae ON ae.id_artista = artistas.id
+        WHERE ae.id_estilo = :id_estilo
+        ORDER BY artistas.id DESC";
+
+        $consulta = $this->conexao->prepare($sql);
+        $consulta->bindValue(':id_estilo', $idEstilo, PDO::PARAM_INT);
+        $consulta->execute();
+
+        return $consulta->fetchAll(PDO::FETCH_ASSOC) ?: null;
     }
 
     public function buscarArtistasAleatorios(int $limite = 6): ?array
     {
-        $sql = "SELECT artistas.id, artistas.nome, artistas.cidade, artistas.estado, (\n            SELECT foto_artista.url_imagem\n            FROM foto_artista\n            WHERE foto_artista.id_artista = artistas.id\n            ORDER BY foto_artista.id ASC\n            LIMIT 1\n        ) AS url_imagem, (\n            SELECT GROUP_CONCAT(estilo_musical.nome SEPARATOR ',')\n            FROM artista_estilo\n            JOIN estilo_musical ON estilo_musical.id = artista_estilo.id_estilo\n            WHERE artista_estilo.id_artista = artistas.id\n            ORDER BY estilo_musical.id ASC\n            LIMIT 1\n        ) AS estilos_musicais\n        FROM artistas\n        ORDER BY RAND() LIMIT :limite";
+        $sql = "SELECT artistas.id, artistas.nome, artistas.cidade, artistas.estado, (
+            SELECT GROUP_CONCAT(url_imagem SEPARATOR '||')
+            FROM foto_artista
+            WHERE foto_artista.id_artista = artistas.id
+            ORDER BY foto_artista.id ASC
+        ) AS imagens, (
+            SELECT GROUP_CONCAT(estilo_musical.nome SEPARATOR ',')
+            FROM artista_estilo
+            JOIN estilo_musical ON estilo_musical.id = artista_estilo.id_estilo
+            WHERE artista_estilo.id_artista = artistas.id
+            ORDER BY estilo_musical.id ASC
+            LIMIT 1
+        ) AS estilos_musicais
+        FROM artistas
+        ORDER BY RAND() LIMIT :limite";
 
         $consulta = $this->conexao->prepare($sql);
         $consulta->bindValue(':limite', $limite, PDO::PARAM_INT);
         $consulta->execute();
 
-        return $consulta->fetchAll() ?: null;
+        return $consulta->fetchAll(PDO::FETCH_ASSOC) ?: null;
     }
     public function buscarIntegrantes(int $id)
     {
-        $sql = "SELECT 	integrante_artista.id, integrante_artista.nome, integrante_artista.instrumento, integrante_artista.url_imagem FROM integrante_artista JOIN artistas ON integrante_artista.id = artistas.id WHERE artistas.id = :id";
+        $sql = "SELECT integrante_artista.id, integrante_artista.nome, integrante_artista.instrumento, integrante_artista.url_imagem
+                FROM integrante_artista
+                WHERE integrante_artista.id_artista = :id";
 
         $consulta = $this->conexao->prepare($sql);
-
-        $consulta->bindValue(":id", $id);
+        $consulta->bindValue(":id", $id, PDO::PARAM_INT);
         $consulta->execute();
 
-
-        return $consulta->fetchAll() ?: null;
+        return $consulta->fetchAll(PDO::FETCH_ASSOC) ?: null;
     }
 
     public function inserirArtista(Artista $dadosArtista): int

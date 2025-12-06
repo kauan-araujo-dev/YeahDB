@@ -19,3 +19,22 @@ img, video {
 button, input[type="submit"], .botao_acesso {
   max-width: 100%;
 }
+
+/* Link 'Mostrar mais' used in lists */
+.mostrar-mais {
+  display: inline-block;
+  padding: 12px 20px;
+  background: linear-gradient(180deg,#04A777,#03986a);
+  color: #fff;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  box-shadow: 0 6px 18px rgba(4,167,119,0.18);
+  transition: transform .12s ease, box-shadow .12s ease, opacity .12s ease;
+  margin: 18px auto;
+}
+.mostrar-mais:hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(4,167,119,0.22); }
+.mostrar-mais.loading { opacity: .85; pointer-events: none; }
+.linha_cards .mostrar-mais { display: block; }

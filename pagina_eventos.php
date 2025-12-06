@@ -16,13 +16,53 @@ $estadoFiltro = isset($_GET['estado']) && $_GET['estado'] !== '' ? trim($_GET['e
 $cidadeFiltro = isset($_GET['cidade']) && $_GET['cidade'] !== '' ? trim($_GET['cidade']) : null;
 $estiloFiltro = isset($_GET['estilo']) && $_GET['estilo'] !== '' ? trim($_GET['estilo']) : null;
 
-// Se não houver filtros, buscar 4 aleatórios. Caso contrário, buscar por filtros.
+// Paginação simples: ler página atual
+$page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
+$perPage = 4;
+
+// Se não houver filtros, gerar uma seed e usar consulta determinística ORDER BY RAND(:seed)
 if (!$estadoFiltro && !$cidadeFiltro && !$estiloFiltro) {
-    $eventos = $eventoServicos->buscarEventosAleatorios(4);
+    $seed = isset($_GET['seed']) && $_GET['seed'] !== '' ? intval($_GET['seed']) : mt_rand();
+    $offset = ($page - 1) * $perPage;
+
+    $pdo = $eventoServicos->conexao;
+    $sql = "SELECT eventos.id, eventos.nome, eventos.cidade, eventos.estado, eventos.dia,
+            (
+                SELECT foto_evento.url_imagem
+                FROM foto_evento
+                WHERE foto_evento.id_evento = eventos.id
+                ORDER BY foto_evento.id ASC
+                LIMIT 1
+            ) AS url_imagem,
+            (
+                SELECT GROUP_CONCAT(estilo_musical.nome SEPARATOR ',')
+                FROM evento_estilo
+                JOIN estilo_musical ON estilo_musical.id = evento_estilo.id_estilo
+                WHERE evento_estilo.id_evento = eventos.id
+                ORDER BY estilo_musical.id ASC
+                LIMIT 1
+            ) AS estilos_musicais
+        FROM eventos
+        ORDER BY RAND(:seed)
+        LIMIT :limit OFFSET :offset";
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(':seed', $seed, PDO::PARAM_INT);
+    $stmt->bindValue(':limit', $perPage, PDO::PARAM_INT);
+    $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+    $stmt->execute();
+    $eventos = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+
+    // total de eventos para controle do botão
+    $countStmt = $pdo->prepare('SELECT COUNT(*) FROM eventos');
+    $countStmt->execute();
+    $totalEventos = intval($countStmt->fetchColumn() ?: 0);
 } else {
-    $eventos = $eventoServicos->buscarEventosPorFiltros($estadoFiltro, $cidadeFiltro, $estiloFiltro) ?: [];
-    // limitar a 4 resultados para preservar o layout 2x2
-    if (count($eventos) > 4) $eventos = array_slice($eventos, 0, 4);
+    $allEventos = $eventoServicos->buscarEventosPorFiltros($estadoFiltro, $cidadeFiltro, $estiloFiltro) ?: [];
+    $totalEventos = count($allEventos);
+    $offset = ($page - 1) * $perPage;
+    $eventos = array_slice($allEventos, $offset, $perPage);
+    $seed = null;
 }
 
 $contador = 0;
@@ -52,7 +92,7 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
 
 
 <section id="secao_bandas">
-    
+
     <h2 id="titulo_evento">
         ENCONTRE UM <span style="color: #04A777;">EVENTO!</span>
     </h2>
@@ -150,18 +190,46 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
             echo '<div class="linha_cards">';
             foreach ($row as $evento) {
                 $evento['estilos_musicais'] = explode(",", $evento['estilos_musicais']);
-                echo '<a href="artista.php?artista=' . intval($evento['id']) . '" class="caixa_banda">';
-                $img = htmlspecialchars($evento['url_imagem'] ?? '');
+
+                // Agora pega só a primeira imagem corretamente
+                $mainImg = $evento['url_imagem'] ?? '';
+
+                echo '<a href="evento.php?evento=' . intval($evento['id']) . '" class="caixa_banda">';
                 $nome = htmlspecialchars($evento['nome']);
-                echo '<img src="img/eventos/' . intval($evento['id']) . '/fotos_eventos/' . $img . '" alt="' . $nome . '" />';
+                $imgPath = "img/eventos/" . intval($evento['id']) . "/fotos_eventos/" . $mainImg;
+
+                if (!file_exists($imgPath) || empty($mainImg)) {
+                    $imgPath = "img/sem-imagem.png";
+                }
+
+                echo '<img src="' . $imgPath . '" alt="' . $nome . '" />';
                 echo '<div class="texto_banda_overlay">';
                 echo '<h3 class="titulo_banda">' . $nome . '</h3>';
                 echo '<h4 class="estilo_musical_banda">' . htmlspecialchars(implode(', ', $evento['estilos_musicais'])) . '</h4>';
                 echo '<h4 class="data_evento">' . Utils::formatarData($evento['dia'], true) . '</h4>';
-                echo '</div></a>';
+                echo '</div>';
+                if (!empty($imgs)) {
+                    echo '<div class="thumb-strip">';
+                    foreach ($imgs as $t) {
+                        echo '<img class="card-thumb" src="img/eventos/' . intval($evento['id']) . '/fotos_eventos/' . htmlspecialchars($t) . '" alt="' . $nome . '" />';
+                    }
+                    echo '</div>';
+                }
+                echo '</a>';
             }
             echo '</div>';
         }
+    }
+
+    // Link "Mostrar mais" se existirem mais eventos além dos exibidos
+    if ($offset + count($eventos) < $totalEventos) {
+        $nextPage = $page + 1;
+        // preserva filtros na querystring
+        $qs = $_GET;
+        $qs['page'] = $nextPage;
+        if (!empty($seed)) $qs['seed'] = $seed;
+        $href = 'pagina_eventos.php?' . htmlspecialchars(http_build_query($qs));
+        echo '<div class="linha_cards"><a class="mostrar-mais" href="' . $href . '" data-source="eventos" data-page="' . $nextPage . '" data-seed="' . ($seed ?? '') . '">Mostrar mais</a></div>';
     }
     ?>
 
@@ -169,6 +237,8 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
 
 <script src="js/encontre-artistas-menu.js"></script>
 <script src="js/select-dependent.js"></script>
+<script src="js/gallery.js"></script>
+<script src="js/load-more.js"></script>
 
 <body>
     <?php require_once "includes/rodape.php" ?>

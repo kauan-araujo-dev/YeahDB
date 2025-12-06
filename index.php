@@ -35,13 +35,17 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
       <div class="linha_cards">
 
       <?php foreach($artistas as $artista){ 
-        $artista['estilos_musicais'] = explode(",", $artista['estilos_musicais']); ?>
+        $artista['estilos_musicais'] = explode(",", $artista['estilos_musicais']);
+        $imgs = isset($artista['imagens']) ? array_filter(explode('||', $artista['imagens'])) : [];
+        $mainImg = $imgs[0] ?? '';
+        ?>
         <a href="artista.php?artista=<?= $artista['id'] ?>" class="caixa_banda">
-          <img src="img/artistas/<?= $artista['id'] ?>/fotos_artistas/<?= $artista['url_imagem'] ?>" alt="<?= $artista['nome'] ?>" />
+          <img src="img/artistas/<?= $artista['id'] ?>/fotos_artistas/<?= htmlspecialchars($mainImg) ?>" alt="<?= htmlspecialchars($artista['nome']) ?>" />
           <div class="texto_banda_overlay">
-            <h3 class="titulo_banda"><?= $artista['nome'] ?></h3>
-            <h4 class="estilo_musical_banda"><?= implode(", ", $artista['estilos_musicais']) ?></h4>
+            <h3 class="titulo_banda"><?= htmlspecialchars($artista['nome']) ?></h3>
+            <h4 class="estilo_musical_banda"><?= htmlspecialchars(implode(", ", $artista['estilos_musicais'])) ?></h4>
           </div>
+          <?php if (!empty($imgs)) { echo '<div class="thumb-strip">'; foreach ($imgs as $t) { echo '<img class="card-thumb" src="img/artistas/' . $artista['id'] . '/fotos_artistas/' . htmlspecialchars($t) . '" alt="' . htmlspecialchars($artista['nome']) . '" />'; } echo '</div>'; } ?>
         </a>
 
         <?php }?>
@@ -55,17 +59,20 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
         <div class="carousel-inner">
 
         <?php foreach($eventos as $evento){ 
-        $evento['estilos_musicais'] = array_map('trim', explode(",", $evento['estilos_musicais'])) ?>
+        $evento['estilos_musicais'] = array_map('trim', explode(",", $evento['estilos_musicais']));
+        $imgs_e = isset($evento['imagens']) ? array_filter(explode('||', $evento['imagens'])) : [];
+        $mainE = $imgs_e[0] ?? '';
+        ?>
         <div class="carousel-item <?= $contador == 0 ? "active" : "" ?>">
             <a href="evento.php?evento=<?= $evento['id'] ?>" class="container_carrossel">
-              <img src="img/eventos/<?= $evento['id'] ?>/fotos_eventos/<?= $evento['url_imagem'] ?>" alt="Festival do Sol" />
+              <img src="img/eventos/<?= $evento['id'] ?>/fotos_eventos/<?= htmlspecialchars($mainE) ?>" alt="<?= htmlspecialchars($evento['nome']) ?>" />
               <div class="textos_carrossel">
                 <div class="texto_superior">
-                  <h3><?= $evento['nome'] ?></h3>
-                  <h4><?= $evento['cidade'] ?> - <?= $evento['estado'] ?></h4>
+                  <h3><?= htmlspecialchars($evento['nome']) ?></h3>
+                  <h4><?= htmlspecialchars($evento['cidade']) ?> - <?= htmlspecialchars($evento['estado']) ?></h4>
                 </div>
                 <div class="texto_inferior">
-                  <h4><?= implode(", ", $evento['estilos_musicais']) ?></h4>
+                  <h4><?= htmlspecialchars(implode(", ", $evento['estilos_musicais'])) ?></h4>
                   <h4><?= Utils::formatarData($evento['dia'], true)?></h4>
                 </div>
               </div>
@@ -126,6 +133,7 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
 
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+  <script src="js/gallery.js"></script>
   </body>
 
 </html>
