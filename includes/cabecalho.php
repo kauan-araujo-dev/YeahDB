@@ -17,7 +17,7 @@
                 <ul class="lista_menu">
                     <li><a href="pagina_eventos.php">EVENTOS</a></li>
                     <li><a href="pagina_categorias.php">CATEGORIAS</a></li>
-                    <li><a href="encontre_artistas.php">ARTISTAS</a></li>
+                    <li><a href="pagina_artistas.php">ARTISTAS</a></li>
                 </ul>
                 <?php
                 AutenticarServico::iniciarSecao();
