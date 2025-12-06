@@ -150,7 +150,7 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
             echo '<div class="linha_cards">';
             foreach ($row as $evento) {
                 $evento['estilos_musicais'] = explode(",", $evento['estilos_musicais']);
-                echo '<a href="artista.php?artista=' . intval($evento['id']) . '" class="caixa_banda">';
+                echo '<a href="evento.php?evento=' . intval($evento['id']) . '" class="caixa_banda">';
                 $img = htmlspecialchars($evento['url_imagem'] ?? '');
                 $nome = htmlspecialchars($evento['nome']);
                 echo '<img src="img/eventos/' . intval($evento['id']) . '/fotos_eventos/' . $img . '" alt="' . $nome . '" />';
