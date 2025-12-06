@@ -39,13 +39,11 @@ document.addEventListener('DOMContentLoaded', function () {
       .then(function (json) {
         if (json.error) throw new Error(json.error);
 
-        // Encontra o container de cards mais próximo acima do link
-        let container = a.closest('.linha_cards');
-        if (container && container.parentNode) {
-          const wrapper = document.createElement('div');
-          wrapper.className = 'linha_cards';
-          wrapper.innerHTML = json.html;
-          container.parentNode.insertBefore(wrapper, a.parentNode);
+        // Insere o HTML retornado (já contém divs .linha_cards) antes do bloco do link
+        try {
+          a.parentNode.insertAdjacentHTML('beforebegin', json.html);
+        } catch (err) {
+          console.error('Erro inserindo HTML retornado:', err);
         }
 
         if (json.hasMore) {

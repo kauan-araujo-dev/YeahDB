@@ -21,20 +21,51 @@ $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
 $perPage = 6;
 
 // Se filtro por id de estilo foi fornecido, usar método direto por id (mais robusto)
-if ($estiloIdFiltro !== null) {
+    if ($estiloIdFiltro !== null) {
     $allArtistas = $artistaServico->buscarArtistasPorEstiloId($estiloIdFiltro) ?: [];
+    $totalArtistas = count($allArtistas);
+    $offset = ($page - 1) * $perPage;
+    $artistas = array_slice($allArtistas, $offset, $perPage);
 } else {
     if (!$estadoFiltro && !$cidadeFiltro && !$estiloFiltro) {
-        // sem filtros: buscar um conjunto aleatório maior e paginar localmente
-        $allArtistas = $artistaServico->buscarArtistasAleatorios(30) ?: [];
+        $seed = isset($_GET['seed']) && $_GET['seed'] !== '' ? intval($_GET['seed']) : mt_rand();
+        $offset = ($page - 1) * $perPage;
+        $pdo = $artistaServico->conexao;
+        $sql = "SELECT artistas.id, artistas.nome, artistas.cidade, artistas.estado, (
+            SELECT foto_artista.url_imagem
+            FROM foto_artista
+            WHERE foto_artista.id_artista = artistas.id
+            ORDER BY foto_artista.id ASC
+            LIMIT 1
+        ) AS url_imagem, (
+            SELECT GROUP_CONCAT(estilo_musical.nome SEPARATOR ',')
+            FROM artista_estilo
+            JOIN estilo_musical ON estilo_musical.id = artista_estilo.id_estilo
+            WHERE artista_estilo.id_artista = artistas.id
+            ORDER BY estilo_musical.id ASC
+            LIMIT 1
+        ) AS estilos_musicais
+        FROM artistas
+        ORDER BY RAND(:seed)
+        LIMIT :limit OFFSET :offset";
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(':seed', $seed, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', $perPage, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+        $artistas = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+
+        $countStmt = $pdo->prepare('SELECT COUNT(*) FROM artistas');
+        $countStmt->execute();
+        $totalArtistas = intval($countStmt->fetchColumn() ?: 0);
     } else {
         $allArtistas = $artistaServico->buscarArtistasPorFiltros($estadoFiltro, $cidadeFiltro, $estiloFiltro) ?: [];
+        $totalArtistas = count($allArtistas);
+        $offset = ($page - 1) * $perPage;
+        $artistas = array_slice($allArtistas, $offset, $perPage);
     }
 }
-
-$totalArtistas = count($allArtistas);
-$offset = ($page - 1) * $perPage;
-$artistas = array_slice($allArtistas, $offset, $perPage);
 
 $estilosMusicaisServicos = new EstilosMusicaisServicos();
 
@@ -180,7 +211,7 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
         $qs = $_GET;
         $qs['page'] = $nextPage;
         $href = 'encontre_artistas.php?' . htmlspecialchars(http_build_query($qs));
-        echo '<div class="linha_cards"><a class="mostrar-mais" href="' . $href . '" data-source="artistas" data-page="' . $nextPage . '">Mostrar mais</a></div>';
+        echo '<div class="linha_cards"><a class="mostrar-mais" href="' . $href . '" data-source="artistas" data-page="' . $nextPage . '" data-seed="' . ($seed ?? '') . '">Mostrar mais</a></div>';
     }
     ?>
 

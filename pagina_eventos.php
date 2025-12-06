@@ -20,16 +20,51 @@ $estiloFiltro = isset($_GET['estilo']) && $_GET['estilo'] !== '' ? trim($_GET['e
 $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
 $perPage = 4;
 
-// Se não houver filtros, buscar um conjunto aleatório maior para permitir paginação local. Caso contrário, buscar por filtros (conjunto completo) e paginar.
+// Se não houver filtros, gerar uma seed e usar consulta determinística ORDER BY RAND(:seed)
 if (!$estadoFiltro && !$cidadeFiltro && !$estiloFiltro) {
-    $allEventos = $eventoServicos->buscarEventosAleatorios(20) ?: [];
+    $seed = isset($_GET['seed']) && $_GET['seed'] !== '' ? intval($_GET['seed']) : mt_rand();
+    $offset = ($page - 1) * $perPage;
+
+    $pdo = $eventoServicos->conexao;
+    $sql = "SELECT eventos.id, eventos.nome, eventos.cidade, eventos.estado, eventos.dia,
+            (
+                SELECT foto_evento.url_imagem
+                FROM foto_evento
+                WHERE foto_evento.id_evento = eventos.id
+                ORDER BY foto_evento.id ASC
+                LIMIT 1
+            ) AS url_imagem,
+            (
+                SELECT GROUP_CONCAT(estilo_musical.nome SEPARATOR ',')
+                FROM evento_estilo
+                JOIN estilo_musical ON estilo_musical.id = evento_estilo.id_estilo
+                WHERE evento_estilo.id_evento = eventos.id
+                ORDER BY estilo_musical.id ASC
+                LIMIT 1
+            ) AS estilos_musicais
+        FROM eventos
+        ORDER BY RAND(:seed)
+        LIMIT :limit OFFSET :offset";
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(':seed', $seed, PDO::PARAM_INT);
+    $stmt->bindValue(':limit', $perPage, PDO::PARAM_INT);
+    $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+    $stmt->execute();
+    $eventos = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+
+    // total de eventos para controle do botão
+    $countStmt = $pdo->prepare('SELECT COUNT(*) FROM eventos');
+    $countStmt->execute();
+    $totalEventos = intval($countStmt->fetchColumn() ?: 0);
+
 } else {
     $allEventos = $eventoServicos->buscarEventosPorFiltros($estadoFiltro, $cidadeFiltro, $estiloFiltro) ?: [];
+    $totalEventos = count($allEventos);
+    $offset = ($page - 1) * $perPage;
+    $eventos = array_slice($allEventos, $offset, $perPage);
+    $seed = null;
 }
-
-$totalEventos = count($allEventos);
-$offset = ($page - 1) * $perPage;
-$eventos = array_slice($allEventos, $offset, $perPage);
 
 $contador = 0;
 
@@ -176,8 +211,9 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
         // preserva filtros na querystring
         $qs = $_GET;
         $qs['page'] = $nextPage;
+        if (!empty($seed)) $qs['seed'] = $seed;
         $href = 'pagina_eventos.php?' . htmlspecialchars(http_build_query($qs));
-        echo '<div class="linha_cards"><a class="mostrar-mais" href="' . $href . '" data-source="eventos" data-page="' . $nextPage . '">Mostrar mais</a></div>';
+        echo '<div class="linha_cards"><a class="mostrar-mais" href="' . $href . '" data-source="eventos" data-page="' . $nextPage . '" data-seed="' . ($seed ?? '') . '">Mostrar mais</a></div>';
     }
     ?>
 

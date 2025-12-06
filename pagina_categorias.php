@@ -40,14 +40,26 @@ $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
 $perPage = 6;
 
 if (!$estadoFiltro && !$cidadeFiltro && !$estiloFiltro) {
-    $allEstilos = $estilosMusicaisServicos->buscarEstilosAleatorios(30) ?: [];
+    $seed = isset($_GET['seed']) && $_GET['seed'] !== '' ? intval($_GET['seed']) : mt_rand();
+    $offset = ($page - 1) * $perPage;
+    $pdo = $estilosMusicaisServicos->conexao;
+    $sql = "SELECT id, nome, imagem FROM estilo_musical ORDER BY RAND(:seed) LIMIT :limit OFFSET :offset";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(':seed', $seed, PDO::PARAM_INT);
+    $stmt->bindValue(':limit', $perPage, PDO::PARAM_INT);
+    $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+    $stmt->execute();
+    $estilos = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+
+    $countStmt = $pdo->prepare('SELECT COUNT(*) FROM estilo_musical');
+    $countStmt->execute();
+    $totalEstilos = intval($countStmt->fetchColumn() ?: 0);
 } else {
     $allEstilos = $estilosMusicaisServicos->buscarEstilosPorFiltros($estadoFiltro, $cidadeFiltro, $estiloFiltro) ?: [];
+    $totalEstilos = count($allEstilos);
+    $offset = ($page - 1) * $perPage;
+    $estilos = array_slice($allEstilos, $offset, $perPage);
 }
-
-$totalEstilos = count($allEstilos);
-$offset = ($page - 1) * $perPage;
-$estilos = array_slice($allEstilos, $offset, $perPage);
 
 
 
@@ -184,7 +196,7 @@ $estilos = array_slice($allEstilos, $offset, $perPage);
         $qs = $_GET;
         $qs['page'] = $nextPage;
         $href = 'pagina_categorias.php?' . htmlspecialchars(http_build_query($qs));
-        echo '<div class="linha_cards"><a class="mostrar-mais" href="' . $href . '" data-source="estilos" data-page="' . $nextPage . '">Mostrar mais</a></div>';
+        echo '<div class="linha_cards"><a class="mostrar-mais" href="' . $href . '" data-source="estilos" data-page="' . $nextPage . '" data-seed="' . ($seed ?? '') . '">Mostrar mais</a></div>';
     }
     ?>
 
