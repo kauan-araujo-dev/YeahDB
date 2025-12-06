@@ -167,13 +167,13 @@ class ArtistaServicos
     }
     public function buscarIntegrantes(int $id)
     {
-        $sql = "SELECT 	integrante_artista.id, integrante_artista.nome, integrante_artista.instrumento, integrante_artista.url_imagem FROM integrante_artista JOIN artistas ON integrante_artista.id = artistas.id WHERE artistas.id = :id";
+        $sql = "SELECT integrante_artista.id, integrante_artista.nome, integrante_artista.instrumento, integrante_artista.url_imagem
+                FROM integrante_artista
+                WHERE integrante_artista.id_artista = :id";
 
         $consulta = $this->conexao->prepare($sql);
-
-        $consulta->bindValue(":id", $id);
+        $consulta->bindValue(":id", $id, PDO::PARAM_INT);
         $consulta->execute();
-
 
         return $consulta->fetchAll() ?: null;
     }

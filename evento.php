@@ -41,6 +41,10 @@ $participantes = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title><?= htmlspecialchars($evento['nome']) ?> — YeahDB</title>
     <link rel="stylesheet" href="css/pagina_eventos.css">
+    <style>
+        .thumb-event{ transition: transform .12s, box-shadow .12s, outline .12s; }
+        .thumb-event.active-thumb{ outline: 3px solid #04A777; transform: scale(1.03); box-shadow: 0 4px 10px rgba(0,0,0,0.12); }
+    </style>
     <?php require_once "includes/cabecalho.php"; ?>
 </head>
 <main style="padding:20px; max-width:1100px; margin:0 auto;">
@@ -50,11 +54,11 @@ $participantes = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <div style="display:flex; gap:20px; flex-wrap:wrap;">
         <div style="flex:1 1 480px; min-width:280px;">
             <?php if (!empty($fotos)) : ?>
-                <img src="img/eventos/<?= intval($id) ?>/fotos_eventos/<?= htmlspecialchars($fotos[0]) ?>" alt="<?= htmlspecialchars($evento['nome']) ?>" style="width:100%; height:360px; object-fit:cover; border-radius:8px;" />
+                <img id="main-event-image" src="img/eventos/<?= intval($id) ?>/fotos_eventos/<?= htmlspecialchars($fotos[0]) ?>" alt="<?= htmlspecialchars($evento['nome']) ?>" style="width:100%; height:360px; object-fit:cover; border-radius:8px;" />
                 <?php if (count($fotos) > 1) : ?>
-                    <div style="display:flex; gap:8px; margin-top:8px; flex-wrap:wrap;">
+                    <div id="thumbnails-event" style="display:flex; gap:8px; margin-top:8px; flex-wrap:wrap;">
                         <?php foreach ($fotos as $k => $f) : if ($k === 0) continue; ?>
-                            <img src="img/eventos/<?= intval($id) ?>/fotos_eventos/<?= htmlspecialchars($f) ?>" alt="foto" style="width:100px; height:70px; object-fit:cover; border-radius:4px;" />
+                            <img class="thumb-event" src="img/eventos/<?= intval($id) ?>/fotos_eventos/<?= htmlspecialchars($f) ?>" data-large="img/eventos/<?= intval($id) ?>/fotos_eventos/<?= htmlspecialchars($f) ?>" alt="<?= htmlspecialchars($evento['nome']) ?> - foto <?= $k ?>" style="width:100px; height:70px; object-fit:cover; border-radius:4px;" />
                         <?php endforeach; ?>
                     </div>
                 <?php endif; ?>
@@ -96,4 +100,5 @@ $participantes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </main>
 
 <?php require_once "includes/rodape.php"; ?>
+<script src="js/gallery.js"></script>
 </html>

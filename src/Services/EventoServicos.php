@@ -140,6 +140,34 @@ class EventoServicos
         return $consulta->fetchAll() ?: null;
     }
 
+    public function buscarEventosPorArtista(int $id): ?array
+    {
+        $sql = "SELECT eventos.id, eventos.nome, eventos.cidade, eventos.estado, eventos.dia, (
+            SELECT foto_evento.url_imagem
+            FROM foto_evento
+            WHERE foto_evento.id_evento = eventos.id
+            ORDER BY foto_evento.id ASC
+            LIMIT 1
+        ) AS url_imagem, (
+            SELECT GROUP_CONCAT(estilo_musical.nome SEPARATOR ',')
+            FROM evento_estilo
+            JOIN estilo_musical ON estilo_musical.id = evento_estilo.id_estilo
+            WHERE evento_estilo.id_evento = eventos.id
+            ORDER BY estilo_musical.id ASC
+            LIMIT 1
+        ) AS estilos_musicais
+        FROM eventos
+        JOIN artista_evento ae ON ae.id_evento = eventos.id
+        WHERE ae.id_artista = :id
+        ORDER BY eventos.dia DESC";
+
+        $consulta = $this->conexao->prepare($sql);
+        $consulta->bindValue(':id', $id, PDO::PARAM_INT);
+        $consulta->execute();
+
+        return $consulta->fetchAll() ?: null;
+    }
+
     public function inserirEvento(Eventos $evento): int {
         $sql = "INSERT INTO eventos
             (nome, descricao, estado, cidade, endereco, dia, horario, instagram, contato, link_compra, id_usuario)

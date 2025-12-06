@@ -2,6 +2,7 @@
 require_once "src/Database/Conecta.php";
 require_once "src/Helpers/Utils.php";
 require_once "src/Services/ArtistaServicos.php";
+require_once "src/Services/EventoServicos.php";
 require_once "src/Services/AutenticarServico.php";
 
 $id = $_GET['artista'] ?? null;
@@ -15,7 +16,12 @@ $dadosArtista = $artistaServico->buscarArtistaId($id);
 if (empty($dadosArtista)) Utils::redirecionarPara("index.php");
 if (!is_int($id)) Utils::redirecionarPara("index.php");
 
+// Buscar integrantes corretamente filtrados pelo artista
 $integrantes = $artistaServico->buscarIntegrantes($id);
+
+// Buscar eventos em que o artista participa
+$eventoServicos = new EventoServicos();
+$eventosArtista = $eventoServicos->buscarEventosPorArtista($id) ?: [];
 
 
 
@@ -147,13 +153,24 @@ $contador = 0;
         <section id="secao-eventos">
             <h3 id="subtitulo-eventos">EVENTOS QUE ESTÃO PARTICIPANDO</h3>
             <div id="container-cartoes-eventos">
-                <div id="evento-cartao-1" class="cartao-evento">
-                    <img src="img/um festival sertanej.png" alt="Decoração de luzes e palco em um festival ao ar livre." class="imagem-evento">
-                    <div class="informacao-evento">
-                        <p class="nome-evento">FESTIVAL AO LUAR</p>
-                        <p class="detalhes-evento">SERGIPE | 02/11</p>
-                    </div>
-                </div>
+                <?php
+                if (empty($eventosArtista)) {
+                    echo '<p>Nenhum evento encontrado para este artista.</p>';
+                } else {
+                    foreach ($eventosArtista as $evento) {
+                        $estilos = explode(',', $evento['estilos_musicais'] ?? '');
+                        $img = htmlspecialchars($evento['url_imagem'] ?? '');
+                        $nome = htmlspecialchars($evento['nome']);
+                        echo '<a href="evento.php?evento=' . intval($evento['id']) . '" class="cartao-evento">';
+                        echo '<img src="img/eventos/' . intval($evento['id']) . '/fotos_eventos/' . $img . '" alt="' . $nome . '" class="imagem-evento">';
+                        echo '<div class="informacao-evento">';
+                        echo '<p class="nome-evento">' . $nome . '</p>';
+                        echo '<p class="detalhes-evento">' . htmlspecialchars($evento['estado']) . ' | ' . Utils::formatarData($evento['dia'], true) . '</p>';
+                        echo '</div>';
+                        echo '</a>';
+                    }
+                }
+                ?>
             </div>
         </section>
     </div>
