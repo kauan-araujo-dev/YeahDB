@@ -82,7 +82,7 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YeahDB</title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/encontre-artistas.css">
+    <link rel="stylesheet" href="css/pagina_artistas_menu.css">
     <?php
     require_once "includes/cabecalho.php";
     ?>
@@ -90,7 +90,7 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
  
 <section id="secao_bandas">
 
-   <h2 class="titulo_secao">
+   <h2 class="titulo_secao" >
         ENCONTRE UM <span style="color: #FB8B24;">ARTISTA!</span>
     </h2>
 
