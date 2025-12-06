@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 06/12/2025 às 01:32
+-- Tempo de geração: 06/12/2025 às 05:26
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -110,9 +110,9 @@ INSERT INTO `estilo_musical` (`id`, `nome`, `imagem`) VALUES
 (4, 'Eletrônica', 'eletronica.jpg'),
 (5, 'Funk', 'funk.jpg'),
 (6, 'MPB', 'mpb.jpg'),
-(7, 'RAP', 'RAP.img'),
+(7, 'RAP', 'rap.jpg'),
 (8, 'Samba', 'samba.jpg'),
-(9, 'Música Clássica', 'musica_classica.jpg');
+(9, 'Clássica', 'classica.jpg');
 
 -- --------------------------------------------------------
 
@@ -140,11 +140,12 @@ CREATE TABLE `eventos` (
 --
 
 INSERT INTO `eventos` (`id`, `nome`, `descricao`, `estado`, `cidade`, `endereco`, `dia`, `horario`, `instagram`, `contato`, `link_compra`, `id_usuario`) VALUES
-(1, 'Eco-Sons Festival', 'Uma celebração da música e da sustentabilidade. O festival mais verde do país, com palcos movidos a energia solar e workshops de conscientização ambiental.', 'SP', 'São Paulo', 'Parque Ibirapuera', '2026-02-20', '15:00:00', '@ecosons_fest', 'faleconosco@ecosons.art.br', 'www.ticketagora.com.br/ecosonsibirapuera', 1),
+(1, 'Eco-Sons Festival 2006', 'Uma celebração da música e da sustentabilidade. O festival mais verde do país, com palcos movidos a energia solar e workshops de conscientização ambiental.', 'SP', 'São Paulo', 'Parque Ibirapuera', '2026-02-20', '15:00:00', '@ecosons_fest', 'faleconosco@ecosons.art.br', 'www.ticketagora.com.br/ecosonsibirapuera', 1),
 (2, 'Metálica Ruína', 'O evento mais pesado do ano. Uma noite de puro caos e decibéis, reunindo lendas do metal e as novas promessas em um cenário pós-industrial.', 'RJ', 'Volta Redonda', 'Antigo Complexo Industrial de Volta Redonda', '2026-08-15', '23:00:00', '@metalicaruinaoficial', 'bandas@metalicaruina.com', 'www.headbangeringressos.com/metalicaruina', 2),
 (3, 'Samba na Laje', 'O autêntico clima de festa de comunidade. Samba, feijoada e a vista mais deslumbrante da cidade maravilhosa. Venha celebrar a cultura brasileira no alto da colina.', 'RJ', 'Rio de Janeiro', 'Comunidade Santa Marta', '2026-01-05', '21:00:00', '@sambanalaje_rj', 'reservas@sambanalaje.com.br', 'www.sympla.com.br/sambanalajestamarta', 5),
-(4, 'Pop Galaxy Tour', 'Uma noite de gala dedicada às grandes obras da música erudita. Uma experiência refinada na arquitetura histórica de Minas Gerais, celebrando os mestres.', 'MG', 'Ouro Preto', 'Teatro Municipal de Ouro Preto', '2026-02-15', '23:00:00', '@classicosdeinvernooficial', 'ouropreto.arte@festival.org', 'www.teatromunicipalop.com/ingressos', 6),
-(5, 'Clássicos de Inverno', 'Uma noite de gala dedicada às grandes obras da música erudita. Uma experiência refinada na arquitetura histórica de Minas Gerais, celebrando os mestres.', 'MG', 'Ouro Preto', 'Teatro Municipal de Ouro Preto', '2026-03-09', '22:00:00', '@classicosdeinvernooficial', 'ouropreto.arte@festival.org', 'www.teatromunicipalop.com/ingressos', 6);
+(4, 'Pop Galaxy Tour', 'O maior espetáculo pop da América Latina. Superprodução, coreografias e os artistas mais vendidos do momento em uma noite de hits e luzes.', 'MG', 'Ouro Preto', 'Teatro Municipal de Ouro Preto', '2026-02-15', '23:00:00', '@classicosdeinvernooficial', 'ouropreto.arte@festival.org', 'www.teatromunicipalop.com/ingressos', 6),
+(5, 'Clássicos de Inverno', 'Uma noite de gala dedicada às grandes obras da música erudita. Uma experiência refinada na arquitetura histórica de Minas Gerais, celebrando os mestres.', 'MG', 'Ouro Preto', 'Teatro Municipal de Ouro Preto', '2026-03-09', '22:00:00', '@classicosdeinvernooficial', 'ouropreto.arte@festival.org', 'www.teatromunicipalop.com/ingressos', 6),
+(6, 'Sunset Vibes Festival', 'Sunset Vibes Festival chega à Praia do Madeiro, uma das mais paradisíacas do Nordeste, para 10 horas ininterruptas de música eletrônica com vista para o mar.&#13;&#10;Line-up secreto sendo revelado aos poucos, com DJs nacionais e internacionais que vão fazer você dançar da golden hour até debaixo das estrelas.&#13;&#10;Open bar premium, área VIP com vista privilegiada, after oficial na praia e muita energia positiva.&#13;&#10;Prepare-se para o evento que vai marcar o verão 2026!&#13;&#10;#SunsetVibes2026 #Pipa #ElectronicMusic #FestivalNaPraia', 'RS', 'Pelotas', 'Praia do Madeiro', '2026-07-18', '23:00:00', '@sunsetvibesfestival', '(84) 99999-8888', 'https://www.sympla.com.br/sunsetvibes2026', 7);
 
 -- --------------------------------------------------------
 
@@ -168,7 +169,10 @@ INSERT INTO `evento_estilo` (`id_evento`, `id_estilo`) VALUES
 (3, 8),
 (4, 1),
 (4, 4),
-(5, 9);
+(5, 9),
+(6, 1),
+(6, 4),
+(6, 5);
 
 -- --------------------------------------------------------
 
@@ -233,10 +237,12 @@ INSERT INTO `foto_evento` (`id`, `url_imagem`, `id_evento`) VALUES
 (11, 'Pop Galaxy Tour1.png', 4),
 (12, 'Pop Galaxy Tour2.png', 4),
 (13, 'Pop Galaxy Tour3.png', 4),
-(14, 'Clássicos de Inverno4.png', 5),
 (15, 'Clássicos de Inverno1.png', 5),
 (16, 'Clássicos de Inverno2.png', 5),
-(17, 'Clássicos de Inverno3.png', 5);
+(17, 'Clássicos de Inverno3.png', 5),
+(18, 'Clássicos de Inverno4.png', 5),
+(19, 'Clássicos de Inverno5.png', 5),
+(20, 'SunsetVibes20262.png', 6);
 
 -- --------------------------------------------------------
 
@@ -299,7 +305,8 @@ INSERT INTO `integrante_evento` (`id`, `nome`, `estilo_musical`, `url_imagem`, `
 (4, 'Caio Ferraz', 'Baixo / Backing Vocal', 'IronHowl3.png', 2),
 (5, 'GES Escola de Samba', 'Samba', 'Samba na Laje4.png', 3),
 (6, 'Carol Biffe', 'Trance', 'Pop Galaxy Tour4.png', 4),
-(7, 'Tripla Lipa', 'Contralto', 'Clássicos de Inverno5.png', 5);
+(7, 'Tripla Lipa', 'Contralto', 'Clássicos de Inverno5.png', 5),
+(8, 'Djs Djiliro e Liro', 'Funk', 'hiphop.jpg', 6);
 
 -- --------------------------------------------------------
 
@@ -330,7 +337,8 @@ INSERT INTO `usuarios` (`id`, `nome`, `data_nascimento`, `cep`, `estado`, `cidad
 (3, 'Maria Santos', '1992-10-22', '22010-01', 'RJ', 'Rio de Janeiro', 'Rua Barata Ribeiro', '45', 'maria.santos@exemplo.org', '$2y$10$llDCssDg6BwmiAU1M3H.DuIL9lLxrt.j.B0.ciSO/.MVW6ZrlYW6y'),
 (4, 'Pedro Oliveira', '1970-07-01', '90010-10', 'RS', 'Porto Alegre', 'Praça da Matriz', '120', 'pedro.oliveira@ficticio.net', '$2y$10$mN3teRkXEz82u7lFhRvXL.MXpUbX9k76uT68XFtHlkgmj4buhyyUa'),
 (5, 'Ana Costa', '2000-01-30', '30130-90', 'MG', 'Belo Horizonte', 'Av. Afonso Pena', '250', 'ana.costa@modelo.com', '$2y$10$luzIQNYYSo1do2yrb.2uLexrxb3DUr5SKmRH.yN/0qHBLDyvcyKnC'),
-(6, 'Carlos Pereira', '1965-12-10', '69005-01', 'RJ', 'Rio de Janeiro', 'Alameda Cosme Ferreira', '987', 'carlos.pereira@dados.br', '$2y$10$VT2hK64A1GxKHxo1/iw4weE/419bO1mxCEPVOldSE0KBtQhb9DKFK');
+(6, 'Carlos Pereira', '1965-12-10', '69005-01', 'RJ', 'Rio de Janeiro', 'Alameda Cosme Ferreira', '987', 'carlos.pereira@dados.br', '$2y$10$VT2hK64A1GxKHxo1/iw4weE/419bO1mxCEPVOldSE0KBtQhb9DKFK'),
+(7, 'Josefa Fagundes', '1950-05-15', '10291048', 'MG', 'Belo Horizonte', 'Rua 1', '3', 'josefagundes@email.com', '$2y$10$sDjoWVZA3Rjkj4zYKlTzxOGDsuWuYSMKG9801kNEDECCRPVA.tIaC');
 
 --
 -- Índices para tabelas despejadas
@@ -433,7 +441,7 @@ ALTER TABLE `estilo_musical`
 -- AUTO_INCREMENT de tabela `eventos`
 --
 ALTER TABLE `eventos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de tabela `foto_artista`
@@ -445,7 +453,7 @@ ALTER TABLE `foto_artista`
 -- AUTO_INCREMENT de tabela `foto_evento`
 --
 ALTER TABLE `foto_evento`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT de tabela `integrante_artista`
@@ -457,13 +465,13 @@ ALTER TABLE `integrante_artista`
 -- AUTO_INCREMENT de tabela `integrante_evento`
 --
 ALTER TABLE `integrante_evento`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de tabela `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Restrições para tabelas despejadas
