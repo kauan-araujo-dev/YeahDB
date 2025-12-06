@@ -57,7 +57,6 @@ if (!$estadoFiltro && !$cidadeFiltro && !$estiloFiltro) {
     $countStmt = $pdo->prepare('SELECT COUNT(*) FROM eventos');
     $countStmt->execute();
     $totalEventos = intval($countStmt->fetchColumn() ?: 0);
-
 } else {
     $allEventos = $eventoServicos->buscarEventosPorFiltros($estadoFiltro, $cidadeFiltro, $estiloFiltro) ?: [];
     $totalEventos = count($allEventos);
@@ -93,7 +92,7 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
 
 
 <section id="secao_bandas">
-    
+
     <h2 id="titulo_evento">
         ENCONTRE UM <span style="color: #04A777;">EVENTO!</span>
     </h2>
@@ -189,28 +188,34 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
         $rows = array_chunk($eventos, 2);
         foreach ($rows as $row) {
             echo '<div class="linha_cards">';
-           foreach ($row as $evento) {
-    $evento['estilos_musicais'] = explode(",", $evento['estilos_musicais']);
+            foreach ($row as $evento) {
+                $evento['estilos_musicais'] = explode(",", $evento['estilos_musicais']);
 
-    // Agora pega só a primeira imagem corretamente
-    $mainImg = $evento['url_imagem'] ?? '';
+                // Agora pega só a primeira imagem corretamente
+                $mainImg = $evento['url_imagem'] ?? '';
 
-                    echo '<a href="evento.php?evento=' . intval($evento['id']) . '" class="caixa_banda">';
-                    $nome = htmlspecialchars($evento['nome']);
-                    echo '<img src="img/eventos/' . intval($evento['id']) . '/fotos_eventos/' . htmlspecialchars($mainImg) . '" alt="' . $nome . '" />';
-                    echo '<div class="texto_banda_overlay">';
-                    echo '<h3 class="titulo_banda">' . $nome . '</h3>';
-                    echo '<h4 class="estilo_musical_banda">' . htmlspecialchars(implode(', ', $evento['estilos_musicais'])) . '</h4>';
-                    echo '<h4 class="data_evento">' . Utils::formatarData($evento['dia'], true) . '</h4>';
-                    echo '</div>';
-                    if (!empty($imgs)) {
-                        echo '<div class="thumb-strip">';
-                        foreach ($imgs as $t) {
-                            echo '<img class="card-thumb" src="img/eventos/' . intval($evento['id']) . '/fotos_eventos/' . htmlspecialchars($t) . '" alt="' . $nome . '" />';
-                        }
-                        echo '</div>';
+                echo '<a href="evento.php?evento=' . intval($evento['id']) . '" class="caixa_banda">';
+                $nome = htmlspecialchars($evento['nome']);
+                $imgPath = "img/eventos/" . intval($evento['id']) . "/fotos_eventos/" . $mainImg;
+
+                if (!file_exists($imgPath) || empty($mainImg)) {
+                    $imgPath = "img/sem-imagem.png";
+                }
+
+                echo '<img src="' . $imgPath . '" alt="' . $nome . '" />';
+                echo '<div class="texto_banda_overlay">';
+                echo '<h3 class="titulo_banda">' . $nome . '</h3>';
+                echo '<h4 class="estilo_musical_banda">' . htmlspecialchars(implode(', ', $evento['estilos_musicais'])) . '</h4>';
+                echo '<h4 class="data_evento">' . Utils::formatarData($evento['dia'], true) . '</h4>';
+                echo '</div>';
+                if (!empty($imgs)) {
+                    echo '<div class="thumb-strip">';
+                    foreach ($imgs as $t) {
+                        echo '<img class="card-thumb" src="img/eventos/' . intval($evento['id']) . '/fotos_eventos/' . htmlspecialchars($t) . '" alt="' . $nome . '" />';
                     }
-                    echo '</a>';
+                    echo '</div>';
+                }
+                echo '</a>';
             }
             echo '</div>';
         }
