@@ -189,11 +189,12 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
         $rows = array_chunk($eventos, 2);
         foreach ($rows as $row) {
             echo '<div class="linha_cards">';
-            foreach ($row as $evento) {
-                    $evento['estilos_musicais'] = explode(",", $evento['estilos_musicais']);
-                    // imagens múltiplas separadas por '||' (quando vindas da consulta com GROUP_CONCAT)
-                    $imgs = isset($evento['imagens']) ? array_filter(explode('||', $evento['imagens'])) : [];
-                    $mainImg = $imgs[0] ?? '';
+           foreach ($row as $evento) {
+    $evento['estilos_musicais'] = explode(",", $evento['estilos_musicais']);
+
+    // Agora pega só a primeira imagem corretamente
+    $mainImg = $evento['url_imagem'] ?? '';
+
                     echo '<a href="evento.php?evento=' . intval($evento['id']) . '" class="caixa_banda">';
                     $nome = htmlspecialchars($evento['nome']);
                     echo '<img src="img/eventos/' . intval($evento['id']) . '/fotos_eventos/' . htmlspecialchars($mainImg) . '" alt="' . $nome . '" />';
