@@ -85,7 +85,7 @@ try {
                         <h3 class="titulo_evento"><?= htmlspecialchars($evento['nome']) ?></h3>
 
                         <div class="botoes_evento">
-                            <a href="editar_eventos.php?id=<?= intval($evento['id']) ?>" class="evento_editar">
+                            <a href="editar_evento.php?id=<?= intval($evento['id']) ?>" class="evento_editar">
                                 EDITAR
                             </a>
 
