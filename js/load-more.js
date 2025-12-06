@@ -18,6 +18,19 @@ document.addEventListener('DOMContentLoaded', function () {
       // fallback: nada
     }
 
+    // Se estivermos carregando estilos, enviar os ids já renderizados para evitar duplicados
+    if (source === 'estilos') {
+      try {
+        const seenNodes = document.querySelectorAll('.linha_cards.estilos .caixa_banda[data-id]');
+        seenNodes.forEach(function (node) {
+          const id = node.getAttribute('data-id');
+          if (id) ajaxUrl.searchParams.append('seen_ids[]', id);
+        });
+      } catch (err) {
+        // ignore
+      }
+    }
+
     ajaxUrl.searchParams.set('source', source);
     ajaxUrl.searchParams.set('page', page);
     if (perPage) ajaxUrl.searchParams.set('perPage', perPage);

@@ -168,6 +168,23 @@ if (!$estadoFiltro && !$cidadeFiltro && !$estiloFiltro) {
 
 
     <?php
+    // garantir que cada estilo apareça apenas uma vez (por id)
+    if (!empty($estilos)) {
+        $seen = [];
+        $unique = [];
+        foreach ($estilos as $e) {
+            $idE = intval($e['id']);
+            if (!isset($seen[$idE])) {
+                $seen[$idE] = true;
+                $unique[] = $e;
+            }
+        }
+        $estilos = $unique;
+        // Não sobrescrever $totalEstilos aqui — ele representa o total de estilos
+        // disponíveis globalmente (ou do conjunto filtrado) e deve ser usado
+        // para controlar a paginação / botão "Mostrar mais".
+    }
+
     if (empty($estilos)) {
         // Quando não houver estilos, ocultamos a visualização (nenhuma saída)
     } else {
@@ -180,7 +197,7 @@ if (!$estadoFiltro && !$cidadeFiltro && !$estiloFiltro) {
                 $nome = htmlspecialchars($estilo['nome']);
                 // Compatibilidade: passar tanto o id quanto o nome do estilo
                 $qsName = urlencode($estilo['nome']);
-                echo '<a href="encontre_artistas.php?estilo_id=' . $id . '&estilo=' . $qsName . '" class="caixa_banda">';
+                echo '<a href="encontre_artistas.php?estilo_id=' . $id . '&estilo=' . $qsName . '" class="caixa_banda" data-id="' . $id . '">';
                 echo '<img src="img/estilos_musicais/' . $img . '" alt="' . $nome . '" />';
                 echo '<div class="texto_banda_overlay">';
                 echo '<h3 class="titulo_banda">' . $nome . '</h3>';
@@ -204,6 +221,7 @@ if (!$estadoFiltro && !$cidadeFiltro && !$estiloFiltro) {
 
 <script src="js/encontre-artistas-menu.js"></script>
 <script src="js/select-dependent.js"></script>
+<script src="js/gallery.js"></script>
 <script src="js/load-more.js"></script>
 
 <body>

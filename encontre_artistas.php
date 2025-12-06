@@ -190,14 +190,23 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
             foreach ($row as $artista) {
                 $artista['estilos_musicais'] = explode(",", $artista['estilos_musicais']);
                 $id = intval($artista['id']);
-                $img = htmlspecialchars($artista['url_imagem'] ?? '');
+                $imgs = isset($artista['imagens']) ? array_filter(explode('||', $artista['imagens'])) : [];
+                $mainImg = $imgs[0] ?? '';
                 $nome = htmlspecialchars($artista['nome']);
                 echo '<a href="artista.php?artista=' . $id . '" class="caixa_banda">';
-                echo '<img src="img/artistas/' . $id . '/fotos_artistas/' . $img . '" alt="' . $nome . '" />';
+                echo '<img src="img/artistas/' . $id . '/fotos_artistas/' . htmlspecialchars($mainImg) . '" alt="' . $nome . '" />';
                 echo '<div class="texto_banda_overlay">';
                 echo '<h3 class="titulo_banda">' . $nome . '</h3>';
                 echo '<h4 class="estilo_musical_banda">' . htmlspecialchars(implode(', ', $artista['estilos_musicais'])) . '</h4>';
-                echo '</div></a>';
+                echo '</div>';
+                if (!empty($imgs)) {
+                    echo '<div class="thumb-strip">';
+                    foreach ($imgs as $t) {
+                        echo '<img class="card-thumb" src="img/artistas/' . $id . '/fotos_artistas/' . htmlspecialchars($t) . '" alt="' . $nome . '" />';
+                    }
+                    echo '</div>';
+                }
+                echo '</a>';
             }
             echo '</div>';
         }
@@ -219,6 +228,7 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
 
 <script src="js/encontre-artistas-menu.js"></script>
 <script src="js/select-dependent.js"></script>
+<script src="js/gallery.js"></script>
 <script src="js/load-more.js"></script>
 <body>
     <?php require_once "includes/rodape.php" ?>

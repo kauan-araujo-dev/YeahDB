@@ -12,37 +12,36 @@ class EventoServicos
 
     public function buscarEventos(): ?array
     {
-        $sql = "SELECT foto_evento.url_imagem
-        FROM foto_evento
-        WHERE foto_evento.id_evento = eventos.id
-        ORDER BY foto_evento.id ASC
-        LIMIT 1
-        ) AS url_imagem,
-        (
-            SELECT estilo_musical.nome
-            FROM evento_estilo
-            JOIN estilo_musical 
-                ON estilo_musical.id = evento_estilo.id_estilo
-            WHERE evento_estilo.id_evento = eventos.id
-            ORDER BY estilo_musical.id ASC
-            LIMIT 1
-        ) AS estilo
-        FROM eventos
-        ORDER BY eventos.id ASC";
+        $sql = "SELECT eventos.id, eventos.nome, eventos.cidade, eventos.estado, eventos.dia,
+            (
+                SELECT GROUP_CONCAT(url_imagem SEPARATOR '||')
+                FROM foto_evento
+                WHERE foto_evento.id_evento = eventos.id
+                ORDER BY foto_evento.id ASC
+            ) AS imagens,
+            (
+                SELECT GROUP_CONCAT(estilo_musical.nome SEPARATOR ',')
+                FROM evento_estilo
+                JOIN estilo_musical ON estilo_musical.id = evento_estilo.id_estilo
+                WHERE evento_estilo.id_evento = eventos.id
+                ORDER BY estilo_musical.id ASC
+                LIMIT 1
+            ) AS estilos_musicais
+            FROM eventos
+            ORDER BY eventos.id ASC";
 
         $consulta = $this->conexao->query($sql);
 
-        return $consulta->fetchAll() ?: null;
+        return $consulta->fetchAll(PDO::FETCH_ASSOC) ?: null;
     }
     public function buscarEventosUsuario(int $id): ?array
     {
        $sql = "SELECT eventos.id, eventos.nome, eventos.cidade, eventos.estado, eventos.dia,  (
-        SELECT foto_evento.url_imagem
+        SELECT GROUP_CONCAT(url_imagem SEPARATOR '||')
         FROM foto_evento
         WHERE foto_evento.id_evento = eventos.id
         ORDER BY foto_evento.id ASC
-        LIMIT 1
-        ) AS url_imagem,
+        ) AS imagens,
         (
             SELECT GROUP_CONCAT(estilo_musical.nome SEPARATOR ',')
             FROM evento_estilo
@@ -56,40 +55,36 @@ class EventoServicos
         WHERE usuarios.id = :id ORDER BY eventos.id DESC";
 
         $consulta = $this->conexao->prepare($sql);
-
-        $consulta->bindValue(":id", $id);
-
+        $consulta->bindValue(":id", $id, PDO::PARAM_INT);
         $consulta->execute();
 
-
-
-        return $consulta->fetchAll() ?: null;
+        return $consulta->fetchAll(PDO::FETCH_ASSOC) ?: null;
     }
     public function buscarEventosComLimite(int $limite): ?array
     {
-        $sql = "SELECT eventos.id, eventos.nome, eventos.cidade, eventos.estado, eventos.dia,  (
-        SELECT foto_evento.url_imagem
-        FROM foto_evento
-        WHERE foto_evento.id_evento = eventos.id
-        ORDER BY foto_evento.id ASC
-        LIMIT 1
-        ) AS url_imagem,
-        (
-            SELECT GROUP_CONCAT(estilo_musical.nome SEPARATOR ',')
-            FROM evento_estilo
-            JOIN estilo_musical 
-                ON estilo_musical.id = evento_estilo.id_estilo
-            WHERE evento_estilo.id_evento = eventos.id
-            ORDER BY estilo_musical.id ASC
-            LIMIT 1
-        ) AS estilos_musicais
-        FROM eventos
-        ORDER BY eventos.id DESC LIMIT $limite";
+        $sql = "SELECT eventos.id, eventos.nome, eventos.cidade, eventos.estado, eventos.dia,
+            (
+                SELECT GROUP_CONCAT(url_imagem SEPARATOR '||')
+                FROM foto_evento
+                WHERE foto_evento.id_evento = eventos.id
+                ORDER BY foto_evento.id ASC
+            ) AS imagens,
+            (
+                SELECT GROUP_CONCAT(estilo_musical.nome SEPARATOR ',')
+                FROM evento_estilo
+                JOIN estilo_musical ON estilo_musical.id = evento_estilo.id_estilo
+                WHERE evento_estilo.id_evento = eventos.id
+                ORDER BY estilo_musical.id ASC
+                LIMIT 1
+            ) AS estilos_musicais
+            FROM eventos
+            ORDER BY eventos.id DESC LIMIT :limite";
 
         $consulta = $this->conexao->prepare($sql);
+        $consulta->bindValue(':limite', $limite, PDO::PARAM_INT);
         $consulta->execute();
 
-        return $consulta->fetchAll() ?: null;
+        return $consulta->fetchAll(PDO::FETCH_ASSOC) ?: null;
     }
 
     public function buscarEventosPorFiltros(?string $estado, ?string $cidade, ?string $estilo): ?array
@@ -112,7 +107,21 @@ class EventoServicos
             $params[':estilo'] = $estilo;
         }
 
-        $sql = "SELECT eventos.id, eventos.nome, eventos.cidade, eventos.estado, eventos.dia, (\n            SELECT foto_evento.url_imagem\n            FROM foto_evento\n            WHERE foto_evento.id_evento = eventos.id\n            ORDER BY foto_evento.id ASC\n            LIMIT 1\n        ) AS url_imagem, (\n            SELECT GROUP_CONCAT(estilo_musical.nome SEPARATOR ',')\n            FROM evento_estilo\n            JOIN estilo_musical ON estilo_musical.id = evento_estilo.id_estilo\n            WHERE evento_estilo.id_evento = eventos.id\n            ORDER BY estilo_musical.id ASC\n            LIMIT 1\n        ) AS estilos_musicais\n        FROM eventos\n        " . $joinEstilo . "\n";
+        $sql = "SELECT eventos.id, eventos.nome, eventos.cidade, eventos.estado, eventos.dia, (
+            SELECT GROUP_CONCAT(url_imagem SEPARATOR '||')
+            FROM foto_evento
+            WHERE foto_evento.id_evento = eventos.id
+            ORDER BY foto_evento.id ASC
+        ) AS imagens, (
+            SELECT GROUP_CONCAT(estilo_musical.nome SEPARATOR ',')
+            FROM evento_estilo
+            JOIN estilo_musical ON estilo_musical.id = evento_estilo.id_estilo
+            WHERE evento_estilo.id_evento = eventos.id
+            ORDER BY estilo_musical.id ASC
+            LIMIT 1
+        ) AS estilos_musicais
+        FROM eventos
+        " . $joinEstilo . "\n";
 
         if (!empty($where)) {
             $sql .= ' WHERE ' . implode(' AND ', $where);
@@ -126,36 +135,53 @@ class EventoServicos
         }
         $consulta->execute();
 
-        return $consulta->fetchAll() ?: null;
+        return $consulta->fetchAll(PDO::FETCH_ASSOC) ?: null;
     }
 
     public function buscarEventosAleatorios(int $limite = 4): ?array
     {
-        $sql = "SELECT eventos.id, eventos.nome, eventos.cidade, eventos.estado, eventos.dia, (\n            SELECT foto_evento.url_imagem\n            FROM foto_evento\n            WHERE foto_evento.id_evento = eventos.id\n            ORDER BY foto_evento.id ASC\n            LIMIT 1\n        ) AS url_imagem, (\n            SELECT GROUP_CONCAT(estilo_musical.nome SEPARATOR ',')\n            FROM evento_estilo\n            JOIN estilo_musical ON estilo_musical.id = evento_estilo.id_estilo\n            WHERE evento_estilo.id_evento = eventos.id\n            ORDER BY estilo_musical.id ASC\n            LIMIT 1\n        ) AS estilos_musicais\n        FROM eventos\n        ORDER BY RAND() LIMIT :limite";
+        $sql = "SELECT eventos.id, eventos.nome, eventos.cidade, eventos.estado, eventos.dia,
+            (
+                SELECT GROUP_CONCAT(url_imagem SEPARATOR '||')
+                FROM foto_evento
+                WHERE foto_evento.id_evento = eventos.id
+                ORDER BY foto_evento.id ASC
+            ) AS imagens,
+            (
+                SELECT GROUP_CONCAT(estilo_musical.nome SEPARATOR ',')
+                FROM evento_estilo
+                JOIN estilo_musical ON estilo_musical.id = evento_estilo.id_estilo
+                WHERE evento_estilo.id_evento = eventos.id
+                ORDER BY estilo_musical.id ASC
+                LIMIT 1
+            ) AS estilos_musicais
+            FROM eventos
+            ORDER BY RAND() LIMIT :limite";
 
         $consulta = $this->conexao->prepare($sql);
         $consulta->bindValue(':limite', $limite, PDO::PARAM_INT);
         $consulta->execute();
 
-        return $consulta->fetchAll() ?: null;
+        return $consulta->fetchAll(PDO::FETCH_ASSOC) ?: null;
     }
 
     public function buscarEventosPorArtista(int $id): ?array
     {
-        $sql = "SELECT eventos.id, eventos.nome, eventos.cidade, eventos.estado, eventos.dia, (
-            SELECT foto_evento.url_imagem
-            FROM foto_evento
-            WHERE foto_evento.id_evento = eventos.id
-            ORDER BY foto_evento.id ASC
-            LIMIT 1
-        ) AS url_imagem, (
-            SELECT GROUP_CONCAT(estilo_musical.nome SEPARATOR ',')
-            FROM evento_estilo
-            JOIN estilo_musical ON estilo_musical.id = evento_estilo.id_estilo
-            WHERE evento_estilo.id_evento = eventos.id
-            ORDER BY estilo_musical.id ASC
-            LIMIT 1
-        ) AS estilos_musicais
+        $sql = "SELECT eventos.id, eventos.nome, eventos.cidade, eventos.estado, eventos.dia,
+            (
+                SELECT GROUP_CONCAT(url_imagem SEPARATOR '||')
+                FROM foto_evento
+                WHERE foto_evento.id_evento = eventos.id
+                ORDER BY foto_evento.id ASC
+            ) AS imagens,
+            (
+                SELECT GROUP_CONCAT(estilo_musical.nome SEPARATOR ',')
+                FROM evento_estilo
+                JOIN estilo_musical ON estilo_musical.id = evento_estilo.id_estilo
+                WHERE evento_estilo.id_evento = eventos.id
+                ORDER BY estilo_musical.id ASC
+                LIMIT 1
+            ) AS estilos_musicais
         FROM eventos
         JOIN artista_evento ae ON ae.id_evento = eventos.id
         WHERE ae.id_artista = :id
@@ -165,7 +191,7 @@ class EventoServicos
         $consulta->bindValue(':id', $id, PDO::PARAM_INT);
         $consulta->execute();
 
-        return $consulta->fetchAll() ?: null;
+        return $consulta->fetchAll(PDO::FETCH_ASSOC) ?: null;
     }
 
     public function inserirEvento(Eventos $evento): int {

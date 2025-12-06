@@ -28,3 +28,28 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 });
+
+// Troca de miniatura dentro dos cards (delegation)
+document.addEventListener('click', function (e) {
+  const target = e.target;
+  if (!target.classList || !target.classList.contains('card-thumb')) return;
+
+  // encontrar a caixa do card e a imagem principal dentro dela
+  const card = target.closest('.caixa_banda');
+  if (!card) return;
+
+  // a primeira imagem direta dentro do card é o destaque
+  const mainImg = card.querySelector(':scope > img');
+  if (!mainImg) return;
+
+  // substituir a src do destaque pela src da miniatura clicada
+  try {
+    mainImg.src = target.src;
+    // marcar miniatura ativa
+    const siblings = card.querySelectorAll('.card-thumb');
+    siblings.forEach(function (s) { s.classList.remove('active-card-thumb'); });
+    target.classList.add('active-card-thumb');
+  } catch (err) {
+    console.error('Erro ao trocar miniatura do card:', err);
+  }
+});

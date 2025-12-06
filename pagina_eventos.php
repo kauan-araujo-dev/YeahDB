@@ -190,16 +190,26 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
         foreach ($rows as $row) {
             echo '<div class="linha_cards">';
             foreach ($row as $evento) {
-                $evento['estilos_musicais'] = explode(",", $evento['estilos_musicais']);
-                echo '<a href="evento.php?evento=' . intval($evento['id']) . '" class="caixa_banda">';
-                $img = htmlspecialchars($evento['url_imagem'] ?? '');
-                $nome = htmlspecialchars($evento['nome']);
-                echo '<img src="img/eventos/' . intval($evento['id']) . '/fotos_eventos/' . $img . '" alt="' . $nome . '" />';
-                echo '<div class="texto_banda_overlay">';
-                echo '<h3 class="titulo_banda">' . $nome . '</h3>';
-                echo '<h4 class="estilo_musical_banda">' . htmlspecialchars(implode(', ', $evento['estilos_musicais'])) . '</h4>';
-                echo '<h4 class="data_evento">' . Utils::formatarData($evento['dia'], true) . '</h4>';
-                echo '</div></a>';
+                    $evento['estilos_musicais'] = explode(",", $evento['estilos_musicais']);
+                    // imagens múltiplas separadas por '||' (quando vindas da consulta com GROUP_CONCAT)
+                    $imgs = isset($evento['imagens']) ? array_filter(explode('||', $evento['imagens'])) : [];
+                    $mainImg = $imgs[0] ?? '';
+                    echo '<a href="evento.php?evento=' . intval($evento['id']) . '" class="caixa_banda">';
+                    $nome = htmlspecialchars($evento['nome']);
+                    echo '<img src="img/eventos/' . intval($evento['id']) . '/fotos_eventos/' . htmlspecialchars($mainImg) . '" alt="' . $nome . '" />';
+                    echo '<div class="texto_banda_overlay">';
+                    echo '<h3 class="titulo_banda">' . $nome . '</h3>';
+                    echo '<h4 class="estilo_musical_banda">' . htmlspecialchars(implode(', ', $evento['estilos_musicais'])) . '</h4>';
+                    echo '<h4 class="data_evento">' . Utils::formatarData($evento['dia'], true) . '</h4>';
+                    echo '</div>';
+                    if (!empty($imgs)) {
+                        echo '<div class="thumb-strip">';
+                        foreach ($imgs as $t) {
+                            echo '<img class="card-thumb" src="img/eventos/' . intval($evento['id']) . '/fotos_eventos/' . htmlspecialchars($t) . '" alt="' . $nome . '" />';
+                        }
+                        echo '</div>';
+                    }
+                    echo '</a>';
             }
             echo '</div>';
         }
@@ -221,6 +231,7 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
 
 <script src="js/encontre-artistas-menu.js"></script>
 <script src="js/select-dependent.js"></script>
+<script src="js/gallery.js"></script>
 <script src="js/load-more.js"></script>
 
 <body>
