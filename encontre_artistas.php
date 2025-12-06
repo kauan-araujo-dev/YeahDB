@@ -190,8 +190,7 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
             foreach ($row as $artista) {
                 $artista['estilos_musicais'] = explode(",", $artista['estilos_musicais']);
                 $id = intval($artista['id']);
-                $imgs = isset($artista['imagens']) ? array_filter(explode('||', $artista['imagens'])) : [];
-                $mainImg = $imgs[0] ?? '';
+                $mainImg = $artista['url_imagem'] ?? '';
                 $nome = htmlspecialchars($artista['nome']);
                 echo '<a href="artista.php?artista=' . $id . '" class="caixa_banda">';
                 echo '<img src="img/artistas/' . $id . '/fotos_artistas/' . htmlspecialchars($mainImg) . '" alt="' . $nome . '" />';
