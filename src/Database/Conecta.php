@@ -8,7 +8,7 @@ class Conecta
     {
         if (self::$conexao === null) {
             $host = 'localhost';
-            $banco = 'yeahdb_william';
+            $banco = 'yeah_db';
             $usuario = 'root';
             $senha = '';
             $porta = 3306;
