@@ -67,29 +67,28 @@ class EventoServicos
     }
     public function buscarEventosComLimite(int $limite): ?array
     {
-        $sql = "SELECT eventos.id, eventos.nome, eventos.cidade, eventos.estado, eventos.dia,  (
-        SELECT foto_evento.url_imagem
-        FROM foto_evento
-        WHERE foto_evento.id_evento = eventos.id
-        ORDER BY foto_evento.id ASC
-        LIMIT 1
-        ) AS url_imagem,
-        (
-            SELECT GROUP_CONCAT(estilo_musical.nome SEPARATOR ',')
-            FROM evento_estilo
-            JOIN estilo_musical 
-                ON estilo_musical.id = evento_estilo.id_estilo
-            WHERE evento_estilo.id_evento = eventos.id
-            ORDER BY estilo_musical.id ASC
-            LIMIT 1
-        ) AS estilos_musicais
+        $sql = "SELECT eventos.id, eventos.nome, eventos.cidade, eventos.estado, eventos.dia,
+            (
+                SELECT GROUP_CONCAT(foto_evento.url_imagem SEPARATOR '||')
+                FROM foto_evento
+                WHERE foto_evento.id_evento = eventos.id
+                ORDER BY foto_evento.id ASC
+            ) AS imagens,
+            (
+                SELECT GROUP_CONCAT(estilo_musical.nome SEPARATOR ',')
+                FROM evento_estilo
+                JOIN estilo_musical
+                    ON estilo_musical.id = evento_estilo.id_estilo
+                WHERE evento_estilo.id_evento = eventos.id
+            ) AS estilos_musicais
         FROM eventos
-        ORDER BY eventos.id DESC LIMIT $limite";
+        ORDER BY eventos.id DESC LIMIT :limite";
 
         $consulta = $this->conexao->prepare($sql);
+        $consulta->bindValue(':limite', $limite, PDO::PARAM_INT);
         $consulta->execute();
 
-        return $consulta->fetchAll() ?: null;
+        return $consulta->fetchAll(PDO::FETCH_ASSOC) ?: null;
     }
 
     public function buscarEventosPorFiltros(?string $estado, ?string $cidade, ?string $estilo): ?array
