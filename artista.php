@@ -46,7 +46,7 @@ $contador = 0;
 
         <div class="imagem_banda">
 
-            <img src="img/artistas/<?= $dadosArtista['id'] ?>/fotos_artistas/<?= explode(",", $dadosArtista['url_imagem'])[0] ?>" alt="<?= $dadosArtista['nome'] ?>">
+            <img src="img/artistas/<?= $dadosArtista['id'] ?>/fotos_artistas/<?= explode("||", $dadosArtista['imagens'])[0] ?>" alt="<?= $dadosArtista['nome'] ?>">
 
         </div>
 
@@ -107,7 +107,7 @@ $contador = 0;
             <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
 
-                    <?php foreach (explode(",", $dadosArtista['url_imagem']) as $imagem) {
+                    <?php foreach (explode("||", $dadosArtista['imagens']) as $imagem) {
                     ?>
                         <div class="carousel-item <?= $contador == 0 ? "active" : "" ?>">
                             <div class="container_carrossel">

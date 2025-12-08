@@ -15,22 +15,25 @@ function addParticipante(isFirst) {
 
     const box = document.createElement("div");
     box.classList.add("participante-box");
+box.innerHTML = `
+    <label class="foto-area">
+        <span>ESCOLHA UMA FOTO</span>
+        <input type="file" accept="image/*" class="foto-input" name="participante_foto[]" 
+               style="display:none" onchange="previewFoto(this)">
+    </label>
 
-    box.innerHTML = `
-        <label class="foto-area">
-            <span>ESCOLHA UMA FOTO</span>
-            <input type="file" accept="image/*" name="participante_foto[]" 
-                   style="display:none" onchange="previewFoto(this)">
-        </label>
+    <div class="inputs-area">
+        <label>Email do participante:</label>
+        <input type="text" class="codigo-input" name="participante_codigo[]" 
+               placeholder="Digite o codigo (opcional)" oninput="toggleParticipanteMode(this)">
 
-        <div class="inputs-area">
-            <label>Nome do participante:</label>
-            <input type="text" name="participante_nome[]">
+        <label>Nome do participante:</label>
+        <input type="text" class="nome-input" name="participante_nome[]">
 
-            <label>Estilo músical:</label>
-            <input type="text" name="participantes_estilo_musical[]">
-        </div>
-    `;
+        <label>Estilo musical:</label>
+        <input type="text" class="estilo-input" name="participantes_estilo_musical[]">
+    </div>
+`;
 
     wrapper.appendChild(box);
     container.appendChild(wrapper);
@@ -167,4 +170,75 @@ function updateUploadButton() {
 
     uploadButton.innerHTML = `ESCOLHER FOTO (${qtd}/5)`;
 }
+function toggleParticipanteMode(input) {
+    const wrapper = input.closest(".participante-wrapper");
 
+    const fotoInput = wrapper.querySelector(".foto-input");
+    const codigoInput = wrapper.querySelector(".codigo-input");
+    const nomeInput = wrapper.querySelector(".nome-input");
+    const estiloInput = wrapper.querySelector(".estilo-input");
+    const fotoArea = wrapper.querySelector(".foto-area");
+
+    const codigo = codigoInput.value.trim();
+    const nome = nomeInput.value.trim();
+    const estilo = estiloInput.value.trim();
+    const hasFoto = fotoInput.files.length > 0;
+
+    /* ==========================================================
+       CASO 1: EMAIL PREENCHIDO → limpa & bloqueia os outros
+    ========================================================== */
+    if (codigo !== "") {
+
+        // Zera foto
+        fotoInput.value = "";
+        const preview = wrapper.querySelector(".preview-area");
+        if (preview) preview.remove();
+        fotoArea.innerHTML = `<span>ESCOLHA UMA FOTO</span>`;
+        fotoArea.appendChild(fotoInput);
+
+        // Zera textos
+        nomeInput.value = "";
+        estiloInput.value = "";
+
+        // Desabilitar nome, estilo e foto
+        nomeInput.disabled = true;
+        estiloInput.disabled = true;
+        fotoInput.disabled = true;
+        fotoArea.style.pointerEvents = "none";
+        fotoArea.style.opacity = "0.4";
+
+        // Habilita codigo
+        codigoInput.disabled = false;
+
+        return;
+    }
+
+    /* ==========================================================
+       CASO 2: NOME / ESTILO / FOTO PREENCHIDOS → limpa codigo
+    ========================================================== */
+    if (nome !== "" || estilo !== "" || hasFoto) {
+
+        // Zera codigo
+        codigoInput.value = "";
+        codigoInput.disabled = true;
+
+        // Habilita campos manuais
+        nomeInput.disabled = false;
+        estiloInput.disabled = false;
+        fotoInput.disabled = false;
+        fotoArea.style.pointerEvents = "auto";
+        fotoArea.style.opacity = "1";
+
+        return;
+    }
+
+    /* ==========================================================
+       CASO 3: TUDO VAZIO → habilita tudo normalmente
+    ========================================================== */
+    codigoInput.disabled = false;
+    nomeInput.disabled = false;
+    estiloInput.disabled = false;
+    fotoInput.disabled = false;
+    fotoArea.style.pointerEvents = "auto";
+    fotoArea.style.opacity = "1";
+}

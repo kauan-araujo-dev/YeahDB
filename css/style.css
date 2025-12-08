@@ -1,10 +1,9 @@
 #main-index {
-  margin: 90px 0;
+  margin-bottom: 90px;
   display: flex;
   flex-direction: column;
   gap: 90px;
 }
-
 #carouselExampleFade {
   width: 100%;
   height: 600px;
@@ -40,7 +39,6 @@
   background-color: rgba(0, 0, 0, 0.5);
   font-size: clamp(20px, 3vw, 60px);
 }
-
 #secao_bandas{
     display: flex;
   align-items: center;
@@ -61,7 +59,7 @@
 
 .caixa_banda {
   position: relative;
-  border-radius: 12px;
+  border-radius: 5px;
   overflow: hidden;
   width: 347px;
   height: 432px;
@@ -154,8 +152,9 @@
   padding: 0;
   position: relative;
   overflow: hidden;
-  border-radius: 15px;
+  border-radius: 5px;
   transition: 0.2 ease;
+  box-shadow: 0px 0px 20px rgba(0,0,0,0.1);
 }
 #carouselExampleAutoplaying:hover{
   opacity: 0.9;
@@ -171,6 +170,7 @@
 .carousel-control-prev {
   width: auto !important;
   justify-content: space-between !important;
+
 }
 
 .carousel-inner,
@@ -178,12 +178,14 @@
 .container_carrossel {
   width: 100%;
   height: 100%;
+  box-shadow: 0px 0px 20px rgba(0,0,0,0.1);
 }
 
 .container_carrossel img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  box-shadow: 0px 0px 20px rgba(0,0,0,0.1);
   
 }
 
@@ -196,8 +198,8 @@
   height: 52%;
   background: linear-gradient(to top, #000, #000, transparent);
   pointer-events: none;
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
 }
 
 .textos_carrossel {
@@ -264,6 +266,7 @@
   display: flex;
   align-items: center;
   flex-direction: column;
+  gap: 50px;
 }
 #titulo_estilos_musicais span{
   color: #FB8B24;
@@ -272,15 +275,16 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 20px;
+  gap: 30px;
   width: 100%;
   padding: 20px;
 }
 
 .card_estilos_musicais {
   position: relative; /* Faz do card um contêiner para posicionamento absoluto do texto */
-  width: 245px; /* Mesma largura da imagem */
-  height: 245px; /* Mesma altura da imagem */
+  width: 250px; /* Mesma largura da imagem */
+  height: 250px; /* Mesma altura da imagem */
+  
   
 }
 .cards_estilos_musicais img{
@@ -288,31 +292,32 @@
   width: 100%;
   height: 100%;
   border-radius: 10px;
+  box-shadow: 0px 0px 20px rgba(0,0,0,0.1);
 }
 
-.estilo_musical {
+/* .estilo_musical {
   width: 245px;
   height: 245px;
-  background-color: #ea4746; /* Fundo vermelho para imagens não carregadas */
-  display: block; /* Garante que a imagem ocupe o espaço corretamente */
+  background-color: #ea4746; 
+  display: block; 
 }
 
 .texto-estilo {
-  position: absolute; /* Posiciona o texto em relação ao .card */
-  bottom: 0; /* Distância da parte inferior */
+  position: absolute; 
+  bottom: 0; 
   left: 0;
   right: 0;
-  text-align: center; /* Centraliza o texto horizontalmente */
-  color: white; /* Cor do texto para contrastar com o fundo vermelho */
+  text-align: center; 
+  color: white;
   font-family: Arial, Helvetica, sans-serif;
   font-weight: 700;
   font-size: 18px;
-  text-transform: uppercase; /* Mantém o texto em maiúsculas */
+  text-transform: uppercase; 
   padding: 5px 0;
   background: linear-gradient(180deg, transparent, #000);
   margin-bottom: 0;
   border-radius: 20px;
-}
+} */
 
 /* Media Query para dispositivos móveis (telas até 768px) */
 @media (max-width: 768px) {
@@ -504,4 +509,90 @@
     padding: 10px 20px;
   }
 
+}
+:root{
+    --fade-width:120px;
+    --gap:20px;
+    --bg:transparent; /* Altere se seu fundo for escuro */
+}
+
+.estilos-infinite {
+    position: relative;
+    overflow: hidden;
+    width: 90%;
+    padding: 20px 0;
+}
+
+.estilos-infinite .inner {
+    display: flex;
+    gap: var(--gap);
+    will-change: transform;
+}
+
+.estilo-item {
+    flex: 0 0 auto;
+    width: 250px;
+    height: 250px;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.estilo-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 12px;
+}
+
+/* Fade lateral */
+.estilos-infinite::before,
+.estilos-infinite::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    width: var(--fade-width);
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.estilos-infinite::before {
+    left: 0;
+    background: linear-gradient(to right, var(--bg), transparent);
+}
+
+.estilos-infinite::after {
+    right: 0;
+    background: linear-gradient(to left, var(--bg), transparent);
+}
+
+/* Responsivo */
+@media (max-width:600px){
+    .estilo-item{
+        width:160px;
+        height:160px;
+    }
+    :root{
+        --fade-width:60px;
+        --gap:12px;
+    }
+}
+#carouselBandas .carousel-item {
+  transition: transform 0.8s ease-in-out;
+}
+
+#carouselBandas .col-6.col-md-3 {
+  display: flex;
+  justify-content: center;
+}
+
+#carouselBandas {
+  width: 100%;
+  max-width: 1300px;
+}
+
+#carouselBandas .carousel-control-prev-icon,
+#carouselBandas .carousel-control-next-icon {
+  filter: invert(1);
 }

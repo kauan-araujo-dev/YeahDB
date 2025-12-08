@@ -48,7 +48,60 @@ class UsuarioServicos
         $consulta->execute();
     }
 
-    public function buscarPorEmail($email):?array{
+    public function buscarPorArtistaCodigo($codigo):?array{
+        $sql = "SELECT artistas.id FROM artistas WHERE artistas.codigo_artista = :codigo";
+
+        $consulta = $this->conexao->prepare($sql);
+
+        $consulta->bindValue(":codigo", $codigo);
+
+        $consulta->execute();
+
+        return $consulta->fetch() ?: null;
+
+    }
+
+    public function buscarPorid($id):?array{
+        $sql = "SELECT * FROM usuarios WHERE id = :id";
+
+        $consulta = $this->conexao->prepare($sql);
+
+        $consulta->bindValue(":id", $id);
+
+        $consulta->execute();
+
+        return $consulta->fetch() ?: null;
+
+    }
+
+    public function atualizarUsuario(Usuario $usuario): void
+{
+    $sql = "UPDATE usuarios SET
+                nome = :nome,
+                data_nascimento = :data_nascimento,
+                cep = :cep,
+                estado = :estado,
+                cidade = :cidade,
+                rua = :rua,
+                numero = :numero,
+                email = :email
+            WHERE id = :id";
+
+    $consulta = $this->conexao->prepare($sql);
+
+    $consulta->bindValue(':nome', $usuario->getNome());
+    $consulta->bindValue(':data_nascimento', $usuario->getDataNascimento());
+    $consulta->bindValue(':cep', $usuario->getCep());
+    $consulta->bindValue(':estado', $usuario->getEstado());
+    $consulta->bindValue(':cidade', $usuario->getCidade());
+    $consulta->bindValue(':rua', $usuario->getRua());
+    $consulta->bindValue(':numero', $usuario->getNumero());
+    $consulta->bindValue(':email', $usuario->getEmail());
+    $consulta->bindValue(':id', $usuario->getId());
+
+    $consulta->execute();
+}
+ public function buscarPorEmail($email):?array{
         $sql = "SELECT * FROM usuarios WHERE email = :email";
 
         $consulta = $this->conexao->prepare($sql);

@@ -18,7 +18,7 @@ class EstilosMusicaisServicos
     }
     public function buscarEstilosComLimite(): ?array
     {
-        $sql = "SELECT id, nome, imagem FROM estilo_musical LIMIT 3;";
+        $sql = "SELECT id, nome, imagem FROM estilo_musical";
 
         $consulta = $this->conexao->query($sql);
 

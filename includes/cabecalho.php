@@ -31,7 +31,6 @@
                     <div id="meu-perfil">
                         <p>Olá <?= htmlspecialchars($_SESSION['nome']) ?>, </p>
                         <a href="minha_conta.php">MINHA CONTA</a>
-                        <a href="logout.php" class="botao_acesso">SAIR</a>
                     </div>
                     <?php } ?>
             </nav>

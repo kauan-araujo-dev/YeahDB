@@ -33,7 +33,7 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
 
     <section id="secao_banner">
 
-      <div id="carouselExampleFade" class="carousel slide carousel-fade">
+      <div id="carouselExampleFade" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="2000">
         <div class="carousel-inner">
           <div class="carousel-item active">
             <img src="img/banner-de-fundo.jpg" class="d-block w-100" alt="...">
@@ -138,15 +138,20 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
     <section id="secao_estilos_musicais">
       <h2 class="titulo_secao" id="titulo_estilos_musicais">ENCONTRE O SEU <span>ESTILO</span></h2>
 
+      
+      <div class="estilos-infinite" id="infiniteScroll">
+    <div class="inner" id="inner">
+        <?php foreach($estilos_musicais as $musica): ?>
+            <div class="estilo-item">
+                <a href="artistas.php?<?= $musica['id'] ?>">
+                  <img src="img/estilos_musicais/<?= $musica['imagem'] ?>" 
+                     alt="<?= htmlspecialchars($musica['nome'], ENT_QUOTES) ?>">
+                </a>
+            </div>
+        <?php endforeach; ?>
+    </div>
+</div>
 
-      <div class="cards_estilos_musicais">
-        <?php foreach ($estilos_musicais as $estilo_musical) { ?>
-          <div class="card_estilos_musicais">
-            <img src="img/estilos_musicais/<?= $estilo_musical['imagem'] ?>" alt="band de <?= $estilo_musical['nome'] ?>" class="estilo_musical">
-            <h3 class="texto-estilo"><?= $estilo_musical['nome'] ?></h3>
-          </div>
-        <?php } ?>
-      </div>
     </section>
 
 
@@ -171,6 +176,7 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
   <script src="js/gallery.js"></script>
+  <script src="js/index.js"></script>
   </body>
 
 </html>

@@ -73,12 +73,11 @@ if (!$estadoFiltro && !$cidadeFiltro && !$estiloFiltro) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YeahDB</title>
     <!--  <link rel="stylesheet" href="css/style.css">  -->
-    <link rel="stylesheet" href="css/pagina_eventos.css">
+    <link rel="stylesheet" href="css/pagina_categorias.css">
 
     <?php
     require_once "includes/cabecalho.php";
     ?>
-</head>
 
 
 <section id="secao_bandas">
@@ -199,9 +198,7 @@ if (!$estadoFiltro && !$cidadeFiltro && !$estiloFiltro) {
                 $qsName = urlencode($estilo['nome']);
                 echo '<a href="encontre_artistas.php?estilo_id=' . $id . '&estilo=' . $qsName . '" class="caixa_banda" data-id="' . $id . '">';
                 echo '<img src="img/estilos_musicais/' . $img . '" alt="' . $nome . '" />';
-                echo '<div class="texto_banda_overlay">';
-                echo '<h3 class="titulo_banda">' . $nome . '</h3>';
-                echo '</div></a>';
+                echo '</a>';
             }
             echo '</div>';
         }

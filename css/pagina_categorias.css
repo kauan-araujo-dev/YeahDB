@@ -1,0 +1,332 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  display: flex;
+  flex-direction: column;
+  height: 100vh !important;
+}
+#secao_bandas {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 50px;
+  padding: 20px;
+  height: auto;
+  flex: 1;
+}
+
+#titulo_evento span {
+  color: #04a777;
+}
+
+#titulo_evento {
+  font-weight: bold;
+  font-size: 48px;
+  margin-top: 90px;
+}
+
+.linha_cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  justify-content: center;
+}
+
+.caixa_banda {
+  flex: 1 1 calc(50% - 40px);
+  position: relative;
+  border-radius: 5px;
+  overflow: hidden;
+  max-width: 567px;
+  height: 288px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-decoration: none;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Styles specific to categoria cards: 3 columns on desktop, responsive */
+.linha_cards.estilos .caixa_banda {
+  flex: 1 1 calc(33.333% - 40px);
+  max-width: none;
+  height: 240px;
+}
+
+@media (max-width: 992px) {
+  .linha_cards.estilos .caixa_banda {
+    flex: 1 1 calc(50% - 24px);
+    height: 260px;
+  }
+}
+
+@media (max-width: 480px) {
+  .linha_cards.estilos .caixa_banda {
+    flex: 1 1 100%;
+    height: 220px;
+  }
+}
+
+.caixa_banda img {
+  width: 300px;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  position: relative;
+  z-index: 0;
+}
+
+/* Faixa de miniaturas dentro do card (baixo do conteúdo) */
+.thumb-strip {
+  display: flex;
+  gap: 6px;
+  position: absolute;
+  left: 10px;
+  bottom: 8px;
+  z-index: 2;
+}
+.card-thumb {
+  width: 44px;
+  height: 44px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+}
+.card-thumb.active-card-thumb {
+  outline: 3px solid rgba(4, 167, 119, 0.9);
+  transform: translateY(-2px);
+}
+
+.texto_banda_overlay {
+  text-transform: uppercase;
+  position: absolute;
+  bottom: 0;
+  left: 0px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  padding: 10px 10px;
+  z-index: 1;
+}
+
+.titulo_banda {
+  font-size: 1.5rem;
+  color: #ffffff;
+  text-align: center;
+  border-radius: 5px 5px 0 0;
+  font-weight: bold;
+}
+
+.data_evento {
+  color: #04a777;
+  align-self: end;
+  bottom: 20px;
+}
+
+.estilo_musical_banda {
+  font-size: 1.2rem;
+  color: #fb8b24;
+  text-align: center;
+  font-weight: bold;
+}
+
+.caixa_banda:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.nav-selects {
+  display: flex;
+  justify-content: center;
+  gap: 80px;
+  margin: 40px 0;
+  font-family: "Poppins", sans-serif;
+}
+
+.custom-select {
+  position: relative;
+  width: 220px;
+}
+
+.select-header {
+  padding-bottom: 10px;
+  cursor: pointer;
+  position: relative;
+}
+
+.select-header span {
+  color: #5c21d3;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.select-header::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #5c21d3;
+}
+
+.arrow {
+  position: absolute;
+  top: 0;
+  right: 0;
+  border: solid #5c21d3;
+  border-width: 0 2px 2px 0;
+  padding: 5px;
+  transform: rotate(45deg);
+  transition: 0.2s;
+}
+
+.reset-select {
+  position: absolute;
+  top: 0;
+  right: 22px;
+  background: transparent;
+  border: none;
+  color: #888;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0 6px;
+  font-size: 14px;
+}
+.reset-select:hover {
+  color: #5c21d3;
+}
+
+/* Lista oculta */
+.select-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 8px;
+  border: 1px solid #ccc;
+  background: #fff;
+  display: none;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.select-list li {
+  padding: 10px;
+  cursor: pointer;
+  color: #4b4b4b;
+}
+
+.select-list li:hover {
+  background: #f3e8ff;
+  color: #5c21d3;
+}
+
+/* Classe para quando abrir */
+.show {
+  display: block;
+}
+
+.rotate {
+  transform: rotate(-135deg);
+}
+
+.caixa_eventos {
+  position: relative;
+  border-radius: 5px;
+  overflow: hidden;
+  width: 560px !important;
+  height: 295px !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-decoration: none;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+}
+.caixa_eventos img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  position: relative;
+  z-index: 0;
+}
+.linha-eventos.caixa_eventos::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 52%;
+  background: linear-gradient(to top, #000, #000, transparent);
+  pointer-events: none;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+.texto_evento_overlay {
+  text-transform: uppercase;
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  padding: 10px 10px;
+  z-index: 1;
+}
+.titulo_evento {
+  font-size: 1.5rem;
+  color: #ffffff;
+  text-align: center;
+  border-radius: 5px 5px 0 0;
+  font-weight: bold;
+}
+.textos_eventos {
+  display: flex;
+  flex-direction: column;
+  align-items: space-between;
+  text-transform: uppercase;
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+  padding: 30px 30px;
+  z-index: 1;
+}
+.texto_superior {
+  color: #fff;
+}
+.texto_superior,
+.texto_inferior {
+  display: flex;
+  justify-content: space-between;
+}
+.texto_superior {
+  align-items: center;
+}
+.texto_inferior {
+  align-items: end;
+}
+.texto_superior h3,
+.textos_eventos h4 {
+  font-weight: bold;
+  margin-bottom: 0;
+}
+.texto_superior h3 {
+  font-size: 1.5rem;
+}
+.texto_superior h4 {
+  font-size: 1.2rem;
+}
+.texto_inferior h4 {
+  color: #04a777;
+  font-size: 1.2rem;
+}
+.linha_cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+}
+.estilos_eventos {
+  max-width: 50%;
+  flex-wrap: wrap;
+}

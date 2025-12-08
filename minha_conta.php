@@ -5,7 +5,15 @@ require_once "src/Models/Usuario.php";
 require_once "src/Services/UsuarioServicos.php";
 require_once "src/Services/AutenticarServico.php";
 
+if(isset($_GET['logout'])){
+    session_start();
+    session_destroy();
+}
+
 AutenticarServico::exigirLogin();
+
+$usuarioServico = new UsuarioServicos();
+$usuario = $usuarioServico->buscarPorId($_SESSION['id']);
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -17,8 +25,26 @@ AutenticarServico::exigirLogin();
     <link rel="stylesheet" href="css/minha_conta.css">
     <?php require_once "includes/cabecalho.php"; ?>
     <main class="conteudo-principal">
+
         <section class="secao-conta">
+
+
             <h2 class="titulo-conta">MINHA <span class="destaque-azul">CONTA</span></h2>
+
+
+            <div class="perfil-card">
+
+                <div class="perfil-info">
+                    <h2><?= $usuario['nome'] ?></h2>
+                    <p><strong>Email:</strong> <?= $usuario['email'] ?></p>
+                    <p><strong>Cidade:</strong> <?= $usuario['cidade'] ?> - <?= $usuario['estado'] ?></p>
+                </div>
+
+                <div class="perfil-botoes">
+                    <a href="editar_conta.php" class="btn-editar">EDITAR PERFIL</a>
+                    <a href="?logout" class="btn-sair">SAIR</a>
+                </div>
+            </div>
 
             <div class="container-acoes">
                 <article class="cartao-acao">

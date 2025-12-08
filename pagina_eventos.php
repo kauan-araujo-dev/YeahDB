@@ -180,11 +180,11 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
 
     <?php
     if (empty($eventos)) {
-        echo '<div class="linha_cards"><p>Nenhum evento encontrado para os filtros selecionados.</p></div>';
+        echo '<div class="linha_cards "><p>Nenhum evento encontrado para os filtros selecionados.</p></div>';
     } else {
         $rows = array_chunk($eventos, 2);
         foreach ($rows as $row) {
-            echo '<div class="linha_cards">';
+            echo '<div class="linha_cards linha-eventos">';
             foreach ($row as $evento) {
                 $evento['estilos_musicais'] = explode(",", $evento['estilos_musicais']);
 
