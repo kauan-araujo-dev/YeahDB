@@ -1,6 +1,6 @@
 #rodape {
   padding: 18px 36px;
-  background-color: #3a0ca3;
+  background: linear-gradient(180deg, #3b0bb5, #5529c4);
   color: white;
   font-family: Arial, Helvetica, sans-serif;
   box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.2);

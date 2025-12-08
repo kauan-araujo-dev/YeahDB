@@ -12,7 +12,7 @@ body {
    CABEÇALHO
 ========================================================= */
 #cabecalho {
-  background-color: #3b0bb5;
+  background: linear-gradient(180deg, #3b0bb5, #5529c4);
   padding: 15px 50px;
 }
 

@@ -88,7 +88,6 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
     <?php
     require_once "includes/cabecalho.php";
     ?>
-</head>
 
 
 <section id="secao_bandas">
@@ -101,7 +100,7 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
 
         <div class="custom-select" data-field="estado">
             <div class="select-header">
-                <span class="selected-option">estado</span>
+                <span class="selected-option">ESTADO</span>
                 <button type="button" class="reset-select" title="Limpar">✕</button>
                 <i class="arrow"></i>
             </div>
@@ -109,13 +108,11 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
             <ul class="select-list">
                 <?php
                 // Buscar estados distintos na tabela eventos
-                $stmt = $eventoServicos->conexao->prepare("SELECT DISTINCT estado FROM eventos WHERE estado IS NOT NULL AND estado != '' ORDER BY estado ASC");
-                $stmt->execute();
-                $estados = $stmt->fetchAll(PDO::FETCH_COLUMN);
+                $estados = json_decode(file_get_contents("https://servicodados.ibge.gov.br/api/v1/localidades/estados"), true);
 
                 if (!empty($estados)) {
                     foreach ($estados as $est) {
-                        echo '<li>' . htmlspecialchars($est) . '</li>';
+                        echo '<li>' . htmlspecialchars($est['sigla']) . '</li>';
                     }
                 } else {
                     echo '<li>Nenhuma informação localizada</li>';
@@ -126,7 +123,7 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
 
         <div class="custom-select" data-field="cidade">
             <div class="select-header">
-                <span class="selected-option">cidade</span>
+                <span class="selected-option">CIDADE</span>
                 <button type="button" class="reset-select" title="Limpar">✕</button>
                 <i class="arrow"></i>
             </div>
@@ -151,7 +148,7 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
 
         <div class="custom-select" data-field="estilo">
             <div class="select-header">
-                <span class="selected-option">estilo musical</span>
+                <span class="selected-option">ESTILO MUSICAL</span>
                 <button type="button" class="reset-select" title="Limpar">✕</button>
                 <i class="arrow"></i>
             </div>
@@ -194,20 +191,32 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
                 // Agora pega só a primeira imagem corretamente
                 $mainImg = $evento['url_imagem'] ?? '';
 
-                echo '<a href="evento.php?evento=' . intval($evento['id']) . '" class="caixa_banda">';
                 $nome = htmlspecialchars($evento['nome']);
-                $imgPath = "img/eventos/" . intval($evento['id']) . "/fotos_eventos/" . $mainImg;
 
-                if (!file_exists($imgPath) || empty($mainImg)) {
-                    $imgPath = "img/sem-imagem.png";
-                }
+$imgPath = "img/eventos/" . intval($evento['id']) . "/fotos_eventos/" . $evento['url_imagem'];
+if (!file_exists($imgPath) || empty($evento['url_imagem'])) {
+    $imgPath = "img/sem-imagem.png";
+}
 
-                echo '<img src="' . $imgPath . '" alt="' . $nome . '" />';
-                echo '<div class="texto_banda_overlay">';
-                echo '<h3 class="titulo_banda">' . $nome . '</h3>';
-                echo '<h4 class="estilo_musical_banda">' . htmlspecialchars(implode(', ', $evento['estilos_musicais'])) . '</h4>';
-                echo '<h4 class="data_evento">' . Utils::formatarData($evento['dia'], true) . '</h4>';
-                echo '</div>';
+echo '<a href="evento.php?evento=' . intval($evento['id']) . '" class="caixa_eventos">';
+
+echo '<img src="' . $imgPath . '" alt="' . $nome . '" />';
+
+echo '<div class="textos_eventos">';
+
+echo '<div class="texto_superior">';
+echo '<h3>' . $nome . '</h3>';
+echo '<h4>' . htmlspecialchars($evento['cidade']) . ' - ' . htmlspecialchars($evento['estado']) . '</h4>';
+echo '</div>';
+
+echo '<div class="texto_inferior">';
+echo '<h4 class="estilos_eventos">' . htmlspecialchars(implode(', ', $evento['estilos_musicais'])) . '</h4>';
+echo '<h4>' . Utils::formatarData($evento['dia'], true) . '</h4>';
+echo '</div>';
+
+echo '</div>';
+
+echo '</a>';
                 if (!empty($imgs)) {
                     echo '<div class="thumb-strip">';
                     foreach ($imgs as $t) {
