@@ -112,7 +112,7 @@ class EventoServicos
             $params[':estilo'] = $estilo;
         }
 
-        $sql = "SELECT eventos.id, eventos.nome, eventos.cidade, eventos.estado, eventos.dia, (\n            SELECT foto_evento.url_imagem\n            FROM foto_evento\n            WHERE foto_evento.id_evento = eventos.id\n            ORDER BY foto_evento.id ASC\n            LIMIT 1\n        ) AS url_imagem, (\n            SELECT GROUP_CONCAT(estilo_musical.nome SEPARATOR ',')\n            FROM evento_estilo\n            JOIN estilo_musical ON estilo_musical.id = evento_estilo.id_estilo\n            WHERE evento_estilo.id_evento = eventos.id\n            ORDER BY estilo_musical.id ASC\n            LIMIT 1\n        ) AS estilos_musicais\n        FROM eventos\n        " . $joinEstilo . '\n';
+        $sql = "SELECT eventos.id, eventos.nome, eventos.cidade, eventos.estado, eventos.dia, (\n            SELECT foto_evento.url_imagem\n            FROM foto_evento\n            WHERE foto_evento.id_evento = eventos.id\n            ORDER BY foto_evento.id ASC\n            LIMIT 1\n        ) AS url_imagem, (\n            SELECT GROUP_CONCAT(estilo_musical.nome SEPARATOR ',')\n            FROM evento_estilo\n            JOIN estilo_musical ON estilo_musical.id = evento_estilo.id_estilo\n            WHERE evento_estilo.id_evento = eventos.id\n            ORDER BY estilo_musical.id ASC\n            LIMIT 1\n        ) AS estilos_musicais\n        FROM eventos\n" . $joinEstilo . "\n";
 
         if (!empty($where)) {
             $sql .= ' WHERE ' . implode(' AND ', $where);
