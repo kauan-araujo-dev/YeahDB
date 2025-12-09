@@ -3,7 +3,6 @@
 const selects = document.querySelectorAll(".custom-select");
 
 // TEMPO PARA FECHAR AUTOMATICAMENTE (3 segundos)
-const AUTO_CLOSE_TIME = 3000;
 
 selects.forEach(select => {
 
