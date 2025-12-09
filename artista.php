@@ -2,7 +2,6 @@
 require_once "src/Database/Conecta.php";
 require_once "src/Helpers/Utils.php";
 require_once "src/Services/ArtistaServicos.php";
-require_once "src/Services/EventoServicos.php";
 require_once "src/Services/AutenticarServico.php";
 
 $id = $_GET['artista'] ?? null;
@@ -16,15 +15,9 @@ $dadosArtista = $artistaServico->buscarArtistaId($id);
 if (empty($dadosArtista)) Utils::redirecionarPara("index.php");
 if (!is_int($id)) Utils::redirecionarPara("index.php");
 
-// Buscar integrantes corretamente filtrados pelo artista
 $integrantes = $artistaServico->buscarIntegrantes($id);
 
-// Buscar eventos em que o artista participa
-$eventoServicos = new EventoServicos();
-$eventosArtista = $eventoServicos->buscarEventosUsuario($id) ?: [];
-
-
-
+$eventos = $artistaServico->buscarEventosArtista($id);
 $contador = 0;
 ?>
 <!DOCTYPE html>
@@ -35,9 +28,6 @@ $contador = 0;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $dadosArtista['nome'] ?></title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <link rel="stylesheet" href="css/artista.css">
     <?php require_once "includes/cabecalho.php" ?>
 
@@ -56,9 +46,7 @@ $contador = 0;
             <div>
                 <p><b>REGIÃO: </b><?= $dadosArtista['cidade'] ?> - <?= $dadosArtista['estado'] ?></p>
 
-                <?php if (!empty($dadosArtista['estilos_musicais']) && trim($dadosArtista['estilos_musicais']) !== ''): ?>
-                    <p><b>ESTILOS MUSICAIS: </b><?= implode(", ", array_filter(array_map('trim', explode(",", $dadosArtista['estilos_musicais'])))) ?></p>
-                <?php endif; ?>
+                <p><b>ESTILOS MUSICAIS: </b><?= implode(", ", explode(",", $dadosArtista['estilos_musicais'])) ?></p>
 
 
                 <p><b>CONTATO: </b><?= $dadosArtista['contato'] ?></p>
@@ -151,34 +139,40 @@ $contador = 0;
                 <?php } ?>
             </div>
         </section>
+        <?php if (!empty($eventos)) { ?>
+            <section id="secao-eventos">
+                <h3 id="subtitulo-eventos">EVENTOS QUE ESTÃO PARTICIPANDO</h3>
 
-        <section id="secao-eventos">
-            <h3 id="subtitulo-eventos">EVENTOS QUE ESTÃO PARTICIPANDO</h3>
-            <div id="container-cartoes-eventos">
-                <?php
-                if (empty($eventosArtista)) {
-                    echo '<p>Nenhum evento encontrado para este artista.</p>';
-                } else {
-                    foreach ($eventosArtista as $evento) {
-                        $estilos = explode(',', $evento['estilos_musicais'] ?? '');
-                        $img = htmlspecialchars($evento['url_imagem'] ?? '');
-                        $nome = htmlspecialchars($evento['nome']);
-                        echo '<a href="evento.php?evento=' . intval($evento['id']) . '" class="cartao-evento">';
-                        echo '<img src="img/eventos/' . intval($evento['id']) . '/fotos_eventos/' . $img . '" alt="' . $nome . '" class="imagem-evento">';
-                        echo '<div class="informacao-evento">';
-                        echo '<p class="nome-evento">' . $nome . '</p>';
-                        echo '<p class="detalhes-evento">' . htmlspecialchars($evento['estado']) . ' | ' . Utils::formatarData($evento['dia'], true) . '</p>';
-                        echo '</div>';
-                        echo '</a>';
-                    }
-                }
-                ?>
-            </div>
-        </section>
+                <div class="linha_cards">
+                    <?php foreach ($eventos as $evento) {
+                        $evento['estilos_musicais'] = explode(",", $evento['estilos_musicais']); ?>
+                        <a href="evento.php?evento=<?= $evento['id'] ?>" class="caixa_eventos">
+                            <img src="img/eventos/<?= $evento['id'] ?>/fotos_eventos/<?= $evento['url_imagem'] ?>" alt="Festival do Sol" />
+                            <div class="textos_eventos">
+                                <div class="texto_superior">
+                                    <h3><?= $evento['nome'] ?></h3>
+                                    <h4><?= $evento['cidade'] ?> - <?= $evento['estado'] ?></h4>
+                                </div>
+                                <div class="texto_inferior">
+                                    <h4 class="estilos_eventos"><?= implode(", ", $evento['estilos_musicais']) ?></h4>
+                                    <h4><?= Utils::formatarData($evento['dia'], true) ?></h4>
+                                </div>
+                            </div>
+                        </a>
+
+                    <?php }
+                    ?>
+
+                </div>
+
+
     </div>
+    </section>
+<?php } ?>
+</div>
 
-    <?php require_once "includes/rodape.php" ?>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-    </body>
+<?php require_once "includes/rodape.php" ?>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+</body>
 
 </html>

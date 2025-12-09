@@ -455,4 +455,30 @@ public function buscarEstilosDisponiveis(): array
     return $stmt->fetchAll(PDO::FETCH_COLUMN) ?: [];
 }
 
+public function buscarEventosArtista($id){
+    $sql = "SELECT DISTINCT eventos.id, eventos.nome, eventos.cidade, eventos.estado, eventos.dia,  (
+        SELECT foto_evento.url_imagem
+        FROM foto_evento
+        WHERE foto_evento.id_evento = eventos.id
+        ORDER BY foto_evento.id ASC
+        LIMIT 1
+    ) AS url_imagem,
+    (
+        SELECT GROUP_CONCAT(estilo_musical.nome SEPARATOR ',')
+            FROM evento_estilo
+            JOIN estilo_musical 
+                ON estilo_musical.id = evento_estilo.id_estilo
+            WHERE evento_estilo.id_evento = eventos.id
+            ORDER BY estilo_musical.id ASC
+            LIMIT 1
+    ) AS estilos_musicais
+FROM eventos JOIN evento_estilo ON evento_estilo.id_evento = eventos.id JOIN artista_evento ON artista_evento.id_evento = eventos.id JOIN artistas ON artista_evento.id_artista = artistas.id WHERE artistas.id = :id
+";
+
+$consulta = $this->conexao->prepare($sql);
+    $consulta->bindValue(":id", $id);
+    $consulta->execute();
+    return $consulta->fetchAll() ?: null;
+}
+
 }

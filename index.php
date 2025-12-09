@@ -155,19 +155,14 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
     </section>
 
 
-    <section class="secao_criar_conta">
-      <div class="textos_criar_conta">
-        <p><b>QUER DIVULGAR O SEU</b></p>
-        <p class="texto_talento"><b>TALENTO?</b></p>
-        <p><b>CRIE SUA CONTA!</b></p>
-      </div>
+    <section class="signup-section">
+    <div class="signup-card">
+        <h2>QUER DIVULGAR O SEU <span>TALENTO?</span></h2>
+        <p>Entre para a comunidade de artistas e eventos!</p>
 
-      <a href="cadastrar.php">
-        <button class="botao_criar_conta">
-          <b><i>CRIAR CONTA</i></b>
-        </button>
-      </a>
-    </section>
+        <a href="cadastrar.php" class="signup-btn">CRIAR CONTA</a>
+    </div>
+</section>
 
   </main>
 
