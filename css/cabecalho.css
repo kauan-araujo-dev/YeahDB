@@ -51,11 +51,12 @@ body {
   background-color: #00b894;
   color: #ffffff;
   padding: 10px 30px;
-  border-radius: 6px;
+  border-radius: 3px;
   font-weight: 700;
   text-decoration: none;
   letter-spacing: 0.5px;
   transition: 0.3s;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .botao_acesso:hover {
@@ -190,3 +191,53 @@ body {
     font-size: 13px;
   }
 }
+
+
+#burger-btn {
+    width: 65px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+    align-items: center;
+    gap: 5px;
+  }
+
+  #burger-btn div {
+    width: 35px;
+    height: 4px;
+    background: #fff;
+    border-radius: 1px;
+    transition: .3s;
+  }
+
+  #offcanvasRight{
+    background-color: #5529c4;
+  }
+  .offcanvas-body{
+    width: 100% !important;
+    padding: 0 !important;
+    display: flex;
+    flex-direction: column;
+  }
+  .offcanvas-header h5{
+    text-align: center;
+    width: 100%;
+    color: #fff;
+  }
+  .offcanvas-header h5 span{
+    color: #00b894;
+  }
+  #offcanvasRight a{
+    color: #fff;
+    text-decoration: none;
+    background-color: #00b894;
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    
+  }

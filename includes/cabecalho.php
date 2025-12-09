@@ -1,4 +1,4 @@
-    <?php require_once "src/Services/AutenticarServico.php";?>
+    <?php require_once "src/Services/AutenticarServico.php"; ?>
     <link rel="stylesheet" href="css/all.css">
     <link rel="stylesheet" href="css/cabecalho.css">
     <link rel="stylesheet" href="css/rodape.css">
@@ -28,11 +28,25 @@
                         <a href="login.php" class="botao_acesso">ACESSAR</a>
                     </div>
                 <?php } else { ?>
-                    <div id="meu-perfil">
-                        <p>Olá <?= htmlspecialchars($_SESSION['nome']) ?>, </p>
-                        <a href="minha_conta.php">MINHA CONTA</a>
+
+                    <button class="btn btn-primary"id="burger-btn" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </button>
+
+                    <!-- Offcanvas -->
+                    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+                        <div class="offcanvas-header">
+                            <h5 class="offcanvas-title" id="offcanvasRightLabel">
+                                <p>Olá <span><?= htmlspecialchars($_SESSION['nome']) ?></span> </p>
+                            </h5>
+                        </div>
+                        <div class="offcanvas-body">
+                            <a href="minha_conta.php">MINHA CONTA</a>
+                        </div>
                     </div>
-                    <?php } ?>
+                <?php } ?>
             </nav>
         </header>
 

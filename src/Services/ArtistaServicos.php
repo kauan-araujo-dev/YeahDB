@@ -315,4 +315,144 @@ class ArtistaServicos
 
         return true;
     }
+
+    public function buscarArtistasFiltrados(
+    ?string $estado,
+    ?string $cidade,
+    ?string $estilo,
+    int $pagina,
+    int $porPagina
+): array 
+{
+    $where = [];
+    $params = [];
+
+    if ($estado) {
+        $where[] = "artistas.estado = :estado";
+        $params[':estado'] = $estado;
+    }
+    if ($cidade) {
+        $where[] = "artistas.cidade = :cidade";
+        $params[':cidade'] = $cidade;
+    }
+    if ($estilo) {
+        $where[] = "em.nome = :estilo";
+        $params[':estilo'] = $estilo;
+    }
+
+    $sql = "SELECT 
+                artistas.id, artistas.nome, artistas.cidade, artistas.estado,
+                (SELECT GROUP_CONCAT(url_imagem SEPARATOR '||')
+                 FROM foto_artista 
+                 WHERE foto_artista.id_artista = artistas.id
+                 ORDER BY foto_artista.id ASC) AS imagens,
+                (SELECT GROUP_CONCAT(estilo_musical.nome SEPARATOR ',')
+                 FROM artista_estilo
+                 JOIN estilo_musical 
+                    ON estilo_musical.id = artista_estilo.id_estilo
+                 WHERE artista_estilo.id_artista = artistas.id
+                 LIMIT 1
+                ) AS estilos_musicais
+            FROM artistas
+            LEFT JOIN artista_estilo ae ON ae.id_artista = artistas.id
+            LEFT JOIN estilo_musical em ON em.id = ae.id_estilo";
+
+    if (!empty($where)) {
+        $sql .= " WHERE " . implode(" AND ", $where);
+    }
+
+    $sql .= " GROUP BY artistas.id
+              ORDER BY artistas.id DESC
+              LIMIT :limite OFFSET :offset";
+
+    $consulta = $this->conexao->prepare($sql);
+
+    foreach ($params as $k => $v) {
+        $consulta->bindValue($k, $v);
+    }
+
+    $offset = ($pagina - 1) * $porPagina;
+    $consulta->bindValue(":limite", $porPagina, PDO::PARAM_INT);
+    $consulta->bindValue(":offset", $offset, PDO::PARAM_INT);
+
+    $consulta->execute();
+
+    return $consulta->fetchAll(PDO::FETCH_ASSOC) ?: [];
+}
+
+public function contarArtistasFiltrados(?string $estado, ?string $cidade, ?string $estilo): int
+{
+    $where = [];
+    $params = [];
+    $joinEstilo = '';
+
+    // Só junta as tabelas de estilo quando o filtro de estilo for usado
+    if ($estilo) {
+        $joinEstilo = " JOIN artista_estilo ae ON ae.id_artista = artistas.id
+                        JOIN estilo_musical em ON em.id = ae.id_estilo ";
+        $where[] = "em.nome = :estilo";
+        $params[':estilo'] = $estilo;
+    }
+
+    if ($estado) {
+        $where[] = "artistas.estado = :estado";
+        $params[':estado'] = $estado;
+    }
+
+    if ($cidade) {
+        $where[] = "artistas.cidade = :cidade";
+        $params[':cidade'] = $cidade;
+    }
+
+    $sql = "SELECT COUNT(DISTINCT artistas.id) AS total
+            FROM artistas
+            " . $joinEstilo;
+
+    if (!empty($where)) {
+        $sql .= " WHERE " . implode(" AND ", $where);
+    }
+
+    $stmt = $this->conexao->prepare($sql);
+
+    foreach ($params as $k => $v) {
+        $stmt->bindValue($k, $v);
+    }
+
+    $stmt->execute();
+
+    return intval($stmt->fetchColumn() ?: 0);
+}
+public function buscarEstadosDisponiveis(): array
+{
+    $sql = "SELECT DISTINCT estado 
+            FROM artistas 
+            WHERE estado IS NOT NULL AND estado != '' 
+            ORDER BY estado ASC";
+
+    $stmt = $this->conexao->query($sql);
+    return $stmt->fetchAll(PDO::FETCH_COLUMN) ?: [];
+}
+
+public function buscarCidadesDisponiveis(): array
+{
+    $sql = "SELECT DISTINCT cidade 
+            FROM artistas 
+            WHERE cidade IS NOT NULL AND cidade != '' 
+            ORDER BY cidade ASC";
+
+    $stmt = $this->conexao->query($sql);
+    return $stmt->fetchAll(PDO::FETCH_COLUMN) ?: [];
+}
+
+public function buscarEstilosDisponiveis(): array
+{
+    $sql = "SELECT DISTINCT em.nome
+            FROM artista_estilo ae
+            JOIN estilo_musical em ON em.id = ae.id_estilo
+            ORDER BY em.nome ASC";
+
+    $stmt = $this->conexao->query($sql);
+    return $stmt->fetchAll(PDO::FETCH_COLUMN) ?: [];
+}
+
 }
