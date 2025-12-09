@@ -131,3 +131,112 @@ document.addEventListener('DOMContentLoaded', function () {
     refreshAll();
   });
 });
+document.addEventListener('DOMContentLoaded', function () {
+
+    const selects = document.querySelectorAll(".custom-select");
+
+    selects.forEach(select => {
+        const header = select.querySelector(".select-header");
+        const list = select.querySelector(".select-list");
+        const options = () => Array.from(select.querySelectorAll(".select-list li"));
+        let isOpen = false;
+        let focusedIndex = -1;
+
+        // Torna o header focável
+        header.tabIndex = 0;
+
+        function openSelect() {
+            list.style.display = "block";
+            isOpen = true;
+            focusedIndex = 0;
+            highlightOption(focusedIndex);
+        }
+
+        function closeSelect() {
+            list.style.display = "none";
+            isOpen = false;
+            removeHighlight();
+        }
+
+        function highlightOption(index) {
+            removeHighlight();
+            const opts = options();
+            if (opts[index]) {
+                opts[index].classList.add("keyboard-focus");
+                opts[index].scrollIntoView({ block: "nearest" });
+            }
+        }
+
+        function removeHighlight() {
+            options().forEach(opt => opt.classList.remove("keyboard-focus"));
+        }
+
+        function selectOption(index) {
+            const opt = options()[index];
+            if (!opt) return;
+
+            const text = opt.textContent.trim();
+            const span = select.querySelector(".selected-option");
+
+            if (span) span.textContent = text;
+
+            // dispara clique programático (mantém integração com seu JS)
+            opt.click();
+        }
+
+        // ------------------------------
+        // EVENTOS DE TECLADO
+        // ------------------------------
+        header.addEventListener("keydown", function (e) {
+
+            // ENTER ou SPACE abre o select
+            if ((e.key === "Enter" || e.key === " ") && !isOpen) {
+                e.preventDefault();
+                openSelect();
+                return;
+            }
+
+            // SETAS para navegação
+            if (isOpen && (e.key === "ArrowDown" || e.key === "ArrowUp")) {
+                e.preventDefault();
+                const opts = options();
+
+                if (e.key === "ArrowDown") {
+                    focusedIndex = (focusedIndex + 1) % opts.length;
+                } else {
+                    focusedIndex = (focusedIndex - 1 + opts.length) % opts.length;
+                }
+
+                highlightOption(focusedIndex);
+                return;
+            }
+
+            // ENTER para selecionar
+            if (isOpen && e.key === "Enter") {
+                e.preventDefault();
+                selectOption(focusedIndex);
+                closeSelect();
+                return;
+            }
+
+            // ESC para fechar sem selecionar
+            if (e.key === "Escape" && isOpen) {
+                closeSelect();
+                return;
+            }
+        });
+
+        // ------------------------------
+        // ABRIR/FECHAR COM CLICK DO MOUSE
+        // ------------------------------
+        header.addEventListener("click", function () {
+            isOpen ? closeSelect() : openSelect();
+        });
+
+        // Fecha ao clicar fora
+        document.addEventListener("click", function (e) {
+            if (!select.contains(e.target)) closeSelect();
+        });
+    });
+
+});

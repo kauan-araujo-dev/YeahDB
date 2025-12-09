@@ -195,3 +195,7 @@ section {
   transform: scale(1.05);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
+.custom-select .select-list li.keyboard-focus {
+    background-color: #ddd;
+    outline: 1px solid #444;
+}
