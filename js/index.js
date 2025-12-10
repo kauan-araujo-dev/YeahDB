@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function iniciarCarrossel() {
         const larguraOriginal = inner.scrollWidth / 2;
-        let velocidade = 35;       // px por segundo (ajuste aqui)
+        let velocidade = 50;       // px por segundo (ajuste aqui)
         let pos = 0;
         let ultimoTempo = null;
 
