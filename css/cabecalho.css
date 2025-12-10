@@ -79,125 +79,148 @@ body {
 #cabecalho .botao_acesso:active {
     color: #ffffff;
 }
-#meu-perfil{
-  display: flex;
-  align-items: center;
-  font-weight: bold;
-  gap: 10px;
-}
-#meu-perfil p{
-  margin-bottom: 0; 
-  color: #fff;
-  text-transform: uppercase;
-  
-}
-#meu-perfil a{
-  color: #00b894;
-  text-decoration: none;
+
+/* Menu sanduíche para mobile */
+.btn-menu-mobile {
+    display: none;
+    flex-direction: column;
+    background: none;
+    border: none;
+    cursor: pointer;
+    gap: 6px;
 }
 
-@media (max-width: 768px) {
-    #cabecalho {
-        padding: 15px 20px;
+.btn-menu-mobile span {
+    width: 28px;
+    height: 3px;
+    background: white;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+
+.btn-menu-mobile.active span:nth-child(1) {
+    transform: rotate(45deg) translate(10px, 10px);
+}
+
+.btn-menu-mobile.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.btn-menu-mobile.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -7px);
+}
+
+.menu-mobile {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: linear-gradient(180deg, #3b0bb5, #5529c4);
+    flex-direction: column;
+    gap: 0;
+    padding: 0;
+    border-top: 2px solid rgba(255, 255, 255, 0.1);
+    z-index: 1000;
+}
+
+.menu-mobile.active {
+    display: flex;
+}
+
+.menu-mobile-item {
+    color: white;
+    text-decoration: none;
+    padding: 15px 20px;
+    text-align: center;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.menu-mobile-item:hover {
+    background-color: rgba(0, 184, 148, 0.2);
+    padding-left: 30px;
+}
+
+@media (max-width: 900px) {
+    .lista_menu {
+        display: none;
     }
 
+    .btn-menu-mobile {
+        display: flex;
+    }
+    
     #menu_principal {
-        flex-wrap: wrap;
-        gap: 15px;
-        justify-content: center;
-    }
-
-    .logo {
-        flex: 1 1 100%;
-        text-align: center;
-        margin-bottom: 10px;
-    }
-
-    .logo img {
-        height: 35px;
-    }
-
-    #menu {
-        gap: 20px;
-        order: 2;
-    }
-
-    #menu a {
-        font-size: 14px;
-    }
-
-    .botao {
-        order: 3;
-        padding: 8px 20px;
-        font-size: 13px;
+        position: relative;
     }
 } 
 
-/* Additional responsive adjustments for header (tablets and small desktops) */
-@media (max-width: 1050px) {
-  #menu_principal {
-    flex-direction: column;
-    gap: 14px;
-    align-items: center;
-  }
+@media (max-width: 900px) {
+    #cabecalho {
+        padding: 12px 20px;
+    }
 
-  .logo_site img {
-    height: 70px;
-    width: auto;
-  }
+    #menu_principal {
+        gap: 0;
+    }
 
-  .lista_menu {
-    gap: 24px;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
+    .logo_site img {
+        height: 60px;
+    }
 
-  .lista_menu a {
-    font-size: 20px;
-  }
+    #login-cadastro {
+        gap: 8px;
+        margin-top: 10px;
+        width: 100%;
+    }
 
-  #meu-perfil {
-    gap: 12px;
-    flex-direction: row;
-  }
-
-  .botao_acesso {
-    padding: 8px 20px;
-    font-size: 14px;
-  }
+    .botao_acesso {
+        padding: 8px 20px;
+        font-size: 13px;
+    }
 }
 
-/* Small screens: stack cleanly and keep buttons usable */
-@media (max-width: 480px) {
-  #menu_principal {
-    gap: 10px;
-    padding: 10px;
-  }
+@media (max-width: 600px) {
+    #cabecalho {
+        padding: 10px 15px;
+        width: 100vw;
+        position: relative;
+        left: 50%;
+        right: 50%;
+        margin-left: -50vw;
+        margin-right: -50vw;
+    }
 
-  .logo_site img {
-    height: 50px;
-  }
+    #menu_principal {
+        position: relative;
+        width: 100%;
+    }
 
-  .lista_menu {
-    gap: 12px;
-    flex-direction: column;
-    align-items: center;
-  }
+    .logo_site img {
+        height: 50px;
+    }
 
-  .lista_menu a {
-    font-size: 16px;
-  }
+    #login-cadastro {
+        flex-direction: column;
+        gap: 6px;
+        width: calc(100% - 40px);
+    }
 
-  #meu-perfil {
-    width: 100%;
-    justify-content: center;
-    gap: 10px;
-  }
+    .botao_acesso {
+        width: 100%;
+        padding: 10px 15px;
+        font-size: 12px;
+    }
 
-  .botao_acesso {
-    padding: 7px 14px;
-    font-size: 13px;
-  }
+    .menu-mobile {
+        width: 100vw;
+        left: 50%;
+        right: 50%;
+        margin-left: -50vw;
+        margin-right: -50vw;
+    }
 }
 
 

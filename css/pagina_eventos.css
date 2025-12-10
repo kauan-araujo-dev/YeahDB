@@ -409,3 +409,48 @@ body {
     padding: 14px !important;
   }
 }
+
+/* ================================
+   RESPONSIVIDADE iPHONE SE (375px)
+================================ */
+@media (max-width: 480px) {
+  .linha_cards {
+    gap: 15px;
+    max-width: 100%;
+    padding: 0 10px;
+  }
+
+  .caixa_eventos {
+    width: 100%;
+    height: 220px;
+    max-width: 100%;
+  }
+
+  .nav-selects {
+    gap: 12px;
+    padding: 0 10px;
+  }
+
+  .custom-select {
+    min-width: 100%;
+    flex: none;
+  }
+
+  .select-header span {
+    font-size: 13px;
+  }
+
+  .select-list {
+    max-height: 140px;
+    font-size: 12px;
+  }
+
+  #titulo_evento {
+    font-size: 24px;
+    margin: 20px 0;
+  }
+
+  #secao_bandas {
+    margin: 70px 0 !important;
+  }
+}

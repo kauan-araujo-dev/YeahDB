@@ -194,3 +194,107 @@
   transform: scale(1.05);
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
+
+/* ================================
+   RESPONSIVIDADE iPHONE SE (375px)
+================================ */
+@media (max-width: 480px) {
+  #secao_bandas {
+    gap: 15px;
+    padding: 10px;
+    margin: 70px 0;
+  }
+
+  .titulo_secao {
+    font-size: 22px;
+    margin-bottom: 15px;
+  }
+
+  .nav-selects {
+    gap: 12px;
+    max-width: 100%;
+    flex-direction: column;
+    padding: 0 10px;
+  }
+
+  .custom-select {
+    min-width: 100%;
+    flex: none;
+  }
+
+  .select-header span {
+    font-size: 13px;
+  }
+
+  .select-header::after {
+    height: 1px;
+  }
+
+  .reset-select {
+    font-size: 12px;
+    right: 18px;
+  }
+
+  .select-list {
+    max-height: 130px;
+    font-size: 12px;
+  }
+
+  .linha_cards {
+    gap: 15px;
+    padding: 0 10px;
+  }
+
+  .caixa_banda {
+    width: 100%;
+    height: 200px;
+    max-width: 100%;
+  }
+
+  .titulo_banda {
+    font-size: 1.2rem;
+  }
+
+  .estilo_musical_banda {
+    font-size: 0.95rem;
+  }
+
+  .thumb-strip {
+    max-width: 100%;
+  }
+
+  .card-thumb {
+    height: 50px;
+  }
+}
+
+@media (max-width: 768px) {
+  #secao_bandas {
+    gap: 20px;
+    padding: 15px;
+  }
+
+  .titulo_secao {
+    font-size: 28px;
+  }
+
+  .nav-selects {
+    gap: 20px;
+    max-width: 95%;
+  }
+
+  .custom-select {
+    min-width: 200px;
+    flex: 1;
+  }
+
+  .linha_cards {
+    gap: 20px;
+    max-width: 95%;
+  }
+
+  .caixa_banda {
+    width: 280px;
+    height: 250px;
+  }
+}

@@ -13,3 +13,28 @@ footer {
 #form1{
   margin-bottom: 90px;
 }
+
+/* Responsividade iPhone SE (375px) */
+@media (max-width: 480px) {
+  #form1 {
+    margin-bottom: 70px;
+  }
+
+  footer {
+    flex-direction: column;
+    gap: 12px;
+    padding: 15px;
+  }
+
+  #footer-form1 {
+    justify-content: center !important;
+    border: none;
+  }
+
+  footer button,
+  footer a {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+  }
+}
