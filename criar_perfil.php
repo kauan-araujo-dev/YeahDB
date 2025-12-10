@@ -109,8 +109,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $estado,
             $cidade,
             $cache,
-            $whatsapp,
-            $instagram,
+            "https://wa.me/".$whatsapp,
+            "https://www.instagram.com/".str_replace($instagram, "@", ""),
             $contato,
             $_SESSION['id']
         );

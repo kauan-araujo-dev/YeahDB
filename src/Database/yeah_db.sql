@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 06/12/2025 às 05:26
+-- Tempo de geração: 10/12/2025 às 19:36
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -34,9 +34,10 @@ CREATE TABLE `artistas` (
   `estado` char(2) NOT NULL,
   `cidade` varchar(100) NOT NULL,
   `cache_artista` float NOT NULL,
-  `whatsapp` varchar(20) NOT NULL,
+  `whatsapp` varchar(50) NOT NULL,
   `instagram` varchar(100) NOT NULL,
   `contato` varchar(100) NOT NULL,
+  `codigo_artista` varchar(10) NOT NULL,
   `id_usuario` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -44,12 +45,12 @@ CREATE TABLE `artistas` (
 -- Despejando dados para a tabela `artistas`
 --
 
-INSERT INTO `artistas` (`id`, `nome`, `descricao`, `estado`, `cidade`, `cache_artista`, `whatsapp`, `instagram`, `contato`, `id_usuario`) VALUES
-(1, 'Iron Howl', 'Iron Howl é uma banda de Heavy Metal formada em Belo Horizonte, unindo riffs agressivos, vocais potentes e uma presença de palco intensa. O grupo se inspira na velha guarda do metal, mas incorpora elementos modernos de produção, entregando shows explosivos e cheios de energia. Suas letras abordam temas épicos, fantasia sombria e lutas internas, criando um estilo marcante e identitário.', 'RJ', 'Volta Redonda', 12000, '31 99244-8866', '@ironhowl.official', 'contato@ironhowl.com', 2),
-(2, 'Golden Groove Experience', 'Golden Groove Experience é uma banda vibrante inspirada na era clássica da disco music dos anos 70. Com figurinos brilhosos, luzes coloridas, arranjos cheios de groove e vocais poderosos, o grupo recria fielmente a atmosfera das grandes pistas de dança da época. Inspirada em nomes como Earth, Wind &#38; Fire, Bee Gees e Chic, a banda entrega shows alegres, dançantes e cheios de energia — transformando qualquer evento em uma festa retrô inesquecível.', 'SP', 'São Paulo', 8500, '11 98855-2297', '@goldengroovexp', 'contato@goldengroovexp.com', 1),
-(3, 'Rima Urbana Crew', 'Rima Urbana Crew é um grupo de Rap do Rio de Janeiro que mistura rimas conscientes, batidas pesadas e elementos de trap moderno. Suas letras abordam a vida na periferia, superação e identidade cultural, trazendo autenticidade e intensidade às apresentações. Com forte presença de palco e performances energéticas, o trio se destaca pela química entre os integrantes e pela sonoridade marcante.', 'RJ', 'Rio de Janeiro', 6500, '21 98733-1204', '@rimaurbana.crew', 'contato@rimaurbanacrew.com', 4),
-(4, 'Aurora Urbana', 'Aurora Urbana é uma banda de Indie Rock com influências modernas de synth pop e rock alternativo. Formada em São Paulo em 2019, o grupo combina melodias atmosféricas, vocais expressivos e uma identidade visual profunda que remete ao cenário urbano contemporâneo. Suas apresentações ao vivo são conhecidas por alta energia e forte envolvimento com o público.', 'SP', 'São Paulo', 7500, '11 98344-1922', '@auroraurbana.oficial', 'contato@auroraurbana.com', 5),
-(5, 'Thiago Solano', 'Thiago Solano é um violonista solo conhecido por sua técnica refinada, performances emocionantes e arranjos acústicos envolventes. Traz influências da Música Popular Brasileira, folk internacional e técnicas modernas de fingerstyle. Com um repertório versátil — que vai de clássicos nacionais a interpretações criativas de hits contemporâneos — Thiago transforma qualquer evento em uma experiência intimista e sofisticada.', 'SE', 'Aracajú', 2800, '41 99877-5521', '@thiagosolano.music', 'contato@thiagosolano.com', 6);
+INSERT INTO `artistas` (`id`, `nome`, `descricao`, `estado`, `cidade`, `cache_artista`, `whatsapp`, `instagram`, `contato`, `codigo_artista`, `id_usuario`) VALUES
+(1, 'Iron Howl', 'Iron Howl é uma banda de Heavy Metal formada em Belo Horizonte, unindo riffs agressivos, vocais potentes e uma presença de palco intensa. O grupo se inspira na velha guarda do metal, mas incorpora elementos modernos de produção, entregando shows explosivos e cheios de energia. Suas letras abordam temas épicos, fantasia sombria e lutas internas, criando um estilo marcante e identitário.', 'RJ', 'Volta Redonda', 12000, 'https://wa.me/31992448866', 'https://www.instagram.com/ironhowl.official', 'contato@ironhowl.com', '', 2),
+(2, 'Golden Groove Experience', 'Golden Groove Experience é uma banda vibrante inspirada na era clássica da disco music dos anos 70. Com figurinos brilhosos, luzes coloridas, arranjos cheios de groove e vocais poderosos, o grupo recria fielmente a atmosfera das grandes pistas de dança da época. Inspirada em nomes como Earth, Wind &#38; Fire, Bee Gees e Chic, a banda entrega shows alegres, dançantes e cheios de energia — transformando qualquer evento em uma festa retrô inesquecível.', 'SP', 'São Paulo', 8500, 'https://wa.me/11988552297', 'https://www.instagram.com/goldengroovexp', 'contato@goldengroovexp.com', '', 1),
+(3, 'Rima Urbana Crew', 'Rima Urbana Crew é um grupo de Rap do Rio de Janeiro que mistura rimas conscientes, batidas pesadas e elementos de trap moderno. Suas letras abordam a vida na periferia, superação e identidade cultural, trazendo autenticidade e intensidade às apresentações. Com forte presença de palco e performances energéticas, o trio se destaca pela química entre os integrantes e pela sonoridade marcante.', 'RJ', 'Rio de Janeiro', 6500, 'https://wa.me/21987331204', 'https://www.instagram.com/rimaurbana.crew', 'contato@rimaurbanacrew.com', '', 4),
+(4, 'Aurora Urbana', 'Aurora Urbana é uma banda de Indie Rock com influências modernas de synth pop e rock alternativo. Formada em São Paulo em 2019, o grupo combina melodias atmosféricas, vocais expressivos e uma identidade visual profunda que remete ao cenário urbano contemporâneo. Suas apresentações ao vivo são conhecidas por alta energia e forte envolvimento com o público.', 'SP', 'São Paulo', 7500, 'https://wa.me/11983441922', 'https://www.instagram.com/auroraurbana.oficial', 'contato@auroraurbana.com', '', 5),
+(5, 'Thiago Solano', 'Thiago Solano é um violonista solo conhecido por sua técnica refinada, performances emocionantes e arranjos acústicos envolventes. Traz influências da Música Popular Brasileira, folk internacional e técnicas modernas de fingerstyle. Com um repertório versátil — que vai de clássicos nacionais a interpretações criativas de hits contemporâneos — Thiago transforma qualquer evento em uma experiência intimista e sofisticada.', 'SE', 'Aracajú', 2800, 'https://wa.me/41998775521', 'https://www.instagram.com/thiagosolano.music', 'contato@thiagosolano.com', '', 6);
 
 -- --------------------------------------------------------
 
@@ -86,6 +87,15 @@ CREATE TABLE `artista_evento` (
   `id_artista` int(11) NOT NULL,
   `id_evento` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `artista_evento`
+--
+
+INSERT INTO `artista_evento` (`id_artista`, `id_evento`) VALUES
+(1, 2),
+(4, 1),
+(4, 4);
 
 -- --------------------------------------------------------
 
@@ -338,7 +348,8 @@ INSERT INTO `usuarios` (`id`, `nome`, `data_nascimento`, `cep`, `estado`, `cidad
 (4, 'Pedro Oliveira', '1970-07-01', '90010-10', 'RS', 'Porto Alegre', 'Praça da Matriz', '120', 'pedro.oliveira@ficticio.net', '$2y$10$mN3teRkXEz82u7lFhRvXL.MXpUbX9k76uT68XFtHlkgmj4buhyyUa'),
 (5, 'Ana Costa', '2000-01-30', '30130-90', 'MG', 'Belo Horizonte', 'Av. Afonso Pena', '250', 'ana.costa@modelo.com', '$2y$10$luzIQNYYSo1do2yrb.2uLexrxb3DUr5SKmRH.yN/0qHBLDyvcyKnC'),
 (6, 'Carlos Pereira', '1965-12-10', '69005-01', 'RJ', 'Rio de Janeiro', 'Alameda Cosme Ferreira', '987', 'carlos.pereira@dados.br', '$2y$10$VT2hK64A1GxKHxo1/iw4weE/419bO1mxCEPVOldSE0KBtQhb9DKFK'),
-(7, 'Josefa Fagundes', '1950-05-15', '10291048', 'MG', 'Belo Horizonte', 'Rua 1', '3', 'josefagundes@email.com', '$2y$10$sDjoWVZA3Rjkj4zYKlTzxOGDsuWuYSMKG9801kNEDECCRPVA.tIaC');
+(7, 'Josefa Fagundes', '1950-05-15', '10291048', 'MG', 'Belo Horizonte', 'Rua 1', '3', 'josefagundes@email.com', '$2y$10$sDjoWVZA3Rjkj4zYKlTzxOGDsuWuYSMKG9801kNEDECCRPVA.tIaC'),
+(8, 'Kauan', '2007-01-04', '03923055', 'SP', 'São Paulo', 'Penhores', '123', 'rogerio@gmail.com', '$2y$10$n3/21vM3TOM6y2fiyupew.LTKFeQ3YPTyDkiV8/hYjryc1UIysBJi');
 
 --
 -- Índices para tabelas despejadas
@@ -471,7 +482,7 @@ ALTER TABLE `integrante_evento`
 -- AUTO_INCREMENT de tabela `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- Restrições para tabelas despejadas

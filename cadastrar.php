@@ -110,9 +110,11 @@ if (isset($_SESSION['pt2'])) {
 
           $usuario = new Usuario($nome, $data_nascimento, $cep, $estado, $cidade, $rua, $numero, $email, $senha, null);
 
-          $usuarioServicos->inserirUsuario($usuario);
+          $id_inserido = $usuarioServicos->inserirUsuario($usuario);
 
           session_destroy();
+
+          AutenticarServico::criarLogin($id_inserido, $nome, $email);
           Utils::redirecionarPara("index.php");
         } else {
           $msg = "As senha não coincidem";
@@ -142,11 +144,12 @@ if (isset($_SESSION['pt2'])) {
   <?php require_once "includes/cabecalho.php" ?>
   <section>
     <h2>Faça seu <span>Cadastro</span></h2>
-    <?php if ($msg) {
-      echo "<p>$msg</p>";
-    }  ?>
+    
     <?php if (!isset($_SESSION['pt2'])) { ?>
       <form method="post" id="form1" method="post">
+        <?php if ($msg) {
+      echo "<p class='erro'>$msg</p>";
+    }  ?>
         <div id="container-inputs">
 
           <div>
