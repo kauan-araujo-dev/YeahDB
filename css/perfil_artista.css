@@ -107,6 +107,7 @@ form{
   transition: background-color 0.3s ease;
   text-transform: uppercase;
   padding: 0px;
+   width: auto;
 }
 
 #uploadButton:hover {

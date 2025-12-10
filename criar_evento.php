@@ -302,7 +302,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <label for="descricao">Descrição:</label>
                     <textarea id="descricao" name="descricao"><?= $_POST['descricao'] ?? '' ?></textarea>
                 </div>
-
+<button id="uploadButton" onclick="fileInput.click()" type="button" class="upBtn">Adicionar foto</button>
+                <input type="file" id="fileInput" accept="image/*" multiple style="display: none;" name="fotos_evento[]">
+                <div id="previewContainer"></div>
                 <!-- 🔥 MANTIDO: participantes -->
                 <div id="container-participantes">
                     <label>PARTICIPANTES: </label>
@@ -312,9 +314,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
 
                 <!-- 🔥 MANTIDO: fotos -->
-                <button id="uploadButton" onclick="fileInput.click()" type="button" class="upBtn">Adicionar foto</button>
-                <input type="file" id="fileInput" accept="image/*" multiple style="display: none;" name="fotos_evento[]">
-                <div id="previewContainer"></div>
+                
 
             </div>
 

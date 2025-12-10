@@ -107,6 +107,7 @@ form{
   transition: background-color 0.3s ease;
   text-transform: uppercase;
   padding: 0px;
+  width: auto;
 }
 
 #uploadButton:hover {
@@ -166,7 +167,7 @@ form{
 .participante-wrapper {
   position: relative;
   margin: 35px 0;
-  padding-right: 30px; 
+  padding-right: 0; 
 }
 
 .btn-remove-x {
@@ -195,7 +196,7 @@ form{
   gap: 40px;
 }
 
-/* FOTO DO INTEGRANTE / MEMBRO DA EQUIPE */
+/* FOTO DO participante / MEMBRO DA EQUIPE */
 .foto-area {
   width: 180px;
   height: 180px;
@@ -256,4 +257,58 @@ form{
 .participante-wrapper {
   position: relative;
   margin-bottom: 30px;
+}
+
+@media (max-width: 1024px) {
+  .participante-box {
+    gap: 25px;
+  }
+
+  .foto-area {
+    width: 150px;
+    height: 150px;
+  }
+
+  .inputs-area {
+    width: 280px;
+  }
+}
+
+/* Até 768px — coloca empilhado */
+@media (max-width: 768px) {
+  .participante-box {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .foto-area {
+    width: 180px;
+    height: 180px;
+  }
+
+  .inputs-area {
+    width: 100%;
+  }
+
+  .btn-remove-x {
+    top: -5px;
+    right: -5px;
+  }
+}
+
+/* Celulares pequenos */
+@media (max-width: 480px) {
+  .foto-area {
+    width: 150px;
+    height: 150px;
+  }
+
+  .inputs-area input {
+    font-size: 16px;
+  }
+
+  #btn-add {
+    font-size: 14px;
+  }
 }
