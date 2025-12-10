@@ -36,7 +36,7 @@ class EventoServicos
     }
     public function buscarEventosUsuario(int $id): ?array
     {
-       $sql = "SELECT eventos.id, eventos.nome, eventos.cidade, eventos.estado, eventos.dia,  (
+        $sql = "SELECT eventos.id, eventos.nome, eventos.cidade, eventos.estado, eventos.dia,  (
         SELECT foto_evento.url_imagem
         FROM foto_evento
         WHERE foto_evento.id_evento = eventos.id
@@ -64,6 +64,37 @@ class EventoServicos
 
 
         return $consulta->fetchAll() ?: null;
+    }
+    public function buscarEventosId(int $id): ?array
+    {
+        $sql = "SELECT eventos.id, eventos.nome, eventos.cidade, eventos.estado, eventos.dia, eventos.descricao,  (
+        SELECT foto_evento.url_imagem
+        FROM foto_evento
+        WHERE foto_evento.id_evento = eventos.id
+        ORDER BY foto_evento.id ASC
+        LIMIT 1
+        ) AS url_imagem,
+        (
+            SELECT GROUP_CONCAT(estilo_musical.nome SEPARATOR ',')
+            FROM evento_estilo
+            JOIN estilo_musical 
+                ON estilo_musical.id = evento_estilo.id_estilo
+            WHERE evento_estilo.id_evento = eventos.id
+            ORDER BY estilo_musical.id ASC
+            LIMIT 1
+        ) AS estilos_musicais
+        FROM eventos
+        WHERE id = :id ORDER BY eventos.id DESC";
+
+        $consulta = $this->conexao->prepare($sql);
+
+        $consulta->bindValue(":id", $id);
+
+        $consulta->execute();
+
+
+
+        return $consulta->fetch() ?: null;
     }
     public function buscarEventosComLimite(int $limite): ?array
     {
@@ -139,7 +170,8 @@ class EventoServicos
         return $consulta->fetchAll() ?: null;
     }
 
-    public function inserirEvento(Eventos $evento): int {
+    public function inserirEvento(Eventos $evento): int
+    {
         $sql = "INSERT INTO eventos
             (nome, descricao, estado, cidade, endereco, dia, horario, instagram, contato, link_compra, id_usuario)
             VALUES
@@ -179,7 +211,8 @@ class EventoServicos
 
         $consulta->execute();
     }
-    public function inserirEstilo($id_evento, $id_estilo){
+    public function inserirEstilo($id_evento, $id_estilo)
+    {
         $sql = "INSERT INTO evento_estilo(id_evento, id_estilo) VALUES(:id_evento, :id_estilo)";
 
         $consulta = $this->conexao->prepare($sql);
@@ -190,7 +223,8 @@ class EventoServicos
         $consulta->execute();
     }
 
-    public function inserirFotoEvento(FotoEvento $foto): void {
+    public function inserirFotoEvento(FotoEvento $foto): void
+    {
         $sql = "INSERT INTO foto_evento (url_imagem, id_evento)
                 VALUES (:url, :id_evento)";
 
@@ -200,7 +234,7 @@ class EventoServicos
         $consulta->execute();
     }
 
-     public static function criarPastasUpload(int $id): bool
+    public static function criarPastasUpload(int $id): bool
     {
         // sobe 2 níveis e chega na raiz do projeto
         $root = dirname(__DIR__, 2);
@@ -226,7 +260,8 @@ class EventoServicos
         return true;
     }
 
-    public function excluirEvento($id, $idUsuario): int {
+    public function excluirEvento($id, $idUsuario): int
+    {
         // Deletar registros filhos antes de excluir o evento para não violar FKs.
         // Usa transação para garantir atomicidade.
         try {
@@ -271,7 +306,8 @@ class EventoServicos
         } catch (\Throwable $e) {
             try {
                 $this->conexao->rollBack();
-            } catch (\Throwable $ignore) {}
+            } catch (\Throwable $ignore) {
+            }
 
             // Re-throw para o controlador/log, ou retornar 0 caso prefira silenciar
             throw $e;
@@ -315,5 +351,46 @@ class EventoServicos
         $resultado = $consulta->fetch(PDO::FETCH_ASSOC);
 
         return $resultado ?: null;
+    }
+
+    public function buscarParticipantes(int $id)
+    {
+        $sql = "SELECT integrante_evento.id, integrante_evento.nome, integrante_evento.estilo_musical, integrante_evento.url_imagem
+                FROM integrante_evento
+                WHERE integrante_evento.id_evento = :id";
+
+        $consulta = $this->conexao->prepare($sql);
+        $consulta->bindValue(":id", $id, PDO::PARAM_INT);
+        $consulta->execute();
+
+        return $consulta->fetchAll(PDO::FETCH_ASSOC) ?: null;
+    }
+
+
+    public function buscarArtistaEvento($id)
+    {
+        $sql = "SELECT DISTINCT artistas.id, artistas.nome, artistas.cidade, artistas.estado,  (
+        SELECT foto_artista.url_imagem
+        FROM foto_artista
+        WHERE foto_artista.id_artista = artistas.id
+        ORDER BY foto_artista.id ASC
+        LIMIT 1
+    ) AS url_imagem,
+    (
+        SELECT GROUP_CONCAT(estilo_musical.nome SEPARATOR ',')
+            FROM artista_estilo
+            JOIN estilo_musical 
+                ON estilo_musical.id = artista_estilo.id_estilo
+            WHERE artista_estilo.id_artista = artistas.id
+            ORDER BY estilo_musical.id ASC
+            LIMIT 1
+    ) AS estilos_musicais
+FROM eventos JOIN artista_evento ON artista_evento.id_evento = eventos.id JOIN artistas ON artista_evento.id_artista = artistas.id WHERE eventos.id = :id
+";
+
+        $consulta = $this->conexao->prepare($sql);
+        $consulta->bindValue(":id", $id);
+        $consulta->execute();
+        return $consulta->fetchAll() ?: null;
     }
 }

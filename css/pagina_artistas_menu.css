@@ -12,6 +12,7 @@
   padding: 20px;
   margin: 90px 0;
   width: 100%;
+  flex: 1;
 }
 
 .titulo_secao {

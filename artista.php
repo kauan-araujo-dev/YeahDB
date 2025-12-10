@@ -52,12 +52,12 @@ $contador = 0;
                 <p><b>CONTATO: </b><?= $dadosArtista['contato'] ?></p>
 
                 <div class="redes_sociais">
-                    <a href="" target="_blank" class="rede"><i class="fab fa-instagram"></i></a>
-                    <a href="" target="_blank" class="rede"><i class="fab fa-facebook-f"></i></a>
+                    <a href="<?= $dadosArtista['instagram']?>" target="_blank" class="rede"><i class="fab fa-instagram"></i></a>
+                    
                 </div>
             </div>
             <div class="botao_whatsapp">
-                <a href="<?= $dadosArtista['cidade'] ?>" target="_blank">
+                <a href="<?= $dadosArtista['whatsapp'] ?>" target="_blank">
                     FALE COM O ARTISTA <i class="fab fa-whatsapp"></i>
                 </a>
 

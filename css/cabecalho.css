@@ -253,13 +253,26 @@ body {
     display: flex;
     flex-direction: column;
   }
+  .offcanvas-header{
+    display: flex;
+    align-items: center;
+  }
+  .btn-close{
+    color: #fff !important;
+  }
   .offcanvas-header h5{
-    text-align: center;
-    width: 100%;
-    color: #fff;
+    text-align: center !important;
+    width: 100% !important;
+    color: #fff !important;
+    font-weight: bold;
+    margin-bottom: 0 !important;
   }
   .offcanvas-header h5 span{
     color: #00b894;
+  }
+  .offcanvas-header button{
+    top: 0;
+    right: 0;
   }
   #offcanvasRight a{
     color: #fff;

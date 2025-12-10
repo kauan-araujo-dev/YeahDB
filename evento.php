@@ -2,174 +2,178 @@
 require_once "src/Database/Conecta.php";
 require_once "src/Helpers/Utils.php";
 require_once "src/Services/EventoServicos.php";
+require_once "src/Services/AutenticarServico.php";
 
-$id = isset($_GET['evento']) ? intval($_GET['evento']) : 0;
-if ($id <= 0) {
-    header('Location: pagina_eventos.php');
-    exit;
-}
+$id = $_GET['evento'] ?? null;
 
-$serv = new EventoServicos();
-$evento = $serv->obterEventoPorId($id);
-if (!$evento) {
-    header('Location: pagina_eventos.php');
-    exit;
-}
 
-$pdo = Conecta::getConexao();
+if (!$id) Utils::redirecionarPara("index.php");
 
-// ===========================
-// FOTOS DO EVENTO
-// ===========================
-$stmt = $pdo->prepare('
-    SELECT url_imagem 
-    FROM foto_evento 
-    WHERE id_evento = :id 
-    ORDER BY id ASC
-');
-$stmt->execute([':id' => $id]);
-$fotos = $stmt->fetchAll(PDO::FETCH_COLUMN);
+$eventoServico = new EventoServicos();
+$id = intval($id);
+$dadosEvento = $eventoServico->buscarEventosId($id);
+Utils::dump($dadosEvento);
+if (empty($dadosEvento)) Utils::redirecionarPara("index.php");
+if (!is_int($id)) Utils::redirecionarPara("index.php");
 
-// ===========================
-// ESTILOS
-// ===========================
-$stmt = $pdo->prepare('
-    SELECT em.nome 
-    FROM evento_estilo ee 
-    JOIN estilo_musical em ON em.id = ee.id_estilo 
-    WHERE ee.id_evento = :id 
-    ORDER BY em.nome ASC
-');
-$stmt->execute([':id' => $id]);
-$estilos = $stmt->fetchAll(PDO::FETCH_COLUMN);
+$participantes = $eventoServico->buscarParticipantes($id);
 
-// ===========================
-// PARTICIPANTES
-// ===========================
-$stmt = $pdo->prepare('
-    SELECT a.id, a.nome 
-    FROM artista_evento ae 
-    JOIN artistas a ON a.id = ae.id_artista 
-    WHERE ae.id_evento = :id
-');
-$stmt->execute([':id' => $id]);
-$participantes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$artistas = $eventoServico->buscarArtistaEvento($id);
+$contador = 0;
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title><?= htmlspecialchars($evento['nome']) ?> — YeahDB</title>
-
-    <link rel="stylesheet" href="css/pagina_eventos.css">
-
-    <style>
-        .thumb-event {
-            transition: transform .12s, box-shadow .12s, outline .12s;
-            cursor: pointer;
-        }
-        .thumb-event:hover {
-            transform: scale(1.05);
-        }
-        .thumb-event.active-thumb {
-            outline: 3px solid #04A777;
-            transform: scale(1.03);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.12);
-        }
-    </style>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?= $dadosEvento['nome'] ?></title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/evento.css">
-    <?php require_once "includes/cabecalho.php"; ?>
-    
-<main style="padding:20px; max-width:1100px; margin:0 auto;">
-    <a href="pagina_eventos.php">&larr; Voltar</a>
-    <h3 style="margin:12px 0;"><?= htmlspecialchars($evento['nome']) ?></h3>
+    <?php require_once "includes/cabecalho.php" ?>
 
-    <div style="display:flex; gap:20px; flex-wrap:wrap;">
+    <h2 id="titulo_evento"><?= $dadosEvento['nome'] ?></h2>
+    <section class="banda">
 
-        <!-- ======================= -->
-        <!--   IMAGEM PRINCIPAL     -->
-        <!-- ======================= -->
-        <div style="flex:1 1 480px; min-width:280px;">
+        <div class="imagem_banda">
 
-            <?php if (!empty($fotos)) : ?>
-                <img 
-                    id="main-event-image" 
-                    src="img/eventos/<?= intval($id) ?>/fotos_eventos/<?= htmlspecialchars($fotos[0]) ?>" 
-                    alt="<?= htmlspecialchars($evento['nome']) ?>" 
-                    style="width:100%; height:360px; object-fit:cover; border-radius:8px;" 
-                />
+            <img src="img/eventos/<?= $dadosEvento['id'] ?>/fotos_eventos/<?= explode(",", $dadosEvento['url_imagem'])[0] ?>" alt="<?= $dadosEvento['nome'] ?>">
 
-                <!-- ======================= -->
-                <!-- MINIATURAS - TODAS AS FOTOS -->
-                <!-- ======================= -->
-                <?php if (count($fotos) > 1) : ?>
-                    <div id="thumbnails-event" 
-                         style="display:flex; gap:10px; margin-top:12px; flex-wrap:wrap; width:100%;">
+        </div>
 
-                        <?php foreach ($fotos as $k => $f) : if ($k === 0) continue; ?>
-                            <img 
-                                class="thumb-event"
-                                src="img/eventos/<?= intval($id) ?>/fotos_eventos/<?= htmlspecialchars($f) ?>"
-                                data-large="img/eventos/<?= intval($id) ?>/fotos_eventos/<?= htmlspecialchars($f) ?>"
-                                alt="foto <?= $k ?>"
-                                style="width:120px; height:90px; object-fit:cover; border-radius:6px; flex:0 0 auto;"
-                            />
-                        <?php endforeach; ?>
 
-                    </div>
-                <?php endif; ?>
+        <div class="estilo_da_banda">
 
-            <?php else: ?>
-                <div style="background:#eee; height:360px; display:flex; 
-                            align-items:center; justify-content:center; border-radius:8px;">
-                    Sem imagem
+            <div>
+                <p><b>REGIÃO: </b><?= $dadosEvento['cidade'] ?> - <?= $dadosEvento['estado'] ?></p>
+
+                <p><b>ESTILOS MUSICAIS: </b><?= implode(", ", explode(",", $dadosEvento['estilos_musicais'])) ?></p>
+
+
+                <p><b>CONTATO: </b><?= $dadosEvento['contato'] ?></p>
+
+                <div class="redes_sociais">
+                    <a href="<?= $dadosEvento['instagram']?>" target="_blank" class="rede"><i class="fab fa-instagram"></i></a>
+                    
                 </div>
-            <?php endif; ?>
+            </div>
+            <div class="botao_whatsapp">
+                <a href="<?= $dadosEvento['whatsapp'] ?>" target="_blank">
+                    FALE COM O ARTISTA <i class="fab fa-whatsapp"></i>
+                </a>
+
+            </div>
+            <p class="cache">CACHÊ: <span class="valor">R$<?= number_format($dadosEvento['cache_evento'], 2, ",", ".") ?> </span></p>
+
+
+
+
+
         </div>
-
-        <!-- ======================= -->
-        <!--      INFORMAÇÕES       -->
-        <!-- ======================= -->
-        <div style="flex:1 1 380px; min-width:260px;">
-            <h3>Informações</h3>
-            <p><strong>Data:</strong> <?= Utils::formatarData($evento['dia'], true) ?></p>
-            <p><strong>Horário:</strong> <?= htmlspecialchars($evento['horario']) ?></p>
-            <p><strong>Local:</strong> <?= htmlspecialchars($evento['endereco']) ?> — <?= htmlspecialchars($evento['cidade']) ?> / <?= htmlspecialchars($evento['estado']) ?></p>
-            <p><strong>Contato:</strong> <?= htmlspecialchars($evento['contato']) ?></p>
-
-            <?php if (!empty($estilos)) : ?>
-                <p><strong>Estilos:</strong> <?= htmlspecialchars(implode(', ', $estilos)) ?></p>
-            <?php endif; ?>
-
-            <?php if (!empty($participantes)) : ?>
-                <h4>Participantes</h4>
-                <ul>
-                    <?php foreach ($participantes as $p) : ?>
-                        <li><a href="artista.php?artista=<?= intval($p['id']) ?>"><?= htmlspecialchars($p['nome']) ?></a></li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?>
-
-            <?php if (!empty($evento['link_compra'])) : ?>
-                <p><a href="<?= htmlspecialchars($evento['link_compra']) ?>" target="_blank" rel="noopener">
-                    Comprar ingresso / Mais info
-                </a></p>
-            <?php endif; ?>
-        </div>
-    </div>
-
-    <?php if (!empty($evento['descricao'])) : ?>
-    <section style="margin-top:20px;">
-        <h3>Descrição</h3>
-        <p><?= nl2br(htmlspecialchars($evento['descricao'])) ?></p>
     </section>
-    <?php endif; ?>
 
-</main>
+    <section id="sobre_a_banda">
+        <p class="sobre">
+            <b>SOBRE A BANDA</b>
+        </p>
+        <p class="texto_banda">
+            <?= $dadosEvento['descricao'] ?>
+        </p>
+    </section>
 
-<?php require_once "includes/rodape.php"; ?>
-<script src="js/gallery.js"></script>
+    <div id="conteudo-principal">
+        <section id="galeria-evento">
+            <div id="bloco-texto">
+                <h2 id="titulo-secao">
+                    <span>GALERIA</span>
+                    <span>DO</span>
+                    <span id="destaque-titulo">ARTISTA</span>
+                </h2>
+            </div>
+
+
+
+            <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+
+                    <?php foreach (explode("||", $dadosEvento['imagens']) as $imagem) {
+                    ?>
+                        <div class="carousel-item <?= $contador == 0 ? "active" : "" ?>">
+                            <div class="container_carrossel">
+                                <img src="img/eventos/<?= $dadosEvento['id'] ?>/fotos_eventos/<?= $imagem ?>" alt="Festival do Sol" id="imagem-principal" />
+
+                            </div>
+                        </div>
+
+                    <?php
+                        $contador++;
+                    } ?>
+
+
+                </div>
+
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+
+        </section>
+
+        <section id="secao-participantes">
+            <h3 id="subtitulo-participantes">INTEGRANTES</h3>
+            <div id="container-cartoes-participantes">
+                <?php foreach ($participantes as $participante) {
+                ?>
+                    <div class="caixa_participante">
+                        <img src="img/eventos/<?= $dadosEvento['id'] ?>/fotos_participantes/<?= $participante['url_imagem'] ?>" alt="<?= $participante['nome'] ?>" />
+                        <div class="texto_participante_overlay">
+                            <h3 class="titulo_participante"><?= $participante['nome'] ?></h3>
+                            <h4 class="instrumento_participante"><?= $participante['instrumento'] ?></h4>
+                        </div>
+                    </div>
+
+                <?php } ?>
+            </div>
+        </section>
+        <?php if (!empty($artistas)) { ?>
+            <section id="secao-artistas">
+                <h3 id="subtitulo-artistas">EVENTOS QUE ESTÃO PARTICIPANDO</h3>
+
+                <div class="linha_cards">
+                    <?php foreach ($artistas as $artista) {
+                        $artista['estilos_musicais'] = explode(",", $artista['estilos_musicais']); ?>
+                        <a href="artista.php?artista=<?= $artista['id'] ?>" class="caixa_artistas">
+                            <img src="img/artistas/<?= $artista['id'] ?>/fotos_artistas/<?= $artista['url_imagem'] ?>" alt="Festival do Sol" />
+                            <div class="textos_artistas">
+                                <div class="texto_superior">
+                                    <h3><?= $artista['nome'] ?></h3>
+                                    <h4><?= $artista['cidade'] ?> - <?= $artista['estado'] ?></h4>
+                                </div>
+                                <div class="texto_inferior">
+                                    <h4 class="estilos_artistas"><?= implode(", ", $artista['estilos_musicais']) ?></h4>
+                                    <h4><?= Utils::formatarData($artista['dia'], true) ?></h4>
+                                </div>
+                            </div>
+                        </a>
+
+                    <?php }
+                    ?>
+
+                </div>
+
+
+    </div>
+    </section>
+<?php } ?>
+</div>
+
+<?php require_once "includes/rodape.php" ?>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 </body>
+
 </html>

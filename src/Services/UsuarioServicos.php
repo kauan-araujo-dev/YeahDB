@@ -10,7 +10,7 @@ class UsuarioServicos
         $this->conexao = Conecta::getConexao();
     }
 
-    public function inserirUsuario(Usuario $usuario):void
+    public function inserirUsuario(Usuario $usuario):int
     {
         $sql = "INSERT INTO usuarios (
             nome,
@@ -46,6 +46,8 @@ class UsuarioServicos
         $consulta->bindValue(':senha', $usuario->getSenha());
 
         $consulta->execute();
+
+        return intval($this->conexao->lastInsertId());
     }
 
     public function buscarPorArtistaCodigo($codigo):?array{
