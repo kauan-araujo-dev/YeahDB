@@ -1,13 +1,16 @@
+/* Reset básico */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
+
 body {
   display: flex;
   flex-direction: column;
   height: 100vh !important;
 }
+
 #secao_bandas {
   display: flex;
   align-items: center;
@@ -16,6 +19,7 @@ body {
   padding: 20px;
   height: auto;
   flex: 1;
+  margin: 90px 0 !important;
 }
 
 #titulo_evento span {
@@ -25,80 +29,41 @@ body {
 #titulo_evento {
   font-weight: bold;
   font-size: 48px;
-  margin-top: 90px;
+  text-align: center;
 }
 
+/* Container de cards */
 .linha_cards {
   display: flex;
   flex-wrap: wrap;
   gap: 40px;
   justify-content: center;
+  max-width: 1160px;
 }
 
-.caixa_banda {
-  flex: 1 1 calc(50% - 40px);
+/* Cards de evento */
+.caixa_eventos {
   position: relative;
-  border-radius: 12px;
+  border-radius: 5px;
   overflow: hidden;
-  max-width: 567px;
-  height: 288px;
+  width: 560px;
+  height: 295px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   text-decoration: none;
   box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
 }
 
-/* Styles specific to categoria cards: 3 columns on desktop, responsive */
-.linha_cards.estilos .caixa_banda {
-  flex: 1 1 calc(33.333% - 40px);
-  max-width: none;
-  height: 240px;
-}
-
-@media (max-width: 992px) {
-  .linha_cards.estilos .caixa_banda {
-    flex: 1 1 calc(50% - 24px);
-    height: 260px;
-  }
-}
-
-@media (max-width: 480px) {
-  .linha_cards.estilos .caixa_banda {
-    flex: 1 1 100%;
-    height: 220px;
-  }
-}
-
-.caixa_banda img {
-  width: 300px;
+.caixa_eventos img {
+  width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center 20%;
   display: block;
   position: relative;
   z-index: 0;
 }
 
-/* Faixa de miniaturas dentro do card (baixo do conteúdo) */
-.thumb-strip {
-  display: flex;
-  gap: 6px;
-  position: absolute;
-  left: 10px;
-  bottom: 8px;
-  z-index: 2;
-}
-.card-thumb {
-  width: 44px;
-  height: 44px;
-  object-fit: cover;
-  border-radius: 6px;
-  border: 2px solid rgba(255, 255, 255, 0.85);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
-}
-.card-thumb.active-card-thumb {
-  outline: 3px solid rgba(4, 167, 119, 0.9);
-  transform: translateY(-2px);
-}
-.caixa_banda::after {
+.caixa_eventos::after {
   content: "";
   position: absolute;
   bottom: 0;
@@ -107,60 +72,76 @@ body {
   height: 52%;
   background: linear-gradient(to top, #000, #000, transparent);
   pointer-events: none;
-  border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
 }
 
-.texto_banda_overlay {
-  text-transform: uppercase;
-  position: absolute;
-  bottom: 0;
-  left: 0px;
-  width: 100%;
+.textos_eventos {
   display: flex;
   flex-direction: column;
-  align-items: start;
-  padding: 10px 10px;
+  justify-content: space-between;
+  text-transform: uppercase;
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+  padding: 30px;
   z-index: 1;
 }
+.texto_superior{
+  color: #fff;
+}
+.texto_superior,
+.texto_inferior {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-.titulo_banda {
+.texto_superior h3,
+.texto_superior h4,
+.texto_inferior h4 {
+  font-weight: bold;
+  margin-bottom: 0;
+}
+
+.texto_superior h3 {
   font-size: 1.5rem;
-  color: #ffffff;
-  text-align: center;
-  border-radius: 5px 5px 0 0;
-  font-weight: bold;
 }
-
-.data_evento {
-  color: #04a777;
-  align-self: end;
-  bottom: 20px;
-}
-
-.estilo_musical_banda {
+.texto_superior h4 {
   font-size: 1.2rem;
-  color: #fb8b24;
-  text-align: center;
-  font-weight: bold;
+}
+.texto_inferior h4 {
+  font-size: 1.2rem;
+  color: #04a777;
 }
 
-.caixa_banda:hover {
+.estilos_eventos {
+  max-width: 50%;
+  flex-wrap: wrap;
+}
+
+/* Hover nos cards */
+.caixa_eventos:hover {
   transform: scale(1.05);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+/* Selects customizados */
 .nav-selects {
+  width: 100%;
   display: flex;
-  justify-content: center;
-  gap: 80px;
+  justify-content: space-between;
+  gap: 40px;
   margin: 40px 0;
   font-family: "Poppins", sans-serif;
+  max-width: 1160px;
+  flex-wrap: wrap;
 }
 
 .custom-select {
   position: relative;
-  width: 220px;
+  flex: 1;
+  min-width: 250px;
 }
 
 .select-header {
@@ -212,133 +193,219 @@ body {
   color: #5c21d3;
 }
 
-/* Lista oculta */
+/* Lista de opções: fixa, scroll e sobreposição */
 .select-list {
-  list-style: none;
-  padding: 0;
-  margin-top: 8px;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
   border: 1px solid #ccc;
   background: #fff;
-  display: none;
   border-radius: 4px;
-  overflow: hidden;
+  display: none;
+  z-index: 999;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  list-style: none;
+  padding-left: 0;
 }
-
+.select-list ul {
+  list-style-type: none;
+}
 .select-list li {
-  padding: 10px;
+  padding: 10px 20px;
   cursor: pointer;
   color: #4b4b4b;
 }
 
-.select-list li:hover {
+.select-list li:hover,
+.select-list li.keyboard-focus {
   background: #f3e8ff;
   color: #5c21d3;
 }
 
-/* Classe para quando abrir */
-.show {
+/* Mostrar lista */
+.custom-select.open .select-list {
   display: block;
 }
 
-.rotate {
+.custom-select.open .arrow {
   transform: rotate(-135deg);
 }
+@media (max-width: 1200px) {
+  #titulo_evento {
+    font-size: 42px;
+  }
 
-.caixa_eventos {
-  position: relative;
-  border-radius: 5px;
-  overflow: hidden;
-  width: 560px !important;
-  height: 295px !important;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  text-decoration: none;
-  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+  .linha_cards {
+    gap: 30px;
+    max-width: 1000px;
+  }
+
+  .caixa_eventos {
+    width: 500px;
+    height: 270px;
+  }
 }
-.caixa_eventos img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  position: relative;
-  z-index: 0;
+
+
+/* ================================
+   TELAS ATÉ 992px (tablet grande)
+================================ */
+@media (max-width: 992px) {
+  #titulo_evento {
+    font-size: 38px;
+  }
+
+  .nav-selects {
+    gap: 20px;
+  }
+
+  .custom-select {
+    min-width: 230px;
+  }
+
+  .linha_cards {
+    gap: 25px;
+    max-width: 900px;
+  }
+
+  .caixa_eventos {
+    width: 440px;
+    height: 240px;
+  }
+
+  .texto_superior h3 {
+    font-size: 1.3rem;
+  }
+  .texto_superior h4,
+  .texto_inferior h4 {
+    font-size: 1.1rem;
+  }
 }
-.caixa_eventos::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 52%;
-  background: linear-gradient(to top, #000, #000, transparent);
-  pointer-events: none;
-  border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px;
+
+
+/* ================================
+   TELAS ATÉ 768px (tablet)
+================================ */
+@media (max-width: 768px) {
+  #titulo_evento {
+    font-size: 32px;
+    padding: 0 20px;
+  }
+
+  .nav-selects {
+    flex-direction: column;
+    gap: 25px;
+    align-items: center;
+  }
+
+  .custom-select {
+    width: 80%;
+  }
+
+  .linha_cards {
+    gap: 30px;
+    width: 100%;
+  }
+
+  .caixa_eventos {
+    width: 90%;
+    max-width: 480px;
+    height: 250px;
+  }
+
+  .texto_eventos {
+    padding: 20px !important;
+  }
 }
-.texto_evento_overlay {
-  text-transform: uppercase;
-  position: absolute;
-  bottom: 0px;
-  left: 0px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-  padding: 10px 10px;
-  z-index: 1;
+
+
+/* ================================
+   TELAS ATÉ 600px (celular grande)
+================================ */
+@media (max-width: 600px) {
+  #titulo_evento {
+    font-size: 28px;
+  }
+
+  .custom-select {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .linha_cards {
+    gap: 20px;
+  }
+
+  .caixa_eventos {
+    width: 100%;
+    height: 210px;
+  }
+
+  .texto_superior h3 {
+    font-size: 1.1rem;
+  }
+  .texto_superior h4,
+  .texto_inferior h4 {
+    font-size: 0.95rem;
+  }
 }
-.titulo_evento {
-  font-size: 1.5rem;
-  color: #ffffff;
-  text-align: center;
-  border-radius: 5px 5px 0 0;
-  font-weight: bold;
+
+
+/* ================================
+   TELAS ATÉ 480px (celular médio)
+================================ */
+@media (max-width: 480px) {
+  #titulo_evento {
+    font-size: 24px;
+  }
+
+  .nav-selects {
+    margin: 20px 0;
+  }
+
+  .caixa_eventos {
+    height: 190px;
+    border-radius: 4px;
+  }
+
+  .texto_superior h3 {
+    font-size: 1rem;
+  }
+  .texto_superior h4,
+  .texto_inferior h4 {
+    font-size: 0.85rem;
+  }
+
+  .textos_eventos {
+    padding: 18px !important;
+  }
 }
-.textos_eventos {
-  display: flex;
-  flex-direction: column;
-  align-items: space-between;
-  text-transform: uppercase;
-  position: absolute;
-  bottom: 0px;
-  width: 100%;
-  padding: 30px 30px;
-  z-index: 1;
-}
-.texto_superior {
-  color: #fff;
-}
-.texto_superior,
-.texto_inferior {
-  display: flex;
-  justify-content: space-between;
-}
-.texto_superior {
-  align-items: center;
-}
-.texto_inferior {
-  align-items: end;
-}
-.texto_superior h3,
-.textos_eventos h4 {
-  font-weight: bold;
-  margin-bottom: 0;
-}
-.texto_superior h3 {
-  font-size: 1.5rem;
-}
-.texto_superior h4 {
-  font-size: 1.2rem;
-}
-.texto_inferior h4 {
-  color: #04a777;
-  font-size: 1.2rem;
-}
-.linha_cards {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 40px;
-}
-.estilos_eventos {
-  max-width: 50%;
-  flex-wrap: wrap;
+
+
+/* ================================
+   TELAS ATÉ 380px (celular pequeno)
+================================ */
+@media (max-width: 380px) {
+  #titulo_evento {
+    font-size: 20px;
+  }
+
+  .caixa_eventos {
+    height: 170px;
+  }
+
+  .texto_superior h3 {
+    font-size: 0.9rem;
+  }
+  .texto_superior h4,
+  .texto_inferior h4 {
+    font-size: 0.75rem;
+  }
+
+  .textos_eventos {
+    padding: 14px !important;
+  }
 }

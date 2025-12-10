@@ -3,6 +3,7 @@
 class Artista
 {
     public ?int $id;
+    public ?string $codigo_artista; // <--- ADICIONADO
     public string $nome;
     public string $descricao;
     public string $estado;
@@ -15,6 +16,7 @@ class Artista
 
     public function __construct(
         ?int $id,
+        ?string $codigo_artista = null, // <--- ADICIONADO
         string $nome,
         string $descricao,
         string $estado,
@@ -26,6 +28,7 @@ class Artista
         int $id_usuario
     ) {
         $this->setId($id);
+        $this->setCodigoArtista($codigo_artista); // <--- ADICIONADO
         $this->setNome($nome);
         $this->setDescricao($descricao);
         $this->setEstado($estado);
@@ -36,6 +39,7 @@ class Artista
         $this->setContato($contato);
         $this->setIdUsuario($id_usuario);
     }
+
     // ID
     public function getId(): ?int
     {
@@ -45,6 +49,17 @@ class Artista
     public function setId(?int $id): void
     {
         $this->id = $id;
+    }
+
+    // Código Artista
+    public function getCodigoArtista(): ?string
+    {
+        return $this->codigo_artista;
+    }
+
+    public function setCodigoArtista(?string $codigo_artista): void
+    {
+        $this->codigo_artista = $codigo_artista;
     }
 
     // Nome
@@ -145,4 +160,5 @@ class Artista
     {
         $this->id_usuario = $id_usuario;
     }
+
 }

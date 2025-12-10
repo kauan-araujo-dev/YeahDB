@@ -192,11 +192,9 @@ if (isset($_SESSION['pt2'])) {
           </div>
 
         </div>
-      </form>
-      <footer id="footer-form1">
-        <button id="btn-continuar">Continuar</button>
 
-      </footer>
+         <input type="submit" value="continuar">
+      </form>
     <?php } else { ?>
 
       <form method="post" id="form2" method="post">

@@ -103,6 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $artista = new Artista(
             null,
+            Utils::gerarCodigoAleatorio(),
             $nome,
             $descricao,
             $estado,

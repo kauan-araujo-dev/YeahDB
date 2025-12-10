@@ -4,27 +4,43 @@
   box-sizing: border-box;
 }
 
-.nav-selects {
-    width: 100%;
+#secao_bandas {
   display: flex;
-  justify-content: space-between;
-  gap: 40px;
-  margin: 40px 0;
-  font-family: "Poppins", sans-serif;
-  max-width: 1121px;
+  flex-direction: column;
+  align-items: center;
+  gap: 50px;
+  padding: 20px;
+  margin: 90px 0;
+  width: 100%;
+}
+
+.titulo_secao {
+  font-size: 48px;
+  font-weight: bold;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.nav-selects {
+  display: flex;
   flex-wrap: wrap;
+  gap: 40px;
+  width: 100%;
+  max-width: 1121px;
+  justify-content: space-between;
+  font-family: "Poppins", sans-serif;
+  margin: 40px 0;
 }
 
 .custom-select {
   position: relative;
   flex: 1;
-  
   min-width: 250px;
 }
 
 .select-header {
-  padding-bottom: 10px;
   cursor: pointer;
+  padding-bottom: 10px;
   position: relative;
 }
 
@@ -71,64 +87,52 @@
   color: #5c21d3;
 }
 
-/* Lista oculta */
+/* Lista suspensa fixa com scroll e sobreposição */
 .select-list {
-  list-style: none;
-  padding: 0;
-  margin-top: 8px;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
   border: 1px solid #ccc;
   background: #fff;
-  display: none;
   border-radius: 4px;
-  overflow: hidden;
+  display: none;
+  z-index: 999;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  list-style: none;
+  padding-left: 0;
 }
 
 .select-list li {
-  padding: 10px;
+  padding: 10px 20px;
   cursor: pointer;
   color: #4b4b4b;
 }
 
-.select-list li:hover {
+.select-list li:hover,
+.select-list li.keyboard-focus {
   background: #f3e8ff;
   color: #5c21d3;
 }
 
-/* Classe para quando abrir */
-.show {
+/* abrir lista */
+.custom-select.open .select-list {
   display: block;
 }
 
-.rotate {
+.custom-select.open .arrow {
   transform: rotate(-135deg);
 }
-section {
-  margin: 90px 0;
-}
 
-.titulo_secao {
-  font-size: 48px;
-  text-transform: uppercase;
-  font-weight: bold;
-}
-
-#secao_bandas {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  gap: 50px;
-  padding: 20px;
-  height: auto;
-}
-#titulo_artistas span {
-  color: #04a777;
-}
+/* Cards de artista */
 .linha_cards {
-    max-width: 1121px;
   display: flex;
   flex-wrap: wrap;
   gap: 40px;
   justify-content: center;
+  max-width: 1121px;
 }
 
 .caixa_banda {
@@ -137,19 +141,17 @@ section {
   overflow: hidden;
   width: 347px;
   height: 432px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   text-decoration: none;
-  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
 }
 
 .caixa_banda img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
-  position: relative;
-  z-index: 0;
 }
+
 .caixa_banda::after {
   content: "";
   position: absolute;
@@ -164,38 +166,31 @@ section {
 }
 
 .texto_banda_overlay {
-  text-transform: uppercase;
   position: absolute;
-  bottom: 0px;
-  left: 0px;
+  bottom: 0;
+  left: 0;
   width: 100%;
+  padding: 10px;
   display: flex;
   flex-direction: column;
-  align-items: start;
-  padding: 10px 10px;
+  text-transform: uppercase;
   z-index: 1;
 }
 
 .titulo_banda {
   font-size: 1.5rem;
-  color: #ffffff;
-  text-align: left;
-  border-radius: 5px 5px 0 0;
   font-weight: bold;
+  color: #fff;
 }
 
 .estilo_musical_banda {
   font-size: 1.2rem;
-  color: #fb8b24;
-  text-align: center;
   font-weight: bold;
+  color: #fb8b24;
+  text-align: left;
 }
 
 .caixa_banda:hover {
   transform: scale(1.05);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-.custom-select .select-list li.keyboard-focus {
-    background-color: #ddd;
-    outline: 1px solid #444;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }

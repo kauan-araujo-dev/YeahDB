@@ -79,13 +79,12 @@ $participantes = $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
     </style>
 
+    <link rel="stylesheet" href="css/evento.css">
     <?php require_once "includes/cabecalho.php"; ?>
-</head>
-
-<body>
+    
 <main style="padding:20px; max-width:1100px; margin:0 auto;">
     <a href="pagina_eventos.php">&larr; Voltar</a>
-    <h1 style="margin:12px 0;"><?= htmlspecialchars($evento['nome']) ?></h1>
+    <h3 style="margin:12px 0;"><?= htmlspecialchars($evento['nome']) ?></h3>
 
     <div style="display:flex; gap:20px; flex-wrap:wrap;">
 

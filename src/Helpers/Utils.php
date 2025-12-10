@@ -119,4 +119,15 @@ class Utils
     // Retorna com o ano normalizado
     return $dt->format('d/m/Y');
 }
+public static function gerarCodigoAleatorio(int $tamanho = 10): string
+{
+    $caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    $codigo = '';
+
+    for ($i = 0; $i < $tamanho; $i++) {
+        $codigo .= $caracteres[random_int(0, strlen($caracteres) - 1)];
+    }
+
+    return $codigo;
+}
 }

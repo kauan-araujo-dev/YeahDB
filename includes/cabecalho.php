@@ -23,7 +23,7 @@
                 AutenticarServico::iniciarSecao();
                 if (!isset($_SESSION['id'])) {
                 ?>
-                    <div>
+                    <div id="login-cadastro">
                         <a href="cadastrar.php" class="botao_acesso">CADASTRAR</a>
                         <a href="login.php" class="botao_acesso">ACESSAR</a>
                     </div>

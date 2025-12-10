@@ -1,3 +1,9 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
   font-family: "Poppins", sans-serif;
 }
@@ -105,15 +111,12 @@ section,
 @media (max-width: 768px) {
   .banda {
     flex-direction: column;
-    align-items: center;
     gap: 30px;
     text-align: center;
   }
 
   .imagem_banda img {
     width: 200px;
-    display: flex;
-    justify-content: center;
   }
 
   .estilo_da_banda p {
@@ -159,9 +162,6 @@ section,
     margin-top: 20px;
     padding: 10px;
     text-align: justify;
-  }
-  #galeria-artista{
-    padding: 0;
   }
 }
 
@@ -425,6 +425,9 @@ section,
 
 /* Ajustes finos para Mobile (menos de 480px) */
 @media (max-width: 480px) {
+  body {
+    padding: 10px;
+  }
 
   #titulo-secao {
     font-size: 2em;

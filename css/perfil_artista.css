@@ -155,7 +155,7 @@ form{
 .integrante-wrapper {
   position: relative;
   margin: 35px 0;
-  padding-right: 30px; 
+  padding-right: 0;
 }
 
 .btn-remove-x {
@@ -227,4 +227,128 @@ form{
   background: #f2f2f2;
   border: none;
   margin-bottom: 15px;
+}
+
+@media (max-width: 1024px) {
+  #previewContainer {
+    grid-template-areas:
+      "main-image main-image"
+      "side-image1 side-image2"
+      "side-image3 side-image4";
+    justify-items: center;
+  }
+
+  .img-preview:first-child {
+    width: 320px;
+    height: 320px;
+  }
+
+  .img-preview:nth-child(n+2) {
+    width: 160px;
+    height: 160px;
+  }
+}
+
+/* Celulares grandes (até 768px) */
+@media (max-width: 768px) {
+  #previewContainer {
+    grid-template-areas:
+      "main-image"
+      "side-image1"
+      "side-image2"
+      "side-image3"
+      "side-image4";
+  }
+
+  .img-preview:first-child {
+    width: 260px;
+    height: 260px;
+  }
+
+  .img-preview:nth-child(n+2) {
+    width: 200px;
+    height: 200px;
+  }
+}
+
+/* Celulares pequenos (até 480px) */
+@media (max-width: 480px) {
+  #previewContainer {
+    gap: 14px;
+  }
+
+  .img-preview:first-child {
+    width: 220px;
+    height: 220px;
+  }
+
+  .img-preview:nth-child(n+2) {
+    width: 160px;
+    height: 160px;
+  }
+
+  #uploadButton {
+    font-size: 16px;
+  }
+}
+
+
+
+/* ================================
+   RESPONSIVIDADE DOS INTEGRANTES
+===================================*/
+
+/* Até 1024px — ajusta a largura */
+@media (max-width: 1024px) {
+  .integrante-box {
+    gap: 25px;
+  }
+
+  .foto-area {
+    width: 150px;
+    height: 150px;
+  }
+
+  .inputs-area {
+    width: 280px;
+  }
+}
+
+/* Até 768px — coloca empilhado */
+@media (max-width: 768px) {
+  .integrante-box {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .foto-area {
+    width: 180px;
+    height: 180px;
+  }
+
+  .inputs-area {
+    width: 100%;
+  }
+
+  .btn-remove-x {
+    top: -5px;
+    right: -5px;
+  }
+}
+
+/* Celulares pequenos */
+@media (max-width: 480px) {
+  .foto-area {
+    width: 150px;
+    height: 150px;
+  }
+
+  .inputs-area input {
+    font-size: 16px;
+  }
+
+  #btn-add {
+    font-size: 14px;
+  }
 }

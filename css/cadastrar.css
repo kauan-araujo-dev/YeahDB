@@ -7,6 +7,9 @@ footer {
 }
 
 #footer-form1{
-  justify-content: flex-end !important;
+  justify-content: center !important;
+  border: none;
 }
-
+#form1{
+  margin-bottom: 90px;
+}

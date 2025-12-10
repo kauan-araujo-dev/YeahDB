@@ -107,57 +107,7 @@ class ArtistaServicos
         return $consulta->fetchAll(PDO::FETCH_ASSOC) ?: null;
     }
 
-    public function buscarArtistasPorFiltros(?string $estado, ?string $cidade, ?string $estilo): ?array
-    {
-        $params = [];
-        $where = [];
-
-        if ($estado) {
-            $where[] = 'artistas.estado = :estado';
-            $params[':estado'] = $estado;
-        }
-        if ($cidade) {
-            $where[] = 'artistas.cidade = :cidade';
-            $params[':cidade'] = $cidade;
-        }
-        $joinEstilo = '';
-        if ($estilo) {
-            $joinEstilo = "JOIN artista_estilo ae ON ae.id_artista = artistas.id\nJOIN estilo_musical em ON em.id = ae.id_estilo";
-            $where[] = 'em.nome = :estilo';
-            $params[':estilo'] = $estilo;
-        }
-
-        $sql = "SELECT artistas.id, artistas.nome, artistas.cidade, artistas.estado, (
-            SELECT GROUP_CONCAT(url_imagem SEPARATOR '||')
-            FROM foto_artista
-            WHERE foto_artista.id_artista = artistas.id
-            ORDER BY foto_artista.id ASC
-        ) AS imagens, (
-            SELECT GROUP_CONCAT(estilo_musical.nome SEPARATOR ',')
-            FROM artista_estilo
-            JOIN estilo_musical ON estilo_musical.id = artista_estilo.id_estilo
-            WHERE artista_estilo.id_artista = artistas.id
-            ORDER BY estilo_musical.id ASC
-            LIMIT 1
-        ) AS estilos_musicais
-        FROM artistas
-        " . $joinEstilo . "\n";
-
-        if (!empty($where)) {
-            $sql .= ' WHERE ' . implode(' AND ', $where);
-        }
-
-        $sql .= ' ORDER BY artistas.id DESC';
-
-        $consulta = $this->conexao->prepare($sql);
-        foreach ($params as $k => $v) {
-            $consulta->bindValue($k, $v);
-        }
-        $consulta->execute();
-
-        return $consulta->fetchAll(PDO::FETCH_ASSOC) ?: null;
-    }
-
+ 
     public function buscarArtistasPorEstiloId(int $idEstilo): ?array
     {
         $sql = "SELECT artistas.id, artistas.nome, artistas.cidade, artistas.estado, (
@@ -225,9 +175,9 @@ class ArtistaServicos
     public function inserirArtista(Artista $dadosArtista): int
     {
         $sql = "INSERT INTO artistas 
-            (nome, descricao, estado, cidade, cache_artista, whatsapp, instagram, contato, id_usuario)
+            (nome, descricao, estado, cidade, cache_artista, whatsapp, instagram, contato, codigo_artista, id_usuario)
             VALUES 
-            (:nome, :descricao, :estado, :cidade, :cache_artista, :whatsapp, :instagram, :contato, :id_usuario)";
+            (:nome, :descricao, :estado, :cidade, :cache_artista, :whatsapp, :instagram, :contato, :codigo_artista, :id_usuario)";
 
         $consulta = $this->conexao->prepare($sql);
 
@@ -239,6 +189,7 @@ class ArtistaServicos
         $consulta->bindValue(':whatsapp', $dadosArtista->getWhatsapp());
         $consulta->bindValue(':instagram', $dadosArtista->getInstagram());
         $consulta->bindValue(':contato', $dadosArtista->getContato());
+        $consulta->bindValue(':codigo_artista', $dadosArtista->getCodigoArtista());
         $consulta->bindValue(':id_usuario', $dadosArtista->getIdUsuario(), PDO::PARAM_INT);
 
         $consulta->execute();
@@ -316,146 +267,103 @@ class ArtistaServicos
         return true;
     }
 
-    public function buscarArtistasFiltrados(
-    ?string $estado,
-    ?string $cidade,
-    ?string $estilo,
-    int $pagina,
-    int $porPagina
-): array 
-{
-    $where = [];
-    $params = [];
+  public function buscarArtistasPorFiltros(?string $estado, ?string $cidade, ?string $estilo): ?array
+    {
+        $params = [];
+        $where = [];
 
-    if ($estado) {
-        $where[] = "artistas.estado = :estado";
-        $params[':estado'] = $estado;
-    }
-    if ($cidade) {
-        $where[] = "artistas.cidade = :cidade";
-        $params[':cidade'] = $cidade;
-    }
-    if ($estilo) {
-        $where[] = "em.nome = :estilo";
-        $params[':estilo'] = $estilo;
-    }
+        if ($estado) {
+            $where[] = 'artistas.estado = :estado';
+            $params[':estado'] = $estado;
+        }
 
-    $sql = "SELECT 
-                artistas.id, artistas.nome, artistas.cidade, artistas.estado,
-                (SELECT GROUP_CONCAT(url_imagem SEPARATOR '||')
-                 FROM foto_artista 
-                 WHERE foto_artista.id_artista = artistas.id
-                 ORDER BY foto_artista.id ASC) AS imagens,
-                (SELECT GROUP_CONCAT(estilo_musical.nome SEPARATOR ',')
-                 FROM artista_estilo
-                 JOIN estilo_musical 
-                    ON estilo_musical.id = artista_estilo.id_estilo
-                 WHERE artista_estilo.id_artista = artistas.id
-                 LIMIT 1
-                ) AS estilos_musicais
-            FROM artistas
-            LEFT JOIN artista_estilo ae ON ae.id_artista = artistas.id
-            LEFT JOIN estilo_musical em ON em.id = ae.id_estilo";
+        if ($cidade) {
+            $where[] = 'artistas.cidade = :cidade';
+            $params[':cidade'] = $cidade;
+        }
 
-    if (!empty($where)) {
-        $sql .= " WHERE " . implode(" AND ", $where);
-    }
+        $joinEstilo = '';
+        if ($estilo) {
+            $joinEstilo = "JOIN artista_estilo ae ON ae.id_artista = artistas.id
+                            JOIN estilo_musical em ON em.id = ae.id_estilo";
+            $where[] = 'em.nome = :estilo';
+            $params[':estilo'] = $estilo;
+        }
 
-    $sql .= " GROUP BY artistas.id
-              ORDER BY artistas.id DESC
-              LIMIT :limite OFFSET :offset";
+        $sql = "SELECT artistas.id, artistas.nome, artistas.cidade, artistas.estado,
+                    (SELECT GROUP_CONCAT(url_imagem SEPARATOR '||')
+                     FROM foto_artista 
+                     WHERE foto_artista.id_artista = artistas.id) AS imagens,
+                    (SELECT GROUP_CONCAT(estilo_musical.nome SEPARATOR ',')
+                     FROM artista_estilo
+                     JOIN estilo_musical ON estilo_musical.id = artista_estilo.id_estilo
+                     WHERE artista_estilo.id_artista = artistas.id
+                     ORDER BY estilo_musical.id ASC
+                     LIMIT 1) AS estilos_musicais
+                FROM artistas
+                $joinEstilo";
 
-    $consulta = $this->conexao->prepare($sql);
+        if (!empty($where)) {
+            $sql .= ' WHERE ' . implode(' AND ', $where);
+        }
 
-    foreach ($params as $k => $v) {
-        $consulta->bindValue($k, $v);
+        $sql .= ' ORDER BY artistas.id DESC';
+
+        $consulta = $this->conexao->prepare($sql);
+        foreach ($params as $k => $v) {
+            $consulta->bindValue($k, $v);
+        }
+        $consulta->execute();
+
+        return $consulta->fetchAll(PDO::FETCH_ASSOC) ?: null;
     }
 
-    $offset = ($pagina - 1) * $porPagina;
-    $consulta->bindValue(":limite", $porPagina, PDO::PARAM_INT);
-    $consulta->bindValue(":offset", $offset, PDO::PARAM_INT);
+    // Buscar todos os estados disponíveis para filtro
+    public function buscarEstadosDisponiveis(): array
+    {
+        $sql = "SELECT DISTINCT estado 
+                FROM artistas 
+                WHERE estado IS NOT NULL AND estado != '' 
+                ORDER BY estado ASC";
 
-    $consulta->execute();
-
-    return $consulta->fetchAll(PDO::FETCH_ASSOC) ?: [];
-}
-
-public function contarArtistasFiltrados(?string $estado, ?string $cidade, ?string $estilo): int
-{
-    $where = [];
-    $params = [];
-    $joinEstilo = '';
-
-    // Só junta as tabelas de estilo quando o filtro de estilo for usado
-    if ($estilo) {
-        $joinEstilo = " JOIN artista_estilo ae ON ae.id_artista = artistas.id
-                        JOIN estilo_musical em ON em.id = ae.id_estilo ";
-        $where[] = "em.nome = :estilo";
-        $params[':estilo'] = $estilo;
+        $stmt = $this->conexao->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_COLUMN) ?: [];
     }
 
-    if ($estado) {
-        $where[] = "artistas.estado = :estado";
-        $params[':estado'] = $estado;
+    // Buscar todas as cidades disponíveis para filtro
+    public function buscarCidadesDisponiveis(): array
+    {
+        $sql = "SELECT DISTINCT cidade 
+                FROM artistas 
+                WHERE cidade IS NOT NULL AND cidade != '' 
+                ORDER BY cidade ASC";
+
+        $stmt = $this->conexao->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_COLUMN) ?: [];
     }
 
-    if ($cidade) {
-        $where[] = "artistas.cidade = :cidade";
-        $params[':cidade'] = $cidade;
+    // Buscar todos os estilos musicais disponíveis para filtro
+    public function buscarEstilosDisponiveis(): array
+    {
+        $sql = "SELECT DISTINCT em.nome
+                FROM artista_estilo ae
+                JOIN estilo_musical em ON em.id = ae.id_estilo
+                ORDER BY em.nome ASC";
+
+        $stmt = $this->conexao->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_COLUMN) ?: [];
     }
 
-    $sql = "SELECT COUNT(DISTINCT artistas.id) AS total
-            FROM artistas
-            " . $joinEstilo;
-
-    if (!empty($where)) {
-        $sql .= " WHERE " . implode(" AND ", $where);
+    // Buscar cidades disponíveis dentro de um estado específico
+    public function buscarCidadesPorEstado(string $estado): array
+    {
+        $sql = "SELECT DISTINCT cidade FROM artistas WHERE estado = :estado ORDER BY cidade ASC";
+        $stmt = $this->conexao->prepare($sql);
+        $stmt->bindValue(':estado', $estado, PDO::PARAM_STR);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_COLUMN) ?: [];
     }
-
-    $stmt = $this->conexao->prepare($sql);
-
-    foreach ($params as $k => $v) {
-        $stmt->bindValue($k, $v);
-    }
-
-    $stmt->execute();
-
-    return intval($stmt->fetchColumn() ?: 0);
-}
-public function buscarEstadosDisponiveis(): array
-{
-    $sql = "SELECT DISTINCT estado 
-            FROM artistas 
-            WHERE estado IS NOT NULL AND estado != '' 
-            ORDER BY estado ASC";
-
-    $stmt = $this->conexao->query($sql);
-    return $stmt->fetchAll(PDO::FETCH_COLUMN) ?: [];
-}
-
-public function buscarCidadesDisponiveis(): array
-{
-    $sql = "SELECT DISTINCT cidade 
-            FROM artistas 
-            WHERE cidade IS NOT NULL AND cidade != '' 
-            ORDER BY cidade ASC";
-
-    $stmt = $this->conexao->query($sql);
-    return $stmt->fetchAll(PDO::FETCH_COLUMN) ?: [];
-}
-
-public function buscarEstilosDisponiveis(): array
-{
-    $sql = "SELECT DISTINCT em.nome
-            FROM artista_estilo ae
-            JOIN estilo_musical em ON em.id = ae.id_estilo
-            ORDER BY em.nome ASC";
-
-    $stmt = $this->conexao->query($sql);
-    return $stmt->fetchAll(PDO::FETCH_COLUMN) ?: [];
-}
-
-public function buscarEventosArtista($id){
+    public function buscarEventosArtista($id){
     $sql = "SELECT DISTINCT eventos.id, eventos.nome, eventos.cidade, eventos.estado, eventos.dia,  (
         SELECT foto_evento.url_imagem
         FROM foto_evento
@@ -480,5 +388,4 @@ $consulta = $this->conexao->prepare($sql);
     $consulta->execute();
     return $consulta->fetchAll() ?: null;
 }
-
 }

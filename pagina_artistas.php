@@ -1,186 +1,273 @@
 <?php
 require_once "src/Database/Conecta.php";
 require_once "src/Helpers/Utils.php";
+require_once "src/Services/EstilosMusicaisServicos.php";
 require_once "src/Services/ArtistaServicos.php";
+require_once "src/Services/AutenticarServico.php";
 
-$servico = new ArtistaServicos();
+$artistaServico = new ArtistaServicos();
+$estilosMusicaisServicos = new EstilosMusicaisServicos();
 
-// ---------------------------
-// FILTROS
-// ---------------------------
-$estado = isset($_GET['estado']) && $_GET['estado'] !== '' ? trim($_GET['estado']) : null;
-$cidade = isset($_GET['cidade']) && $_GET['cidade'] !== '' ? trim($_GET['cidade']) : null;
-$estilo  = isset($_GET['estilo'])  && $_GET['estilo']  !== '' ? trim($_GET['estilo']) : null;
+$estadoFiltro = isset($_GET['estado']) && $_GET['estado'] !== '' ? trim($_GET['estado']) : null;
+$cidadeFiltro = isset($_GET['cidade']) && $_GET['cidade'] !== '' ? trim($_GET['cidade']) : null;
+$estiloFiltro = isset($_GET['estilo']) && $_GET['estilo'] !== '' ? trim($_GET['estilo']) : null;
 
-// ---------------------------
-// PAGINAÇÃO
-// ---------------------------
 $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
-$porPagina = 6;
+$perPage = 4;
+$isAjax = isset($_GET['ajax']) && ($_GET['ajax'] === '1' || $_GET['ajax'] === 'true');
 
-// ---------------------------
-// BUSCA PRINCIPAL
-// ---------------------------
-$artistas = $servico->buscarArtistasFiltrados($estado, $cidade, $estilo, $page, $porPagina);
-$total = $servico->contarArtistasFiltrados($estado, $cidade, $estilo);
+$pdo = $artistaServico->conexao;
 
-$temMais = ($page * $porPagina) < $total;
+function carregarArtistas($pdo, $artistaServico, $estadoFiltro, $cidadeFiltro, $estiloFiltro, $page, $perPage)
+{
+    $offset = ($page - 1) * $perPage;
 
-// ---------------------------
-// LISTAS PARA OS SELECTS
-// ---------------------------
-$estados = $servico->buscarEstadosDisponiveis();
-$cidades = $servico->buscarCidadesDisponiveis();
-$estilos = $servico->buscarEstilosDisponiveis();
+    if (!$estadoFiltro && !$cidadeFiltro && !$estiloFiltro) {
+        $seed = isset($_GET['seed']) && $_GET['seed'] !== '' ? intval($_GET['seed']) : mt_rand();
+        $sql = "SELECT artistas.id, artistas.nome,
+                (SELECT foto_artista.url_imagem FROM foto_artista WHERE foto_artista.id_artista = artistas.id ORDER BY foto_artista.id ASC LIMIT 1) AS imagens,
+                (SELECT GROUP_CONCAT(estilo_musical.nome SEPARATOR ',') 
+                 FROM artista_estilo 
+                 JOIN estilo_musical ON estilo_musical.id = artista_estilo.id_estilo 
+                 WHERE artista_estilo.id_artista = artistas.id) AS estilos_musicais
+                FROM artistas
+                ORDER BY RAND(:seed)
+                LIMIT :limit OFFSET :offset";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(':seed', $seed, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', $perPage, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+        $artistas = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+        $countStmt = $pdo->prepare('SELECT COUNT(*) FROM artistas');
+        $countStmt->execute();
+        $totalArtistas = intval($countStmt->fetchColumn() ?: 0);
+        return [$artistas, $totalArtistas, $seed];
+    } else {
+        $allArtistas = $artistaServico->buscarArtistasPorFiltros($estadoFiltro, $cidadeFiltro, $estiloFiltro) ?: [];
+        $totalArtistas = count($allArtistas);
+        $artistas = array_slice($allArtistas, $offset, $perPage);
+        return [$artistas, $totalArtistas, null];
+    }
+}
+
+function renderizarCardsArtistas($artistas)
+{
+    $html = '';
+    foreach ($artistas as $artista) {
+        $id = intval($artista['id']);
+        $nome = htmlspecialchars($artista['nome']);
+
+        $imagens = explode("||", $artista['imagens'] ?? '');
+        $imgPrincipal = $imagens[0] ?? "sem-imagem.png";
+
+        $caminhoImagem = "img/artistas/{$id}/fotos_artistas/{$imgPrincipal}";
+        if (!file_exists($caminhoImagem)) $caminhoImagem = "img/sem-imagem.png";
+
+        $html .= '<a href="artista.php?artista=' . $id . '" class="caixa_banda">';
+        $html .= '<img src="' . htmlspecialchars($caminhoImagem) . '" alt="' . $nome . '">';
+        $html .= '<div class="texto_banda_overlay">';
+        $html .= '<h3 class="titulo_banda">' . $nome . '</h3>';
+        $html .= '<h4 class="estilo_musical_banda">' . htmlspecialchars(implode(", ", explode(",", $artista['estilos_musicais'])) ?? '') . '</h4>';
+        $html .= '</div></a>';
+    }
+    return $html;
+}
+
+if ($isAjax) {
+    $pageAjax = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
+    list($artistasAjax, $totalArtistasAjax, $seedAjax) = carregarArtistas($pdo, $artistaServico, $estadoFiltro, $cidadeFiltro, $estiloFiltro, $pageAjax, $perPage);
+    $htmlCards = renderizarCardsArtistas($artistasAjax);
+    $offsetAjax = ($pageAjax - 1) * $perPage;
+    $hasMore = ($offsetAjax + count($artistasAjax)) < $totalArtistasAjax;
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode([
+        'html' => $htmlCards,
+        'hasMore' => $hasMore,
+        'nextPage' => $pageAjax + 1,
+        'seed' => $seedAjax,
+        'total' => $totalArtistasAjax,
+        'countReturned' => count($artistasAjax),
+    ]);
+    exit;
+}
+
+list($artistas, $totalArtistas, $seed) = carregarArtistas($pdo, $artistaServico, $estadoFiltro, $cidadeFiltro, $estiloFiltro, $page, $perPage);
+$estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YeahDB - Encontre Artistas</title>
-
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>YeahDB - Artistas</title>
     <link rel="stylesheet" href="css/pagina_artistas_menu.css">
     <?php require_once "includes/cabecalho.php"; ?>
+    <style>
+        .mostrar-mais.loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+    </style>
 </head>
 
 <body>
+    <section id="secao_bandas">
+        <h3 id="titulo_secao" class="titulo_secao">ENCONTRE UM <span style="color:#FB8B24;">ARTISTA!</span></h3>
 
-<section id="secao_bandas">
-
-    <h2 class="titulo_secao">
-        ENCONTRE UM <span style="color:#FB8B24;">ARTISTA!</span>
-    </h2>
-
-    <!-- FILTROS -->
-    <nav class="nav-selects">
-
-        <!-- ESTADO -->
-        <div class="custom-select" data-field="estado">
-            <div class="select-header">
-                <span class="selected-option"><?= $estado ?: "ESTADO" ?></span>
-                <button type="button" class="reset-select">✕</button>
-                <i class="arrow"></i>
+        <nav class="nav-selects" data-source="artistas">
+            <!-- Estados -->
+            <div class="custom-select" data-field="estado">
+                <div class="select-header">
+                    <span class="selected-option"><?= $estadoFiltro ? htmlspecialchars($estadoFiltro) : 'ESTADO' ?></span>
+                    <button type="button" class="reset-select" title="Limpar">✕</button>
+                    <i class="arrow"></i>
+                </div>
+                <ul class="select-list">
+                    <?php
+                    $estados = json_decode(@file_get_contents("https://servicodados.ibge.gov.br/api/v1/localidades/estados"), true);
+                    if (!empty($estados)) {
+                        usort($estados, fn($a, $b) => strcmp($a['sigla'], $b['sigla']));
+                        foreach ($estados as $est) echo '<li data-value="' . htmlspecialchars($est['sigla']) . '">' . htmlspecialchars($est['sigla']) . '</li>';
+                    }
+                    ?>
+                </ul>
             </div>
 
-            <ul class="select-list">
-                <?php if (!empty($estados)) : ?>
-                    <?php foreach ($estados as $uf) : ?>
-                        <li><?= htmlspecialchars($uf) ?></li>
-                    <?php endforeach; ?>
-                <?php else : ?>
-                    <li>Nenhum estado encontrado</li>
-                <?php endif; ?>
-            </ul>
-        </div>
-
-        <!-- CIDADE -->
-        <div class="custom-select" data-field="cidade">
-            <div class="select-header">
-                <span class="selected-option"><?= $cidade ?: "CIDADE" ?></span>
-                <button type="button" class="reset-select">✕</button>
-                <i class="arrow"></i>
+            <!-- Cidades -->
+            <div class="custom-select" data-field="cidade">
+                <div class="select-header">
+                    <span class="selected-option"><?= $cidadeFiltro ? htmlspecialchars($cidadeFiltro) : 'CIDADE' ?></span>
+                    <button type="button" class="reset-select" title="Limpar">✕</button>
+                    <i class="arrow"></i>
+                </div>
+                <ul class="select-list">
+                    <?php
+                    if ($estadoFiltro) {
+                        $uf = $estadoFiltro;
+                        $cidadesJson = @file_get_contents("https://servicodados.ibge.gov.br/api/v1/localidades/estados/{$uf}/municipios");
+                        $cidadesArr = json_decode($cidadesJson, true) ?: [];
+                        foreach ($cidadesArr as $c) echo '<li data-value="' . htmlspecialchars($c['nome']) . '">' . htmlspecialchars($c['nome']) . '</li>';
+                    }
+                    ?>
+                </ul>
             </div>
 
-            <ul class="select-list">
-                <?php if (!empty($cidades)) : ?>
-                    <?php foreach ($cidades as $cid) : ?>
-                        <li><?= htmlspecialchars($cid) ?></li>
-                    <?php endforeach; ?>
-                <?php else : ?>
-                    <li>Nenhuma cidade encontrada</li>
-                <?php endif; ?>
-            </ul>
-        </div>
-
-        <!-- ESTILO MUSICAL -->
-        <div class="custom-select" data-field="estilo">
-            <div class="select-header">
-                <span class="selected-option"><?= $estilo ?: "ESTILO MUSICAL" ?></span>
-                <button type="button" class="reset-select">✕</button>
-                <i class="arrow"></i>
+            <!-- Estilos -->
+            <div class="custom-select" data-field="estilo">
+                <div class="select-header">
+                    <span class="selected-option"><?= $estiloFiltro ? htmlspecialchars($estiloFiltro) : 'ESTILO MUSICAL' ?></span>
+                    <button type="button" class="reset-select" title="Limpar">✕</button>
+                    <i class="arrow"></i>
+                </div>
+                <ul class="select-list">
+                    <?php foreach ($estilos_musicais as $est) echo '<li data-value="' . htmlspecialchars($est['nome']) . '">' . htmlspecialchars($est['nome']) . '</li>'; ?>
+                </ul>
             </div>
+        </nav>
 
-            <ul class="select-list">
-                <?php if (!empty($estilos)) : ?>
-                    <?php foreach ($estilos as $nome) : ?>
-                        <li><?= htmlspecialchars($nome) ?></li>
-                    <?php endforeach; ?>
-                <?php else : ?>
-                    <li>Nenhum estilo encontrado</li>
-                <?php endif; ?>
-            </ul>
-        </div>
-
-    </nav>
-
-    <!-- LISTAGEM DE ARTISTAS -->
-    <div class="linha_cards">
-
-        <?php if (empty($artistas)) : ?>
-
-            <p style="width:100%; text-align:center; margin-top:20px;">
-                Nenhum artista encontrado para os filtros selecionados.
-            </p>
-
-        <?php else : ?>
-
-            <?php foreach ($artistas as $artista) : ?>
-
-                <?php
-                $id = intval($artista['id']);
-                $nome = htmlspecialchars($artista['nome']);
-
-                // pega somente a primeira imagem
-                $imagens = explode("||", $artista['imagens'] ?? '');
-                $imgPrincipal = $imagens[0] ?? "sem-imagem.png";
-
-                $caminhoImagem = "img/artistas/{$id}/fotos_artistas/{$imgPrincipal}";
-                if (!file_exists($caminhoImagem)) {
-                    $caminhoImagem = "img/sem-imagem.png";
-                }
-                ?>
-
-                <a href="artista.php?artista=<?= $id ?>" class="caixa_banda">
-
-                    <img src="<?= $caminhoImagem ?>" alt="<?= $nome ?>">
-
-                    <div class="texto_banda_overlay">
-                        <h3 class="titulo_banda"><?= $nome ?></h3>
-                        <h4 class="estilo_musical_banda">
-                            <?= htmlspecialchars($artista['estilos_musicais']) ?>
-                        </h4>
-                    </div>
-
-                </a>
-
-            <?php endforeach; ?>
-
-        <?php endif; ?>
-
-    </div>
-
-    <!-- BOTÃO "MOSTRAR MAIS" -->
-    <?php if ($temMais) : ?>
-        <?php
-        $qs = $_GET;
-        $qs['page'] = $page + 1;
-        $proximoLink = 'encontre_artistas.php?' . http_build_query($qs);
-        ?>
         <div class="linha_cards">
-            <a href="<?= $proximoLink ?>" class="mostrar-mais">MOSTRAR MAIS</a>
+            <?= renderizarCardsArtistas($artistas) ?: '<p>Nenhum artista encontrado para os filtros selecionados.</p>'; ?>
         </div>
-    <?php endif; ?>
 
-</section>
+        <?php
+        $offset = ($page - 1) * $perPage;
+        if ($offset + count($artistas) < $totalArtistas):
+            $nextPage = $page + 1;
+            $qs = $_GET;
+            $qs['page'] = $nextPage;
+            if (!empty($seed)) $qs['seed'] = $seed;
+            $href = 'pagina_artistas.php?' . htmlspecialchars(http_build_query($qs));
+        ?>
+            <div class="linha_cards">
+                <a class="mostrar-mais" href="<?= $href ?>" data-source="artistas" data-page="<?= $nextPage ?>" data-seed="<?= htmlspecialchars($seed ?? '') ?>" role="button">Mostrar mais</a>
+            </div>
+        <?php endif; ?>
+    </section>
 
-<script src="js/encontre-artistas-menu.js"></script>
-<script src="js/select-dependent.js"></script>
-<script src="js/gallery.js"></script>
-<script src="js/load-more.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Selects
+            document.querySelectorAll('.custom-select').forEach(function(cs) {
+                const header = cs.querySelector('.select-header');
+                const list = cs.querySelector('.select-list');
+                const resetBtn = cs.querySelector('.reset-select');
+                header.addEventListener('click', () => list.style.display = (list.style.display === 'block' ? 'none' : 'block'));
+                document.addEventListener('click', e => {
+                    if (!cs.contains(e.target)) list.style.display = 'none';
+                });
+                list.querySelectorAll('li').forEach(li => li.addEventListener('click', () => {
+                    cs.querySelector('.selected-option').textContent = li.dataset.value;
 
-<?php require_once "includes/rodape.php"; ?>
+                    const estadoSelect = document.querySelector('.custom-select[data-field="estado"] .selected-option');
+                    const cidadeSelect = document.querySelector('.custom-select[data-field="cidade"] .selected-option');
+                    const estiloSelect = document.querySelector('.custom-select[data-field="estilo"] .selected-option');
 
+                    const params = new URLSearchParams();
+
+                    // Se mudou o estado, zera a cidade
+                    if (cs.dataset.field === 'estado') {
+                        cidadeSelect.textContent = 'CIDADE';
+                        params.delete('cidade');
+                    }
+
+                    if (estadoSelect.textContent !== 'ESTADO') params.set('estado', estadoSelect.textContent);
+                    if (cidadeSelect.textContent !== 'CIDADE') params.set('cidade', cidadeSelect.textContent);
+                    if (estiloSelect.textContent !== 'ESTILO MUSICAL') params.set('estilo', estiloSelect.textContent);
+
+                    params.set('page', '1');
+                    window.location.href = window.location.pathname + '?' + params.toString();
+                }));
+                resetBtn.addEventListener('click', e => {
+                    e.stopPropagation();
+                    const field = cs.dataset.field;
+                    if (field === 'estado') {
+                        cs.querySelector('.selected-option').textContent = 'ESTADO';
+                        const cidadeSelect = document.querySelector('.custom-select[data-field="cidade"]');
+                        if (cidadeSelect) cidadeSelect.querySelector('.selected-option').textContent = 'CIDADE';
+                    } else if (field === 'cidade') cs.querySelector('.selected-option').textContent = 'CIDADE';
+                    else if (field === 'estilo') cs.querySelector('.selected-option').textContent = 'ESTILO MUSICAL';
+                    const url = new URL(window.location.href);
+                    url.searchParams.delete('estado');
+                    url.searchParams.delete('cidade');
+                    url.searchParams.delete('estilo');
+                    url.searchParams.set('page', '1');
+                    window.location.href = url.toString();
+                });
+            });
+
+            // Mostrar mais AJAX
+            document.querySelectorAll('a.mostrar-mais').forEach(function(a) {
+                a.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const url = new URL(a.href);
+                    url.searchParams.set('ajax', '1');
+                    a.classList.add('loading');
+                    a.textContent = 'Carregando...';
+                    fetch(url.toString(), {
+                            credentials: 'same-origin'
+                        })
+                        .then(r => r.json())
+                        .then(json => {
+                            const container = document.querySelector('.linha_cards');
+                            container.insertAdjacentHTML('beforeend', json.html);
+                            if (json.hasMore) {
+                                a.dataset.page = json.nextPage;
+                                a.textContent = 'Mostrar mais';
+                                a.classList.remove('loading');
+                            } else a.remove();
+                        })
+                        .catch(() => {
+                            a.textContent = 'Erro';
+                            a.classList.remove('loading');
+                        });
+                });
+            });
+        });
+    </script>
+
+    <?php require_once "includes/rodape.php"; ?>
 </body>
+
 </html>

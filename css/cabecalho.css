@@ -12,6 +12,7 @@ body {
    CABEÇALHO
 ========================================================= */
 #cabecalho {
+  width: 100vw;
   background: linear-gradient(180deg, #3b0bb5, #5529c4);
   padding: 15px 50px;
 }
@@ -33,6 +34,8 @@ body {
   display: flex;
   gap: 90px;
   margin-bottom: 0;
+  text-align: center;
+  padding: 0px;
 }
 
 .lista_menu a {
@@ -46,7 +49,12 @@ body {
 .lista_menu a:hover {
   opacity: 0.8;
 }
-
+#login-cadastro{
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
 .botao_acesso {
   background-color: #00b894;
   color: #ffffff;
@@ -126,7 +134,7 @@ body {
 } 
 
 /* Additional responsive adjustments for header (tablets and small desktops) */
-@media (max-width: 992px) {
+@media (max-width: 1050px) {
   #menu_principal {
     flex-direction: column;
     gap: 14px;
