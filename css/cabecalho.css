@@ -56,7 +56,7 @@ body {
   gap: 10px;
 }
 .botao_acesso {
-  background-color: #00b894;
+  background: linear-gradient(135deg, #065f46 0%, #10b981 50%, #6ee7b7 100%);
   color: #ffffff;
   padding: 10px 30px;
   border-radius: 3px;
@@ -143,86 +143,6 @@ body {
     padding-left: 30px;
 }
 
-@media (max-width: 900px) {
-    .lista_menu {
-        display: none;
-    }
-
-    .btn-menu-mobile {
-        display: flex;
-    }
-    
-    #menu_principal {
-        position: relative;
-    }
-} 
-
-@media (max-width: 900px) {
-    #cabecalho {
-        padding: 12px 20px;
-    }
-
-    #menu_principal {
-        gap: 0;
-    }
-
-    .logo_site img {
-        height: 60px;
-    }
-
-    #login-cadastro {
-        gap: 8px;
-        margin-top: 10px;
-        width: 100%;
-    }
-
-    .botao_acesso {
-        padding: 8px 20px;
-        font-size: 13px;
-    }
-}
-
-@media (max-width: 600px) {
-    #cabecalho {
-        padding: 10px 15px;
-        width: 100vw;
-        position: relative;
-        left: 50%;
-        right: 50%;
-        margin-left: -50vw;
-        margin-right: -50vw;
-    }
-
-    #menu_principal {
-        position: relative;
-        width: 100%;
-    }
-
-    .logo_site img {
-        height: 50px;
-    }
-
-    #login-cadastro {
-        flex-direction: column;
-        gap: 6px;
-        width: calc(100% - 40px);
-    }
-
-    .botao_acesso {
-        width: 100%;
-        padding: 10px 15px;
-        font-size: 12px;
-    }
-
-    .menu-mobile {
-        width: 100vw;
-        left: 50%;
-        right: 50%;
-        margin-left: -50vw;
-        margin-right: -50vw;
-    }
-}
-
 
 #burger-btn {
     width: 65px;
@@ -277,7 +197,7 @@ body {
   #offcanvasRight a{
     color: #fff;
     text-decoration: none;
-    background-color: #00b894;
+    background: linear-gradient(135deg, #065f46 0%, #10b981 50%, #6ee7b7 100%);
     width: 100%;
     padding: 10px;
     text-align: center;
@@ -285,3 +205,101 @@ body {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     
   }
+
+  @media (max-width: 992px) {
+
+    #cabecalho {
+        padding: 15px 25px;
+    }
+
+    /* Menu Desktop reduzido */
+    .lista_menu {
+        gap: 40px;
+        font-size: 19px;
+    }
+
+    .logo_site img {
+        height: 65px;
+    }
+
+    #login-cadastro .botao_acesso {
+        padding: 8px 20px;
+        font-size: 14px;
+    }
+}
+
+/* ============================
+   MOBILE (até 768px)
+=============================== */
+@media (max-width: 768px) {
+
+    #cabecalho {
+        padding: 12px 20px;
+    }
+
+    .logo_site img {
+        height: 58px;
+    }
+
+    /* O MENU CONTINUA VISÍVEL, mas mais compacto */
+    .lista_menu {
+      
+        gap: 25px;
+        font-size: 17px;
+    }
+
+    /* Ajusta o layout para evitar quebra */
+    #menu_principal {
+      flex-direction: column;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    /* Botões login/cadastro mais compactos */
+    #login-cadastro {
+        gap: 6px;
+    }
+    #login-cadastro .botao_acesso {
+        padding: 7px 16px;
+        font-size: 13px;
+    }
+
+    /* Hamburguer só aparece SE quiser manter o offcanvas */
+    #burger-btn {
+        width: 50px;
+    }
+}
+
+/* ============================
+   MOBILE PEQUENO (até 480px)
+=============================== */
+@media (max-width: 480px) {
+
+    #cabecalho {
+        padding: 10px 15px;
+    }
+
+    .logo_site img {
+        height: 50px;
+    }
+
+    /* Menu ainda mais compacto */
+    .lista_menu {
+        gap: 18px;
+        font-size: 15px;
+    }
+
+    #menu_principal {
+        gap: 8px;
+    }
+
+    #login-cadastro .botao_acesso {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+
+    #burger-btn {
+        width: 42px;
+    }
+}

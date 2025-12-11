@@ -67,12 +67,11 @@ class EventoServicos
     }
     public function buscarEventosId(int $id): ?array
     {
-        $sql = "SELECT eventos.id, eventos.nome, eventos.cidade, eventos.estado, eventos.dia, eventos.descricao,  (
-        SELECT foto_evento.url_imagem
+        $sql = "SELECT eventos.id, eventos.nome, eventos.cidade, eventos.estado, eventos.dia, eventos.descricao, eventos.link_compra, eventos.endereco, eventos.horario, eventos.contato, (
+        SELECT GROUP_CONCAT(foto_evento.url_imagem SEPARATOR ',')
         FROM foto_evento
         WHERE foto_evento.id_evento = eventos.id
         ORDER BY foto_evento.id ASC
-        LIMIT 1
         ) AS url_imagem,
         (
             SELECT GROUP_CONCAT(estilo_musical.nome SEPARATOR ',')
@@ -370,11 +369,11 @@ class EventoServicos
     public function buscarArtistaEvento($id)
     {
         $sql = "SELECT DISTINCT artistas.id, artistas.nome, artistas.cidade, artistas.estado,  (
-        SELECT foto_artista.url_imagem
+        SELECT GROUP_CONCAT(foto_artista.url_imagem SEPARATOR ',')
         FROM foto_artista
         WHERE foto_artista.id_artista = artistas.id
         ORDER BY foto_artista.id ASC
-        LIMIT 1
+
     ) AS url_imagem,
     (
         SELECT GROUP_CONCAT(estilo_musical.nome SEPARATOR ',')
@@ -392,5 +391,28 @@ FROM eventos JOIN artista_evento ON artista_evento.id_evento = eventos.id JOIN a
         $consulta->bindValue(":id", $id);
         $consulta->execute();
         return $consulta->fetchAll() ?: null;
+    }
+    public function inserirArtistaEvento($id_artista, $id_evento): void {
+        $sql = "INSERT INTO artista_evento (id_artista, id_evento)
+                VALUES (:id_artista, :id_evento)";
+
+        $consulta = $this->conexao->prepare($sql);
+        $consulta->bindValue(":id_artista", $id_artista);
+        $consulta->bindValue(":id_evento", $id_evento);
+        $consulta->execute();
+
+    }
+
+    public function buscarIntegrantes(int $id)
+    {
+        $sql = "SELECT integrante_evento.id, integrante_evento.nome, integrante_evento.estilo_musical, integrante_evento.url_imagem
+                FROM integrante_evento
+                WHERE integrante_evento.id_evento = :id";
+
+        $consulta = $this->conexao->prepare($sql);
+        $consulta->bindValue(":id", $id, PDO::PARAM_INT);
+        $consulta->execute();
+
+        return $consulta->fetchAll(PDO::FETCH_ASSOC) ?: null;
     }
 }

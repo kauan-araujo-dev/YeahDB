@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // =====================================================
     for ($i = 0; $i < count($participante_codigo); $i++) {
         if (empty($participante_codigo[$i])) {
-            echo "n foi preenchido";
+
             if (empty(trim($participantes_estilo_musical[$i]))) {
                 $participante_validos = false;
                 break;
@@ -76,49 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             break;
         }
     }
-    if (empty($_POST['nome'])) {
-        echo "O campo nome não foi preenchido completamente.";
-    }
-
-    if (empty($_POST['estado'])) {
-        echo "O campo estado não foi preenchido completamente.";
-    }
-
-    if (empty($_POST['cidade'])) {
-        echo "O campo cidade não foi preenchido completamente.";
-    }
-
-    if (empty($_POST['endereco'])) {
-        echo "O campo endereço não foi preenchido completamente.";
-    }
-
-    if (empty($_POST['dia'])) {
-        echo "O campo dia não foi preenchido completamente.";
-    }
-
-    if (empty($_POST['horario'])) {
-        echo "O campo horário não foi preenchido completamente.";
-    }
-
-    if (empty($_POST['instagram'])) {
-        echo "O campo instagram não foi preenchido completamente.";
-    }
-
-    if (empty($_POST['contato'])) {
-        echo "O campo contato não foi preenchido completamente.";
-    }
-
-    if (empty($_POST['descricao'])) {
-        echo "O campo descrição não foi preenchido completamente.";
-    }
-
-    if (empty($_POST['estilos'])) {
-        echo "O campo estilos não foi preenchido completamente.";
-    }
-
-    if (!$participante_validos) {
-        echo "Os dados dos participantes não foram preenchidos completamente.";
-    }
+    
     if (
         !empty($_POST['nome']) &&
         !empty($_POST['estado']) &&
@@ -132,9 +90,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         !empty($_POST['estilos']) &&
         $participante_validos
     ) {
-
-        echo "chegou aqui";
-
 
         $nome       = Utils::sanitizar($_POST['nome']);
         $estado     = Utils::sanitizar($_POST['estado']);
@@ -204,7 +159,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         Utils::redirecionarPara("minha_conta.php");
     } else {
-        echo "Tem bagulho não preenchido";
         $erro = "Preencha todos os campos";
     }
 }
@@ -225,7 +179,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <section id="sessao-cadastro">
         <h2>CRIE SEU <span>Evento</span></h2>
         <?php if ($erro) {
-            echo "<p>$erro</p>";
+            echo "<p class='erro'>$erro</p>";
         }  ?>
         <form id="form_evento" method="post" enctype="multipart/form-data">
             <div id="container-inputs">
@@ -238,16 +192,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
                 <div>
-                    <label for="estado">Estado:</label>
-                    <input type="text" id="estado" name="estado" maxlength="2"
-                        value="<?= $_POST['estado'] ?? ''; ?>" />
-                </div>
+    <label for="estado">Estado:</label>
+    <select id="estado" name="estado">
+        <option value="">Selecione</option>
+    </select>
+</div>
 
-                <div>
-                    <label for="cidade">Cidade:</label>
-                    <input type="text" id="cidade" name="cidade"
-                        value="<?= $_POST['cidade'] ?? ''; ?>" />
-                </div>
+<div>
+    <label for="cidade">Cidade:</label>
+    <select id="cidade" name="cidade">
+        <option value="">---</option>
+    </select>
+</div>
 
                 <div>
                     <label for="endereco">Endereço:</label>
@@ -310,7 +266,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <label>PARTICIPANTES: </label>
                     <div id="participantes-container"></div>
 
-                    <button type="button" id="btn-add">ADICIONAR INTEGRANTE +</button>
+                    <button type="button" id="btn-add">ADICIONAR PARTICIPANTE +</button>
                 </div>
 
                 <!-- 🔥 MANTIDO: fotos -->
@@ -322,95 +278,79 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
 
     </section>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
     <script src="js/perfil_evento.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
 
-            // ============================
-            // ARRAYS DE VALORES ALEATÓRIOS
-            // ============================
-            const nomes = [
-                "Festa Urbana", "Noite do Som", "Festival Neon",
-                "Vibe Sunset", "Balada Mix", "Sons da Cidade"
-            ];
-
-            const cidades = [
-                "São Paulo", "Rio de Janeiro", "Curitiba",
-                "Belo Horizonte", "Salvador", "Porto Alegre"
-            ];
-
-            const estados = ["SP", "RJ", "PR", "MG", "BA", "RS"];
-
-            const enderecos = [
-                "Rua das Flores, 102", "Avenida Central, 500",
-                "Praça da Música, 88", "Rua Verde, 230",
-                "Avenida Horizonte, 900"
-            ];
-
-            const instagrams = [
-                "@festaurbana", "@noitedosom", "@vibesunset",
-                "@baladamix", "@sons_da_cidade"
-            ];
-
-            const contatos = [
-                "11988887777", "21977776666", "41999995555",
-                "31944443333"
-            ];
-
-            const descricoes = [
-                "Evento imperdível com artistas renomados!",
-                "Uma noite inesquecível com muito som!",
-                "Festival ao ar livre com várias atrações!",
-                "Balada exclusiva com lineup especial!",
-                "Venha curtir o melhor da música!"
-            ];
-
-            const links_compra = [
-                "https://ingressos.com/evento123",
-                "https://tickets.com/festival",
-                "https://comprar.com/balada",
-                ""
-            ];
-
-            // gera número aleatório
-            const rand = arr => arr[Math.floor(Math.random() * arr.length)];
-
-            // ============================
-            // PREENCHENDO O FORMULÁRIO
-            // ============================
-
-            document.getElementById("nome").value = rand(nomes);
-            document.getElementById("estado").value = rand(estados);
-            document.getElementById("cidade").value = rand(cidades);
-            document.getElementById("endereco").value = rand(enderecos);
-
-            // data futura
-            const hoje = new Date();
-            hoje.setDate(hoje.getDate() + Math.floor(Math.random() * 30));
-            document.getElementById("dia").value = hoje.toISOString().split("T")[0];
-
-            // horário aleatório
-            const hora = String(Math.floor(Math.random() * 23)).padStart(2, "0");
-            const minuto = String(Math.floor(Math.random() * 59)).padStart(2, "0");
-            document.getElementById("horario").value = `${hora}:${minuto}`;
-
-            document.getElementById("instagram").value = rand(instagrams);
-            document.getElementById("contato").value = rand(contatos);
-            document.getElementById("link_compra").value = rand(links_compra);
-            document.getElementById("descricao").value = rand(descricoes);
-
-            // ============================
-            // SELECIONAR ESTILOS AUTOMATICAMENTE
-            // ============================
-            const checkboxes = document.querySelectorAll("#estilos_musicais input[type='checkbox']");
-            checkboxes.forEach(chk => {
-                // probabilisticamente marca ≈ metade
-                chk.checked = Math.random() > 0.5;
-            });
-
-            // PARTICIPANTES E FOTOS — você preenche manualmente :)
-        });
-    </script>
     </body>
+
+    <script>
+// Carregar estados ao abrir a página
+document.addEventListener("DOMContentLoaded", async () => {
+    const estadoSelect = document.getElementById("estado");
+    const cidadeSelect = document.getElementById("cidade");
+
+    // Buscar estados na API do IBGE
+    const res = await fetch("https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome");
+    const estados = await res.json();
+
+    estados.forEach(est => {
+        const option = document.createElement("option");
+        option.value = est.sigla;
+        option.textContent = est.nome;
+        option.dataset.id = est.id; // Guardar ID do estado (IBGE)
+        estadoSelect.appendChild(option);
+    });
+
+    // Se já tiver valor salvo (em caso de erro e repost), selecionar
+    <?php if (!empty($_POST['estado'])) : ?>
+        estadoSelect.value = "<?= $_POST['estado'] ?>";
+    <?php endif; ?>
+
+    // Trigger inicial (carregar cidades se o estado já existir no POST)
+    if (estadoSelect.value !== "") {
+        carregarCidades(estadoSelect, cidadeSelect);
+    }
+});
+
+// Quando mudar o estado, carregar cidades
+document.getElementById("estado").addEventListener("change", (e) => {
+    const estadoSelect = e.target;
+    const cidadeSelect = document.getElementById("cidade");
+
+    carregarCidades(estadoSelect, cidadeSelect);
+});
+
+// Função para carregar cidades pela API
+async function carregarCidades(estadoSelect, cidadeSelect) {
+
+    cidadeSelect.innerHTML = "<option>Carregando...</option>";
+
+    const selectedOption = estadoSelect.selectedOptions[0];
+    const idEstado = selectedOption.dataset.id;
+
+    if (!idEstado) {
+        cidadeSelect.innerHTML = "<option>Selecione o estado primeiro</option>";
+        return;
+    }
+
+    const res = await fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${idEstado}/municipios`);
+    const cidades = await res.json();
+
+    cidadeSelect.innerHTML = "<option value=''>Selecione</option>";
+
+    cidades.forEach(cidade => {
+        const option = document.createElement("option");
+        option.value = cidade.nome;
+        option.textContent = cidade.nome;
+        cidadeSelect.appendChild(option);
+    });
+
+    // Restaurar cidade selecionada se existir no POST
+    <?php if (!empty($_POST['cidade'])) : ?>
+        cidadeSelect.value = "<?= $_POST['cidade'] ?>";
+    <?php endif; ?>
+}
+</script>
+
 
 </html>

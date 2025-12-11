@@ -24,6 +24,7 @@ form {
   flex-direction: column;
   align-items: center;
   gap: 117px;
+  margin-bottom: 90px;
 }
 #container-inputs {
   width: 100%;
@@ -39,7 +40,7 @@ h2 {
 }
 
 input[type="submit"] {
-  background-color: #007be5;
+  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #93c5fd 100%) !important;
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -66,6 +67,7 @@ input[type="text"],
 input[type="number"],
 input[type="time"],
 input[type="date"],
+select,
 textarea {
   outline: none;
   width: 100%;
@@ -292,6 +294,7 @@ textarea {
   input[type="number"],
   input[type="time"],
   input[type="date"],
+  select,
   textarea {
     padding: 18px;
     font-size: 18px;
@@ -328,6 +331,7 @@ textarea {
   input[type="number"],
   input[type="time"],
   input[type="date"],
+  select,
   textarea {
     font-size: 16px;
     padding: 16px;
@@ -406,6 +410,7 @@ textarea {
   input[type="number"],
   input[type="time"],
   input[type="date"],
+  select,
   textarea {
     padding: 16px 12px;
     font-size: 14px;
@@ -451,4 +456,38 @@ textarea {
     height: 24px;
     font-size: 12px;
   }
+}
+
+.erro-input {
+      border: 2px solid #ff4d4d !important;
+  }
+  .span-erro {
+      color: #ff4d4d;
+      font-size: 0.8rem;
+      margin-top: 2px;
+      display: block;
+  }
+
+  .password-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+/* Input */
+
+/* Ícone (centralizado verticalmente) */
+.toggle-password {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 20px;
+    color: #666;
+    transition: 0.3s;
+    line-height: 0; /* evita desalinhamento */
+}
+
+.toggle-password:hover {
+    color: #000;
 }

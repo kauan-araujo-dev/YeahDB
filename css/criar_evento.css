@@ -191,9 +191,13 @@ form{
 /* LADO A LADO */
 .participante-box {
   display: flex;
-  flex-direction: row;
+  flex-direction: row-reverse;
+  justify-content: center;
   align-items: center;
   gap: 40px;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  padding: 40px 10px;
 }
 
 /* FOTO DO participante / MEMBRO DA EQUIPE */

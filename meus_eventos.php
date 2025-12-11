@@ -85,9 +85,9 @@ try {
                         <h3 class="titulo_evento"><?= htmlspecialchars($evento['nome']) ?></h3>
 
                         <div class="botoes_evento">
-                            <a href="editar_evento.php?id=<?= intval($evento['id']) ?>" class="evento_editar">
-                                EDITAR
-                            </a>
+                            
+                                
+                            
 
                             <form method="post" action="excluir_evento.php" style="display:inline">
                                 <input type="hidden" name="id" value="<?= intval($evento['id']) ?>">

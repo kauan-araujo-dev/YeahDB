@@ -7,6 +7,7 @@ require_once "src/Models/FotoArtista.php";
 require_once "src/Services/ArtistaServicos.php";
 require_once "src/Services/EstilosMusicaisServicos.php";
 require_once "src/Services/AutenticarServico.php";
+
 session_start();
 $artistaServico = new ArtistaServicos();
 
@@ -89,7 +90,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         !empty($_POST['contato']) &&
         !empty($_POST['descricao']) && $instrumentos_validas && $nomes_validos && $fotos_artistas_validas && $fotos_integrantes_validas && $estilos_validos
     ) {
-        echo "chegou aqui";
         $nome       = Utils::sanitizar($_POST['nome']);
         $estado     = Utils::sanitizar($_POST['estado']);
         $cidade     = Utils::sanitizar($_POST['cidade']);
@@ -146,7 +146,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         Utils::redirecionarPara("minha_conta.php");
     } else {
-        echo "Tem bagulho não preenchido";
         $erro = "Preencha todos os campos";
     }
 }
@@ -165,9 +164,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="css/perfil_artista.css">
     <?php require_once "includes/cabecalho.php"; ?>
     <section id="sessao-cadastro">
-        <h2>Faça seu perfil de <span>Artista</span></h2>
+        <h2>CRIE seu perfil de <span>Artista</span></h2>
         <?php if ($erro) {
-            echo "<p>$erro</p>";
+            echo "<p class='p-erro'>$erro</p>";
         }  ?>
         <form id="form_artista" method="post" enctype="multipart/form-data">
             <div id="container-inputs">
@@ -177,18 +176,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         value="<?= $_POST['nome'] ?? ''; ?>" />
                 </div>
 
+<div>
+                <label for="estado">Estado:</label>
+    <select id="estado" name="estado">
+        <option value="">Selecione</option>
+    </select>
+</div>
 
-                <div>
-                    <label for="estado">estado:</label>
-                    <input type="text" id="estado" name="estado" maxlength="2"
-                        value="<?= $_POST['estado'] ?? ''; ?>" />
-                </div>
-
-                <div>
-                    <label for="cidade">cidade:</label>
-                    <input type="text" id="cidade" name="cidade"
-                        value="<?= $_POST['cidade'] ?? ''; ?>" />
-                </div>
+<div>
+    <label for="cidade">Cidade:</label>
+    <select id="cidade" name="cidade">
+        <option value="">---</option>
+    </select>
+</div>
 
                 <div>
                     <label for="cache_artista">cache do artista (R$):</label>
@@ -231,6 +231,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <label for="descricao">descrição:</label>
                     <textarea id="descricao" name="descricao"><?= $_POST['descricao'] ?? '' ?></textarea>
                 </div>
+                <button id="uploadButton" onclick="fileInput.click()" type="button" class="upBtn">Adicionar foto</button>
+                <input type="file" id="fileInput" accept="image/*" multiple style="display: none;" name="foto_artista[]">
+                <div id="previewContainer"></div>
 
                 <div id="container-integrantes">
                     <label >Integrantes: </label>
@@ -239,14 +242,81 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <button type="button" id="btn-add">ADICIONAR INTEGRANTE +</button>
                 </div>
 
-                <button id="uploadButton" onclick="fileInput.click()" type="button" class="upBtn">Adicionar foto</button>
-                <input type="file" id="fileInput" accept="image/*" multiple style="display: none;" name="foto_artista[]">
-                <div id="previewContainer"></div>
+                
             </div>
 
             <input type="submit" value="Continuar">
         </form>
     </section>
+    <script>
+// Carregar estados ao abrir a página
+document.addEventListener("DOMContentLoaded", async () => {
+    const estadoSelect = document.getElementById("estado");
+    const cidadeSelect = document.getElementById("cidade");
+
+    // Buscar estados na API do IBGE
+    const res = await fetch("https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome");
+    const estados = await res.json();
+
+    estados.forEach(est => {
+        const option = document.createElement("option");
+        option.value = est.sigla;
+        option.textContent = est.nome;
+        option.dataset.id = est.id; // Guardar ID do estado (IBGE)
+        estadoSelect.appendChild(option);
+    });
+
+    // Se já tiver valor salvo (em caso de erro e repost), selecionar
+    <?php if (!empty($_POST['estado'])) : ?>
+        estadoSelect.value = "<?= $_POST['estado'] ?>";
+    <?php endif; ?>
+
+    // Trigger inicial (carregar cidades se o estado já existir no POST)
+    if (estadoSelect.value !== "") {
+        carregarCidades(estadoSelect, cidadeSelect);
+    }
+});
+
+// Quando mudar o estado, carregar cidades
+document.getElementById("estado").addEventListener("change", (e) => {
+    const estadoSelect = e.target;
+    const cidadeSelect = document.getElementById("cidade");
+
+    carregarCidades(estadoSelect, cidadeSelect);
+});
+
+// Função para carregar cidades pela API
+async function carregarCidades(estadoSelect, cidadeSelect) {
+
+    cidadeSelect.innerHTML = "<option>Carregando...</option>";
+
+    const selectedOption = estadoSelect.selectedOptions[0];
+    const idEstado = selectedOption.dataset.id;
+
+    if (!idEstado) {
+        cidadeSelect.innerHTML = "<option>Selecione o estado primeiro</option>";
+        return;
+    }
+
+    const res = await fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${idEstado}/municipios`);
+    const cidades = await res.json();
+
+    cidadeSelect.innerHTML = "<option value=''>Selecione</option>";
+
+    cidades.forEach(cidade => {
+        const option = document.createElement("option");
+        option.value = cidade.nome;
+        option.textContent = cidade.nome;
+        cidadeSelect.appendChild(option);
+    });
+
+    // Restaurar cidade selecionada se existir no POST
+    <?php if (!empty($_POST['cidade'])) : ?>
+        cidadeSelect.value = "<?= $_POST['cidade'] ?>";
+    <?php endif; ?>
+}
+</script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
     <script src="js/perfil_artista.js"></script>
     </body>
 

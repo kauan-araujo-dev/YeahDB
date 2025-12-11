@@ -9,7 +9,7 @@ function addIntegrante(isFirst) {
 
     if (!isFirst) {
         wrapper.innerHTML = `
-            <button type="button" class="btn-remove-x" onclick="removeIntegrante(this)">X</button>
+            <button type="button" class="btn-remove-x" onclick="removeIntegrante(this)">❌</button>
         `;
     }
 
@@ -168,3 +168,206 @@ function updateUploadButton() {
     uploadButton.innerHTML = `ESCOLHER FOTO (${qtd}/5)`;
 }
 
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    function criarSpanErro(input) {
+        let span = input.parentElement.querySelector(".span-erro");
+        if (!span) {
+            span = document.createElement("span");
+            span.classList.add("span-erro");
+            input.parentElement.appendChild(span);
+        }
+        return span;
+    }
+
+    function validarCampo(input, validacao, mensagemErro) {
+        const span = criarSpanErro(input);
+
+        if (!validacao(input.value.trim())) {
+            input.classList.add("erro-input");
+            span.textContent = mensagemErro;
+            return false;
+        }
+
+        input.classList.remove("erro-input");
+        span.textContent = "";
+        return true;
+    }
+
+    // ------------------------------
+    // Regras de validação
+    // ------------------------------
+    const regras = {
+        nome: v => v.length >= 3,
+        estado: v => /^[A-Za-z]{2}$/.test(v),
+        cidade: v => v.length >= 2,
+        cache_artista: v => !isNaN(v) && parseFloat(v) > 0,
+        whatsapp: v => /^[0-9]{10,13}$/.test(v),
+        instagram: v => v.length >= 3,
+        contato: v => v.length >= 3,
+        descricao: v => v.length >= 10
+    };
+
+    // ------------------------------
+    // Lista de ids para validação simples
+    // ------------------------------
+    const camposSimples = [
+        "nome", "estado", "cidade", "cache_artista",
+        "whatsapp", "instagram", "contato", "descricao"
+    ];
+
+    camposSimples.forEach(id => {
+        const input = document.getElementById(id);
+
+        criarSpanErro(input);
+
+        input.addEventListener("blur", () => {
+
+            const mensagens = {
+                nome: "Nome deve ter pelo menos 3 caracteres.",
+                estado: "Use apenas duas letras (SP, RJ...).",
+                cidade: "Cidade inválida.",
+                cache_artista: "Digite um valor numérico válido.",
+                whatsapp: "Whatsapp deve conter apenas números (10 a 13 dígitos).",
+                instagram: "Usuário do Instagram inválido.",
+                contato: "Preencha este campo.",
+                descricao: "A descrição deve ter no mínimo 10 caracteres."
+            };
+
+            validarCampo(input, regras[id], mensagens[id]);
+        });
+    });
+
+    // ----------------------------------
+    // Validar estilos musicais (checkboxes)
+    // ----------------------------------
+    const estilosContainer = document.getElementById("estilos_musicais");
+
+    function validarEstilos() {
+        const span = document.querySelector("#estilos_musicais_erro") ||
+                     (() => {
+                        let s = document.createElement("span");
+                        s.id = "estilos_musicais_erro";
+                        s.classList.add("span-erro");
+                        estilosContainer.parentElement.appendChild(s);
+                        return s;
+                     })();
+
+        const checkados = estilosContainer.querySelectorAll("input:checked");
+
+        if (checkados.length === 0) {
+            span.textContent = "Selecione ao menos um estilo musical.";
+            return false;
+        }
+
+        span.textContent = "";
+        return true;
+    }
+
+    estilosContainer.addEventListener("change", validarEstilos);
+
+    // ----------------------------------
+    // Validar integrantes
+    // ----------------------------------
+    function validarIntegrantes() {
+    let valido = true;
+
+    // pegar TODOS os inputs atuais criados dinamicamente
+    const nomes = document.querySelectorAll('input[name="integrante_nome[]"]');
+    const instrumentos = document.querySelectorAll('input[name="integrante_instrumento[]"]');
+    const fotos = document.querySelectorAll('input[name="integrante_foto[]"]');
+
+    nomes.forEach(input => {
+        const ok = validarCampo(input, v => v.length >= 2, "Nome do integrante inválido.");
+        if (!ok) valido = false;
+    });
+
+    instrumentos.forEach(input => {
+        const ok = validarCampo(input, v => v.length >= 2, "Instrumento inválido.");
+        if (!ok) valido = false;
+    });
+
+    fotos.forEach(input => {
+        const id = input.id || "foto_integrante";
+        const ok = input.files.length > 0;
+        const span = criarSpanErro(input);
+
+        if (!ok) {
+            input.classList.add("erro-input");
+            span.textContent = "Envie uma foto para este integrante.";
+            valido = false;
+        } else {
+            input.classList.remove("erro-input");
+            span.textContent = "";
+        }
+    });
+
+    return valido;
+}
+
+    // ----------------------------------
+    // Validar fotos enviadas
+    // ----------------------------------
+    function validarFotos() {
+    const fileInput = document.getElementById("fileInput");
+    const files = fileInput.files;
+
+    let span = document.getElementById("fotos_erro");
+    
+    if (!span) {
+        span = document.createElement("span");
+        span.id = "fotos_erro";
+        span.classList.add("span-erro");
+
+        // adiciona logo abaixo do botão, onde está visível
+        document.getElementById("uploadButton").insertAdjacentElement("afterend", span);
+    }
+
+    if (files.length === 0) {
+        span.textContent = "Envie ao menos uma foto do artista.";
+        return false;
+    }
+
+    span.textContent = "";
+    return true;
+}
+    document.getElementById("fileInput")
+        .addEventListener("change", validarFotos);
+
+    // ----------------------------------
+    // Submit Final
+    // ----------------------------------
+    const form = document.getElementById("form_artista");
+
+    form.addEventListener("submit", (e) => {
+
+        let valido = true;
+
+        camposSimples.forEach(id => {
+            const input = document.getElementById(id);
+            const mensagens = {
+                nome: "Nome deve ter pelo menos 3 caracteres.",
+                estado: "Use apenas duas letras (SP, RJ...).",
+                cidade: "Cidade inválida.",
+                cache_artista: "Digite um valor válido.",
+                whatsapp: "Whatsapp inválido.",
+                instagram: "Instagram inválido.",
+                contato: "Preencha este campo.",
+                descricao: "Descrição insuficiente."
+            };
+
+            if (!validarCampo(input, regras[id], mensagens[id])) valido = false;
+        });
+
+        if (!validarEstilos()) valido = false;
+        if (!validarIntegrantes()) valido = false;
+        if (!validarFotos()) valido = false;
+
+        if (!valido) {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+    });
+
+});

@@ -46,12 +46,12 @@ if (!isset($_SESSION['pt2'])) {
       $_SESSION['pt2'] = true;
     } else {
 
-      
+
 
       if (!isset($_POST['voltar'])) {
         if (empty($_POST['nome'])) {
-        $_SESSION['nome'] = null;
-      }
+          $_SESSION['nome'] = null;
+        }
         if (empty($_POST['data_nascimento'])) {
           $_SESSION['data_nascimento'] = null;
         }
@@ -98,24 +98,28 @@ if (isset($_SESSION['pt2'])) {
 
         if ($_POST['senha'] === $_POST['confirmar-senha']) {
 
-          $nome = Utils::sanitizar($_SESSION['nome']);
-          $data_nascimento = Utils::sanitizar($_SESSION['data_nascimento']);
-          $cep = Utils::sanitizar($_SESSION['cep']);
-          $estado = Utils::sanitizar($_SESSION['estado']);
-          $cidade = Utils::sanitizar($_SESSION['cidade']);
-          $rua = Utils::sanitizar($_SESSION['rua']);
-          $numero = Utils::sanitizar($_SESSION['numero']);
-          $email = Utils::sanitizar($_POST['email'], 'email');
-          $senha = Utils::codificarSenha($_POST['senha']);
+          try {
+            $nome = Utils::sanitizar($_SESSION['nome']);
+            $data_nascimento = Utils::sanitizar($_SESSION['data_nascimento']);
+            $cep = Utils::sanitizar($_SESSION['cep']);
+            $estado = Utils::sanitizar($_SESSION['estado']);
+            $cidade = Utils::sanitizar($_SESSION['cidade']);
+            $rua = Utils::sanitizar($_SESSION['rua']);
+            $numero = Utils::sanitizar($_SESSION['numero']);
+            $email = Utils::sanitizar($_POST['email'], 'email');
+            $senha = Utils::codificarSenha($_POST['senha']);
 
-          $usuario = new Usuario($nome, $data_nascimento, $cep, $estado, $cidade, $rua, $numero, $email, $senha, null);
+            $usuario = new Usuario($nome, $data_nascimento, $cep, $estado, $cidade, $rua, $numero, $email, $senha, null);
 
-          $id_inserido = $usuarioServicos->inserirUsuario($usuario);
+            $id_inserido = $usuarioServicos->inserirUsuario($usuario);
 
-          session_destroy();
+            session_destroy();
 
-          AutenticarServico::criarLogin($id_inserido, $nome, $email);
-          Utils::redirecionarPara("index.php");
+            AutenticarServico::criarLogin($id_inserido, $nome, $email);
+            Utils::redirecionarPara("index.php");
+          } catch (Throwable $e) {
+            $msg = "Erro ao inserir usuário";
+          }
         } else {
           $msg = "As senha não coincidem";
         }
@@ -144,12 +148,12 @@ if (isset($_SESSION['pt2'])) {
   <?php require_once "includes/cabecalho.php" ?>
   <section>
     <h2>Faça seu <span>Cadastro</span></h2>
-    
+
     <?php if (!isset($_SESSION['pt2'])) { ?>
       <form method="post" id="form1" method="post">
         <?php if ($msg) {
-      echo "<p class='erro'>$msg</p>";
-    }  ?>
+          echo "<p class='erro'>$msg</p>";
+        }  ?>
         <div id="container-inputs">
 
           <div>
@@ -196,11 +200,14 @@ if (isset($_SESSION['pt2'])) {
 
         </div>
 
-         <input type="submit" value="continuar">
+        <input type="submit" value="continuar">
       </form>
     <?php } else { ?>
 
       <form method="post" id="form2" method="post">
+        <?php if ($msg) {
+          echo "<p class='erro'>$msg</p>";
+        }  ?>
 
         <div id="container-inputs">
           <div>
@@ -213,11 +220,17 @@ if (isset($_SESSION['pt2'])) {
           </div>
           <div>
             <label for="senha">senha:</label>
-            <input type="password" name="senha" id="senha" />
+            <div class="password-wrapper"><input type="password" name="senha" id="senha" />
+              <i id="toggleSenha" class="fa-solid fa-eye toggle-password"></i>
+            </div>
           </div>
           <div>
             <label for="confirmar-senha">confirmar senha:</label>
-            <input type="password" name="confirmar-senha" id="confirmar-senha" />
+            <div class="password-wrapper">
+              <input type="password" name="confirmar-senha" id="confirmar-senha" />
+              <i id="toggleSenha" class="fa-solid fa-eye toggle-password"></i>
+            </div>
+
           </div>
         </div>
 
@@ -229,7 +242,11 @@ if (isset($_SESSION['pt2'])) {
       </footer>
     <?php } ?>
   </section>
+  <script src="js/form.js"></script>
   <script src="js/script.js"></script>
+  <script>
+
+  </script>
   </body>
 
 </html>

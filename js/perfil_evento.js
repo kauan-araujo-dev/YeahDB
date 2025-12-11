@@ -9,7 +9,7 @@ function addParticipante(isFirst) {
 
     if (!isFirst) {
         wrapper.innerHTML = `
-            <button type="button" class="btn-remove-x" onclick="removeParticipante(this)">X</button>
+            <button type="button" class="btn-remove-x" onclick="removeParticipante(this)">❌</button>
         `;
     }
 
@@ -242,3 +242,210 @@ function toggleParticipanteMode(input) {
     fotoArea.style.pointerEvents = "auto";
     fotoArea.style.opacity = "1";
 }
+document.addEventListener("DOMContentLoaded", () => {
+
+    // ------------------------------
+    // Criador de span de erro
+    // ------------------------------
+    function criarSpanErro(input) {
+        let span = input.parentElement.querySelector(".span-erro");
+        if (!span) {
+            span = document.createElement("span");
+            span.classList.add("span-erro");
+            input.parentElement.appendChild(span);
+        }
+        return span;
+    }
+
+    function validarCampo(input, validacao, mensagemErro) {
+        const span = criarSpanErro(input);
+
+        if (!validacao(input.value.trim())) {
+            input.classList.add("erro-input");
+            span.textContent = mensagemErro;
+            return false;
+        }
+
+        input.classList.remove("erro-input");
+        span.textContent = "";
+        return true;
+    }
+
+    // ------------------------------
+    // Regras para o formulário de EVENTO
+    // ------------------------------
+    const regras = {
+        nome: v => v.length >= 3,
+        estado: v => /^[A-Za-z]{2}$/.test(v),
+        cidade: v => v.length >= 2,
+        endereco: v => v.length >= 5,
+        dia: v => v !== "",
+        horario: v => v !== "",
+        instagram: v => v.length >= 3,
+        contato: v => v.length >= 8,
+        descricao: v => v.length >= 10
+    };
+
+    const campos = [
+        "nome", "estado", "cidade", "endereco",
+        "dia", "horario", "instagram", "contato", "descricao"
+    ];
+
+    const mensagens = {
+        nome: "O nome precisa ter pelo menos 3 caracteres.",
+        estado: "Informe um estado válido (ex: SP).",
+        cidade: "Cidade inválida.",
+        endereco: "Endereço muito curto.",
+        dia: "Selecione uma data válida.",
+        horario: "Horário inválido.",
+        instagram: "Instagram inválido.",
+        contato: "Contato muito curto.",
+        descricao: "A descrição deve ter pelo menos 10 caracteres."
+    };
+
+    // Adicionar blur nos campos simples
+    campos.forEach(id => {
+        const input = document.getElementById(id);
+        if (!input) return;
+
+        criarSpanErro(input);
+
+        input.addEventListener("blur", () => {
+            validarCampo(input, regras[id], mensagens[id]);
+        });
+    });
+
+    // ------------------------------
+    // Validar Estilos Musicais
+    // ------------------------------
+    const estilosContainer = document.getElementById("estilos_musicais");
+
+    function validarEstilos() {
+        let span = document.getElementById("estilos_erro");
+
+        if (!span) {
+            span = document.createElement("span");
+            span.classList.add("span-erro");
+            span.id = "estilos_erro";
+            estilosContainer.parentElement.appendChild(span);
+        }
+
+        const selecionados = estilosContainer.querySelectorAll("input:checked");
+
+        if (selecionados.length === 0) {
+            span.textContent = "Selecione pelo menos um estilo musical.";
+            return false;
+        }
+
+        span.textContent = "";
+        return true;
+    }
+
+    estilosContainer.addEventListener("change", validarEstilos);
+
+    // ------------------------------
+    // Validar Fotos do Evento
+    // ------------------------------
+    function validarFotos() {
+    const fileInput = document.getElementById("fileInput");
+    const files = fileInput.files;
+
+    let span = document.getElementById("fotos_erro");
+    
+    if (!span) {
+        span = document.createElement("span");
+        span.id = "fotos_erro";
+        span.classList.add("span-erro");
+
+        // adiciona logo abaixo do botão, onde está visível
+        document.getElementById("uploadButton").insertAdjacentElement("afterend", span);
+    }
+
+    if (files.length === 0) {
+        span.textContent = "Envie ao menos uma foto do artista.";
+        return false;
+    }
+
+    span.textContent = "";
+    return true;
+}
+
+    document.getElementById("fileInput").addEventListener("change", validarFotos);
+
+    // ------------------------------
+    // Validar Participantes
+    // ------------------------------
+    function validarParticipantes() {
+        let valido = true;
+
+        const nomes = document.querySelectorAll('input[name="participante_nome[]"]');
+        const estilos = document.querySelectorAll('input[name="participantes_estilo_musical[]"]');
+        const fotos = document.querySelectorAll('input[name="participante_foto[]"]');
+        const codigos = document.querySelectorAll('input[name="participante_codigo[]"]');
+
+        nomes.forEach((input, i) => {
+            const codigo = codigos[i].value.trim();
+
+            // ✔ Se tiver código → ignora nome/estilo/foto
+            if (codigo !== "") {
+                input.classList.remove("erro-input");
+                criarSpanErro(input).textContent = "";
+                return;
+            }
+
+            if (!validarCampo(input, v => v.length >= 2, "Nome do participante inválido.")) valido = false;
+        });
+
+        estilos.forEach((input, i) => {
+            const codigo = codigos[i].value.trim();
+
+            if (codigo !== "") return;
+
+            if (!validarCampo(input, v => v.length >= 2, "Estilo musical inválido.")) valido = false;
+        });
+
+        fotos.forEach((input, i) => {
+            const codigo = codigos[i].value.trim();
+
+            if (codigo !== "") return;
+
+            const span = criarSpanErro(input);
+
+            if (input.files.length === 0) {
+                input.classList.add("erro-input");
+                span.textContent = "Envie uma foto do participante.";
+                valido = false;
+            } else {
+                input.classList.remove("erro-input");
+                span.textContent = "";
+            }
+        });
+
+        return valido;
+    }
+
+    // ------------------------------
+    // SUBMIT FINAL
+    // ------------------------------
+    const form = document.getElementById("form_evento");
+
+    form.addEventListener("submit", e => {
+
+        let ok = true;
+
+        campos.forEach(id => {
+            const input = document.getElementById(id);
+            if (!validarCampo(input, regras[id], mensagens[id])) ok = false;
+        });
+
+        if (!validarEstilos()) ok = false;
+        if (!validarFotos()) ok = false;
+        if (!validarParticipantes()) ok = false;
+
+        if (!ok) {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+    });
+
+});

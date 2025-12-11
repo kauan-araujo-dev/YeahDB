@@ -67,12 +67,8 @@ $abaAtiva = isset($_GET['tipo']) && in_array($_GET['tipo'], ['artistas','eventos
     <?php endif; ?>
 </section>
 
-<script>
-function mudarAba(tipo) {
-    const url = new URL(window.location.href);
-    url.searchParams.set('tipo', tipo);
-    window.location.href = url.toString();
-}
+<script src="js/pag-categorias.js">
+
 </script>
 
 <?php require_once "includes/rodape.php"; ?>

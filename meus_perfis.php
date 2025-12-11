@@ -65,7 +65,6 @@ $artistas = $artistaServico->buscarArtistasUsuario($_SESSION['id']);
                         <h3 class="titulo_banda"><?= htmlspecialchars($artista['nome']) ?></h3>
 
                         <div class="botoes_banda">
-                            <a href="editar_artista.php?id=<?= intval($artista['id']) ?>" class="banda_editar">EDITAR</a>
                             <a href="excluir_artista.php?id=<?= intval($artista['id']) ?>" 
                                class="banda_excluir"
                                onclick="return confirm('Tem certeza que deseja excluir este perfil?')">

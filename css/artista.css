@@ -13,10 +13,12 @@ section,
 .banda {
   display: flex;
   justify-content: space-between;
+  align-items: stretch;
   padding: 50px 0;
   border-radius: 10px;
   margin-top: 0;
   padding: 20px;
+  gap: 10px;
 }
 
 #titulo_artista {
@@ -29,7 +31,7 @@ section,
 
 .imagem_banda img {
   width: 500px;
-  height: auto;
+  height: 100%;
   max-height: 715px;
   border-radius: 10px;
   object-fit: cover;

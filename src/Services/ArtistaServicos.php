@@ -380,7 +380,7 @@ class ArtistaServicos
             ORDER BY estilo_musical.id ASC
             LIMIT 1
     ) AS estilos_musicais
-FROM eventos JOIN evento_estilo ON evento_estilo.id_evento = eventos.id JOIN artista_evento ON artista_evento.id_evento = eventos.id JOIN artistas ON artista_evento.id_artista = artistas.id WHERE artistas.id = :id
+FROM eventos JOIN artista_evento ON artista_evento.id_evento = eventos.id JOIN artistas ON artista_evento.id_artista = artistas.id WHERE artistas.id = :id
 ";
 
 $consulta = $this->conexao->prepare($sql);

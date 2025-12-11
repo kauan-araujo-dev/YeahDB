@@ -143,7 +143,7 @@ $estilos_musicais = $estilosMusicaisServicos->buscarEstilosComLimite();
     <div class="inner" id="inner">
         <?php foreach($estilos_musicais as $musica): ?>
             <div class="estilo-item">
-                <a href="artistas.php?<?= $musica['id'] ?>">
+                <a href="pagina_artistas.php?estilo=<?= urlencode($musica['nome']) ?>">
                   <img src="img/estilos_musicais/<?= $musica['imagem'] ?>" 
                      alt="<?= htmlspecialchars($musica['nome'], ENT_QUOTES) ?>">
                 </a>

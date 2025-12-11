@@ -161,8 +161,8 @@ form{
 
 .btn-remove-x {
   position: absolute;
-  top: -10px;
-  right: -10px;
+  top: 2px;
+  right: 2px;
   color:  #E32828;
   background-color: transparent;
   width: 28px;
@@ -180,9 +180,13 @@ form{
 /* LADO A LADO */
 .integrante-box {
   display: flex;
-  flex-direction: row;
+  flex-direction: row-reverse;
+  justify-content: center;
   align-items: center;
   gap: 40px;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  padding: 40px 10px;
 }
 
 /* FOTO */

@@ -10,14 +10,8 @@ section,
   margin-bottom: 90px;
   padding: 20px;
 }
-.banda {
-  display: flex;
-  justify-content: space-between;
-  padding: 50px 0;
-  border-radius: 10px;
-  margin-top: 0;
-  padding: 20px;
-}
+
+/**************** TÍTULO DO EVENTO *****************/
 
 #titulo_evento {
   text-align: center;
@@ -27,44 +21,45 @@ section,
   text-transform: uppercase;
 }
 
-.imagem_banda img {
-  width: 500px;
-  height: auto;
-  max-height: 715px;
+/************** TOPO DO EVENTO ****************/
+
+.evento_topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  padding: 50px 0;
   border-radius: 10px;
-  object-fit: cover;
+  margin-top: 0;
+  padding: 20px;
+  gap: 10px;
 }
 
-.estilo_da_banda {
+.imagem_evento_principal img {
+  width: 600px;
+  height: auto;
+  max-height: 374px;
+  border-radius: 10px;
+  object-fit: cover;
+  object-position: top;
+}
+
+.dados_evento {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   gap: 50px;
 }
 
-.estilo_da_banda p {
+.dados_evento p {
   font-size: 30px;
   margin-bottom: 10px;
 }
 
-.redes_sociais {
-  margin-top: 15px;
-  display: flex;
-  gap: 15px;
-}
-
-.redes_sociais a {
-  color: #030303;
-  font-size: 50px;
-  transition: 0.3s;
-}
-
-.botao_whatsapp a {
+.botao_ingresso a {
   display: inline-flex;
   align-items: center;
-  justify-content: start;
   gap: 10px;
-  background-color: #04a777;
+  background-color: #ff8c00;
   color: white;
   padding: 12px 25px;
   border-radius: 35px;
@@ -73,133 +68,35 @@ section,
   text-decoration: none;
   transition: 0.3s;
 }
-.botao_whatsapp a:hover {
+.botao_ingresso a:hover {
   opacity: 0.9;
 }
 
-.cache {
-  font-size: 48px !important;
-  font-weight: 800;
-  font-family: "Poppins", sans-serif;
-}
+/**************** SOBRE *****************/
 
-.valor {
-  font-size: 48px;
-  color: #3a0ca3;
-}
-#sobre_a_banda{
+#sobre_o_evento {
   padding: 0 20px;
 }
-.sobre {
+
+.titulo_sobre {
   font-size: 30px;
   padding-bottom: 20px;
+  font-weight: bold;
 }
 
-.texto_banda {
+.texto_evento {
   font-size: 30px;
   margin-top: 30px;
   word-break: break-word;
-
 }
 
-@media (max-width: 768px) {
-  .banda {
-    flex-direction: column;
-    align-items: center;
-    gap: 30px;
-    text-align: center;
-  }
+/**************** GALERIA DO EVENTO ********************/
 
-  .imagem_banda img {
-    width: 200px;
-    display: flex;
-    justify-content: center;
-  }
-
-  .estilo_da_banda p {
-    font-size: 15px;
-  }
-  .redes_sociais {
-    justify-content: center;
-    gap: 20px;
-  }
-
-  .redes_sociais a {
-    font-size: 18px;
-  }
-
-  .botao_whatsapp {
-    margin-top: 60px;
-  }
-
-  .botao_whatsapp a {
-    padding: 10px 20px;
-    font-size: 14px;
-  }
-  .cache {
-    font-size: 20px !important;
-    margin-top: 80px;
-  }
-  .valor {
-    font-size: 20px;
-  }
-
-  #sobre_a_banda {
-    padding: 40px;
-  }
-
-  .sobre {
-    font-size: 22px;
-    padding: 10px;
-    text-align: center;
-  }
-
-  .texto_banda {
-    font-size: 18px;
-    margin-top: 20px;
-    padding: 10px;
-    text-align: justify;
-  }
-  #galeria-evento{
-    padding: 0;
-  }
-}
-
-#conteudo-principal {
-  margin: 0 auto;
-}
-
-/* Títulos das Seções */
-#titulo-secao {
-  font-size: 2.5em; /* Tamanho maior para o título principal */
-  font-weight: 700;
-  line-height: 1.1;
-  color: #000;
-  margin-bottom: 20px;
-  font-weight: bold;
-}
-
-#destaque-titulo {
-  color: #ff8c00; /* Cor laranja para o destaque (ARTISTA) */
-}
-
-/* Subtítulos (Usando ID para cada bloco de subtítulo) */
-#subtitulo-integrantes,
-#subtitulo-eventos {
-  font-size: 1.2em;
-  font-weight: 600;
-  color: #000;
-  margin-top: 30px;
-  margin-bottom: 15px;
-  font-weight: bold;
-}
-
-/* 1. Galeria do Artista */
 #galeria-evento {
-  padding:40px;
+  padding: 40px;
   display: flex;
   margin-bottom: 40px;
-  justify-content: space-between !important;
+  justify-content: center;
   align-items: center !important;
   width: 100%;
   flex-wrap: wrap !important;
@@ -208,31 +105,40 @@ section,
 #carouselExampleAutoplaying {
   width: 852px !important;
   height: 528px !important;
-  
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
+
 .carousel-inner,
 .carousel-item,
 .container_carrossel {
   width: 100%;
   height: 100%;
 }
+
 #bloco-texto h2 {
   display: flex;
   flex-direction: column;
   gap: 20px !important;
 }
+
+#titulo-secao {
+  font-size: 2.5em;
+  font-weight: 700;
+  line-height: 1.1;
+  color: #000;
+  margin-bottom: 20px;
+}
+
+#destaque-titulo {
+  color: #ff8c00;
+}
+
 #imagem-principal {
   width: 100%;
   height: 100%;
-  border-radius: 8px; /* Borda arredondada para a imagem */
-  height: 100%;
+  border-radius: 8px;
   object-fit: cover;
   object-position: top;
-}
-#carouselExampleAutoplaying span {
-  width: 50px;
-  height: 72px;
 }
 
 .carousel-control-next,
@@ -241,38 +147,24 @@ section,
   justify-content: space-between !important;
 }
 
+/**************** ARTISTAS DO EVENTO *****************/
 
-/* Estilo para setas de navegação (manter classe para estilo repetitivo) */
-.navegacao-seta {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background-color: rgba(255, 255, 255, 0.5);
-  color: #333;
-  font-size: 1.5em;
-  padding: 10px 15px;
-  cursor: pointer;
-  border-radius: 50%;
-  user-select: none;
+#subtitulo-artistas {
+  font-size: 22px;
+  font-weight: bold;
+  margin-top: 30px;
+  margin-bottom: 15px;
 }
 
-#seta-esquerda {
-  left: 10px;
-}
-
-#seta-direita {
-  right: 10px;
-}
-
-/* 2. Integrantes */
-#container-cartoes-integrantes {
+#container-cartoes-artistas {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
 }
 
-/* Estilo para Cartões de Integrantes (Usando classe para estilo repetitivo) */
-.caixa_integrante {
+/* Cartão de artista — baseado em caixa_integrante */
+
+.cartao-artista {
   position: relative;
   border-radius: 12px;
   overflow: hidden;
@@ -281,19 +173,15 @@ section,
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   text-decoration: none;
   box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
-  
 }
 
-.caixa_integrante img {
+.cartao-artista img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
-  position: relative;
-  z-index: 0;
-  
 }
-.caixa_integrante::after {
+
+.cartao-artista::after {
   content: "";
   position: absolute;
   bottom: 0;
@@ -302,163 +190,45 @@ section,
   height: 52%;
   background: linear-gradient(to top, #000, #000, transparent);
   pointer-events: none;
-  border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px;
 }
 
-.texto_integrante_overlay {
-  text-transform: uppercase;
-  position: absolute;
-  bottom: 0px;
-  left: 0px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-  padding: 10px 10px;
-  z-index: 1;
-}
-
-.titulo_integrante {
-  font-size: 1.5rem;
-  color: #ffffff;
-  text-align: center;
-  border-radius: 5px 5px 0 0;
-  font-weight: bold;
-}
-
-.instrumento_integrante {
-  font-size: 1.2rem;
-  color: #FB8B24;
-  text-align: center;
-  font-weight: bold;
-}
-
-.caixa_integrante:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-/* 3. Eventos */
-#container-cartoes-eventos {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-}
-
-/* Estilo para Cartões de Eventos (Usando classe para estilo repetitivo) */
-.cartao-evento {
-  flex: 0 0 500px;
-  position: relative;
-  justify-content: flex-start;
-  border-radius: 8px !important;
-}
-
-.imagem-evento {
-  width: 100%;
-  height: auto;
-  border-radius: 12px !important;
-}
-
-.informacao-evento {
+.overlay-artista {
   position: absolute;
   bottom: 0;
-  left: 0;
   width: 100%;
-  padding: 15px 10px 10px;
+  z-index: 1;
+  padding: 15px;
+}
+
+.overlay-artista h3 {
+  font-size: 1.5rem;
   color: #fff;
+  font-weight: bold;
 }
 
-.nome-evento {
-  font-weight: 600;
-  font-size: 1em;
-  margin-bottom: 2px;
-}
-
-.detalhes-evento {
-  font-size: 0.8em;
-  font-weight: 400;
+.overlay-artista h4 {
+  font-size: 1.2rem;
   color: #ff8c00;
+  font-weight: bold;
 }
 
-/* Responsividade para Telas Maiores (Desktop/Tablet) */
-@media (max-width: 768px) {
-  /* 1. Galeria do Artista - Desktop Layout */
-  #galeria-evento {
-    flex-direction: row;
-    align-items: flex-start;
-    margin-bottom: 50px;
-  }
-
-  #bloco-texto {
-    flex: 0 0 200px;
-    padding-top: 20px;
-  }
-
-  #titulo-secao {
-    font-size: 3em;
-  }
-
-  #carouselExampleAutoplaying {
-    flex: 1;
-  }
-
-  /* 2. Integrantes - Ajusta cards */
-  #container-cartoes-integrantes {
-    justify-content: flex-start;
-  }
-
-  .cartao-integrante {
-    flex: 0 0 calc(50% - 10px);
-    max-width: 300px;
-  }
-
-  /* 3. Eventos - Ajusta cards */
-  #container-cartoes-eventos {
-    justify-content: flex-start;
-  }
-
-  .cartao-evento {
-    flex: 0 0 400px;
-  }
+.cartao-artista:hover {
+  transform: scale(1.05);
 }
 
-/* Ajustes finos para Mobile (menos de 480px) */
-@media (max-width: 480px) {
+/**************** RESPONSIVIDADE *****************/
 
-  #titulo-secao {
-    font-size: 2em;
-    margin-bottom: 10px;
-  }
-
-  #subtitulo-integrantes,
-  #subtitulo-eventos {
-    font-size: 1.1em;
-    margin-top: 20px;
-  }
-
-  /* Integrantes: Força 1 card por linha em telas muito pequenas */
-  .cartao-integrante {
-    flex: 1 1 100%;
-    max-width: none;
-  }
-
-  /* Eventos: Força 1 card por linha em telas muito pequenas */
-  .cartao-evento {
-    flex: 1 1 100%;
-  }
-}
 @media (max-width: 1200px) {
   #carouselExampleAutoplaying {
     width: 1040px;
     height: 434px;
   }
-  #galeria-evento{
+  #galeria-evento {
     justify-content: center !important;
     align-items: center;
     gap: 20px;
   }
-  #galeria-evento #titulo-secao{
+  #galeria-evento #titulo-secao {
     display: flex !important;
     flex-direction: row !important;
   }
@@ -476,76 +246,53 @@ section,
     width: 740px;
     height: 308px;
   }
+}
 
-  .texto_superior h3 {
-    font-size: 38px;
+@media (max-width: 768px) {
+  .evento_topo {
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    text-align: center;
   }
 
-  .textos_carrossel h4 {
-    font-size: 28px;
+  .imagem_evento_principal img {
+    width: 200px;
   }
-  #carouselExampleAutoplaying span {
-  width: 45px;
-  height: 67px;
-}
+
+  .dados_evento p {
+    font-size: 18px;
+  }
+
+  .botao_ingresso a {
+    padding: 10px 20px;
+    font-size: 16px;
+  }
+
+  .titulo_sobre {
+    font-size: 22px;
+  }
+
+  .texto_evento {
+    font-size: 18px;
+    margin-top: 20px;
+    padding: 10px;
+    text-align: justify;
+  }
 }
 
-.caixa_banda {
-  position: relative;
-  border-radius: 5px;
-  overflow: hidden;
-  width: 347px;
-  height: 432px;
-  box-shadow: 0 0 20px rgba(0,0,0,0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  text-decoration: none;
-}
+@media (max-width: 480px) {
+  #titulo-secao {
+    font-size: 2em;
+    margin-bottom: 10px;
+  }
 
-.caixa_banda img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+  #subtitulo-artistas {
+    font-size: 1.1em;
+  }
 
-.caixa_banda::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 52%;
-  background: linear-gradient(to top, #000, #000, transparent);
-  pointer-events: none;
-  border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px;
-}
-
-.texto_banda_overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  text-transform: uppercase;
-  z-index: 1;
-}
-
-.titulo_banda {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #fff;
-}
-
-.estilo_musical_banda {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #fb8b24;
-  text-align: left;
-}
-
-.caixa_banda:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  .cartao-artista {
+    flex: 1 1 100%;
+    max-width: none;
+  }
 }

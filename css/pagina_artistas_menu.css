@@ -3,7 +3,11 @@
   padding: 0;
   box-sizing: border-box;
 }
-
+body{
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
 #secao_bandas {
   display: flex;
   flex-direction: column;
