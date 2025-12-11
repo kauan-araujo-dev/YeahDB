@@ -332,7 +332,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     } ?>
                 </div>
             </div>
-            
+
+            <label>Foto (opcional): <input type="file" name="participante_foto[]" accept="image/*" /></label>
+                                <?php if (!empty($i['url_imagem'])): ?>
+                                    <div class="preview-existente">
+                                        <img src="img/eventos/<?= intval($idEvento) ?>/fotos_participantes/<?= htmlspecialchars($i['url_imagem']) ?>" alt="<?= $iname ?>" style="width:90px;height:60px;object-fit:cover;border-radius:4px;border:1px solid #ddd;" />
+                                    </div>
+                                <?php endif; ?>
+
             <!-- participantes: replicando a mesma estrutura do criar_evento.php -->
             <div id="container-participantes">
                 <label>PARTICIPANTES: </label>
@@ -347,12 +354,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div class="participante-item">
                                 <input type="text" name="participante_nome[]" value="<?= $iname ?>" placeholder="Nome do integrante" />
                                 <input type="text" name="participantes_estilo_musical[]" value="<?= $iest ?>" placeholder="Instrumento / Estilo" />
-                                <label>Foto (opcional): <input type="file" name="participante_foto[]" accept="image/*" /></label>
-                                <?php if (!empty($i['url_imagem'])): ?>
-                                    <div class="preview-existente">
-                                        <img src="img/eventos/<?= intval($idEvento) ?>/fotos_participantes/<?= htmlspecialchars($i['url_imagem']) ?>" alt="<?= $iname ?>" style="width:90px;height:60px;object-fit:cover;border-radius:4px;border:1px solid #ddd;" />
-                                    </div>
-                                <?php endif; ?>
                             </div>
                             <?php
                         }
