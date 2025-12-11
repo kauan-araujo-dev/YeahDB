@@ -420,9 +420,6 @@
     height: 212px;
   }
 
-  .botao_acesso {
-    display: none;
-  }
 
   .caixa_banda {
     flex: 1 1 calc(50% - 10px);

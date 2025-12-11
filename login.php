@@ -13,7 +13,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!empty($_POST['email']) && !empty($_POST['senha'])) {
         $emailValido = $usuarioServicos->buscarPorEmail($_POST['email']);
         if ($emailValido) {
-            echo $emailValido['senha'];
             if (Utils::verificarSenha($emailValido['senha'], $_POST['senha'])) {
                 AutenticarServico::criarLogin($emailValido['id'], $emailValido['nome'], $emailValido['email']);
             } else {
