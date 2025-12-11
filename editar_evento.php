@@ -319,6 +319,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <textarea id="descricao" name="descricao"><?= htmlspecialchars($_POST['descricao'] ?? $evento['descricao']) ?></textarea>
             </div>
 
+             <!-- fotos do evento: input único múltiplo -->
+            <div style="margin-top:12px;">
+                <label>FOTOS DO EVENTO (envie novas para adicionar):</label><br>
+                <button id="uploadButton" onclick="fileInput.click(); return false;" type="button" class="upBtn">Adicionar foto</button>
+                <input type="file" id="fileInput" accept="image/*" multiple style="display: none;" name="fotos_evento[]">
+                <div id="previewContainer">
+                    <?php if (!empty($fotos)) {
+                        foreach ($fotos as $k => $f) {
+                            echo '<img src="img/eventos/' . intval($idEvento) . '/fotos_eventos/' . htmlspecialchars($f) . '" style="width:120px;height:90px;object-fit:cover;margin:6px;border-radius:6px;border:1px solid #ddd;" />';
+                        }
+                    } ?>
+                </div>
+            </div>
+            
             <!-- participantes: replicando a mesma estrutura do criar_evento.php -->
             <div id="container-participantes">
                 <label>PARTICIPANTES: </label>
@@ -349,19 +363,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <button type="button" id="btn-add">ADICIONAR INTEGRANTE +</button>
             </div>
 
-            <!-- fotos do evento: input único múltiplo -->
-            <div style="margin-top:12px;">
-                <label>FOTOS DO EVENTO (envie novas para adicionar):</label><br>
-                <button id="uploadButton" onclick="fileInput.click(); return false;" type="button" class="upBtn">Adicionar foto</button>
-                <input type="file" id="fileInput" accept="image/*" multiple style="display: none;" name="fotos_evento[]">
-                <div id="previewContainer">
-                    <?php if (!empty($fotos)) {
-                        foreach ($fotos as $k => $f) {
-                            echo '<img src="img/eventos/' . intval($idEvento) . '/fotos_eventos/' . htmlspecialchars($f) . '" style="width:120px;height:90px;object-fit:cover;margin:6px;border-radius:6px;border:1px solid #ddd;" />';
-                        }
-                    } ?>
-                </div>
-            </div>
+           
 
         </div>
 
