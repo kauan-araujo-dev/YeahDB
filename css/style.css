@@ -457,6 +457,9 @@
   .textos_carrossel h4 {
     font-size: 10px;
   }
+  .linha_cards{
+    align-items: center;
+  }
 }
 
 @media (max-width: 430px) {
@@ -717,6 +720,7 @@
   }
   .linha_cards {
     flex-direction: column;
+    align-items: center;
     gap: 15px;
   }
   .texto_superior h3 {
