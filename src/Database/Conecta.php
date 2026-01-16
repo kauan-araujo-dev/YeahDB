@@ -10,7 +10,7 @@ class Conecta
             $host = 'localhost';
             $banco = 'yeah_db';
             $usuario = 'root';
-            $senha = '';
+            $senha = 'YeahDB2025@';
             $porta = 3306;
 
             $dsn = "mysql:host=$host;port=$porta;dbname=$banco;charset=utf8mb4";
