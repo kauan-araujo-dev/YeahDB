@@ -1,5 +1,5 @@
 # YeahDB
 Projeto Integrador do curso Desenvolvedor FullStack do Senac Penha
 
-🌐 Link do site que o banco de dados foi implementado: 
+🌐 Link do site: 
 https://yeahdb.great-site.net/
